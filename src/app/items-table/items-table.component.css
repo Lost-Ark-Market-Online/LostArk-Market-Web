@@ -1,0 +1,118 @@
+.full-width-table {
+    width: 100%;
+}
+
+.market {
+    background-color: #121416;
+    border-collapse: separate;
+    border-spacing: 0px 4px;
+}
+
+.paginator {
+    background-color: #1e2329;
+    box-shadow: inset 0 0 10px #272a2f;
+    color: #ab9c77;
+}
+
+.market .header {
+    background-color: #1e2329;
+    box-shadow: inset 0 0 10px #272a2f;
+    color: #ab9c77;
+    padding: 16px;
+    font-size: 1.1em;
+}
+
+.market .header:not(:first-child) {
+    border-left: #121416 solid 5px;
+}
+
+.market {
+    color: white;
+}
+
+.market .cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    color: white;
+    padding: 4px 16px;
+}
+
+.market .cellContainer {
+    position: relative;
+}
+
+.market .cellContainer:not(:first-child)::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 2px;
+    top: 10%;
+    height: 80%;
+    width: 2px;
+    background: #434230;
+}
+
+.market .cell.right {
+    justify-content: end;
+}
+
+.market .normal {
+    background: linear-gradient(50deg, #5e5e5e 0%, transparent 50%);
+}
+
+.market .normal .cell {
+    color: white;
+}
+
+.market .uncommon {
+    background: linear-gradient(50deg, #203808 0%, transparent 50%);
+}
+
+.market .uncommon .cell {
+    color: #93ee24;
+}
+
+.market .rare {
+    background: linear-gradient(50deg, #064054 0%, transparent 50%);
+}
+
+.market .rare .cell {
+    color: white;
+    color: #17a7e6;
+}
+
+.market .epic {
+    background: linear-gradient(50deg, #440850 0%, transparent 50%);
+}
+
+.market .epic .cell {
+    color: #b249d4;
+}
+
+.market .legendary {
+    background: linear-gradient(50deg, #6a4109 0%, transparent 50%);
+}
+
+.market .legendary .cell {
+    color: #e8921b;
+}
+
+.market .relic {
+    background: linear-gradient(50deg, #783201 0%, transparent 50%);
+}
+
+.market .normal .relic {
+    color: #e66516;
+}
+
+.market .cell .gold {
+    height: 20px;
+    width: 20px;
+}
+
+.market .row {
+    background-color: #090a0c;
+    margin-bottom: 8px;
+}

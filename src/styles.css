@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-select-value {
+    color: #ab9c77;
+}
+
+.mat-paginator,
+.mat-paginator-page-size .mat-select-trigger,
+.mat-select-arrow {
+    color: #ab9c77;
+}
+
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+    color: #554f40;
+}

@@ -1,0 +1,139 @@
+import { DataSource } from '@angular/cdk/collections';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { Observable, of, take, mergeMap, forkJoin, combineLatest, startWith, switchMap, Subject, last, map } from 'rxjs';
+import { collection, collectionData, doc, DocumentData, Firestore, getFirestore, limit, orderBy, query, QueryConstraint, where } from '@angular/fire/firestore';
+
+// TODO: Replace this with your own data model type
+export interface MarketItem extends DocumentData {
+  id: string;
+  name: string;
+  amount: number;
+  rarity: number;
+  category: string;
+  subcategory: string;
+  image: string;
+  avgPrice?: number;
+  cheapestRemaining?: number;
+  lowPrice?: number;
+  recentPrice?: number;
+  updatedAt?: Date;
+}
+
+/**
+ * Data source for the ItemsTable view. This class should
+ * encapsulate all logic for fetching and manipulating the displayed data
+ * (including sorting, pagination, and filtering).
+ */
+export class MarketDataSource extends DataSource<MarketItem> {
+  data: MarketItem[] = [];
+  collectionSize: number = 0;
+  paginator: MatPaginator | undefined;
+  sort: MatSort | undefined;
+  filter: { region: string, category?: string, subcategory?: string } | undefined;
+  filter$: Subject<{ region: string, category?: string, subcategory?: string }> = new Subject();
+
+  constructor(private firestore: Firestore) {
+    super();
+  }
+
+  updateFilter(region: string, category?: string, subcategory?: string) {
+    this.filter$.next({
+      region: region,
+      category: category,
+      subcategory: subcategory
+    });
+  }
+
+  connect(): Observable<MarketItem[]> {
+    if (this.paginator && this.sort && this.filter) {
+      const firestore = this.firestore;
+
+      return combineLatest({
+        filter: this.filter$.pipe(startWith({
+          region: this.filter?.region,
+          category: this.filter?.category,
+          subcategory: this.filter?.subcategory
+        })),
+        paginator: this.paginator.page.pipe(startWith({ previousPageIndex: 0, pageIndex: 0, pageSize: 10, length: 0 })),
+        sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))
+      }).pipe(mergeMap((combined) => {
+        const queryFilters: QueryConstraint[] = [];
+        if (combined.filter.category) {
+          queryFilters.push(where('category', '==', combined.filter.category));
+          if (combined.filter.subcategory) {
+            queryFilters.push(where('subcategory', '==', combined.filter.subcategory));
+          }
+        }
+        const collectionObservable = collectionData(
+          query(
+            collection(firestore, combined.filter.region).withConverter<MarketItem>({
+              fromFirestore: snapshot => {
+                const { name, amount, rarity, category, subcategory, image } = snapshot.data();
+                const { id } = snapshot;
+                const { hasPendingWrites } = snapshot.metadata;
+                return { name, amount, rarity, category, subcategory, image, id, hasPendingWrites };
+              },
+              toFirestore: (it: any) => it // Not writing into Firestore
+            }),
+            ...queryFilters
+          )
+        ) as Observable<MarketItem[]>;
+        return collectionObservable.pipe(take(1), map(collection => ({
+          sort: combined.sort,
+          filter: combined.filter,
+          paginator: combined.paginator,
+          collection: collection
+        })));
+      }), switchMap((combined) => {
+        const queries = combined.collection.map(item => forkJoin({
+          marketItem: of(item),
+          priceData: collectionData(query(
+            collection(doc(firestore, `${combined.filter.region}/${item.id}`), 'entries'),
+            orderBy('createdAt', 'desc'),
+            limit(2)
+          )).pipe(take(1), map(entries => entries[0]))
+        }).pipe(map(({ marketItem, priceData }) => ({
+          ...marketItem,
+          avgPrice: priceData['avgPrice'],
+          cheapestRemaining: priceData['cheapestRemaining'],
+          lowPrice: priceData['lowPrice'],
+          recentPrice: priceData['recentPrice'],
+          updatedAt: priceData['createdAt'].toDate(),
+        }))));
+        return forkJoin(queries).pipe(map(collection => ({
+          sort: combined.sort,
+          paginator: combined.paginator,
+          collection: collection
+        })))
+      }), map(combined => {
+        const { subCollection, size } = this.filterCollection(combined.collection, { paginator: combined.paginator, sort: combined.sort });
+        this.collectionSize = size;
+        return subCollection;
+      }));
+    } else {
+      throw Error('Please set the paginator and sort on the data source before connecting.');
+    }
+  }
+
+  filterCollection(collection: MarketItem[], filter: any): { subCollection: MarketItem[], size: number } {
+    let subcol = [...collection];
+    if (filter.sort) {
+      subcol = subcol.sort((a, b) => {
+        if (a[filter.sort.active] > b[filter.sort.active]) {
+          return filter.sort.direction == 'desc' ? -1 : 1;
+        }
+        if (b[filter.sort.active] > a[filter.sort.active]) {
+          return filter.sort.direction == 'desc' ? 1 : -1;
+        }
+        return 0;
+      })
+    }
+    if (filter.paginator) {
+      subcol = subcol.slice(filter.paginator.pageIndex * filter.paginator.pageSize, (filter.paginator.pageIndex + 1) * filter.paginator.pageSize)
+    }
+    return { subCollection: subcol, size: collection.length };
+  }
+
+  disconnect(): void { }
+}

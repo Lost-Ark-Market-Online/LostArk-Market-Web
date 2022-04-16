@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "lostarkmarket-79ddf": {
+      "hosting": {
+        "lostark-market": [
+          "lostarkmarket-79ddf"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "lostarkmarket-79ddf"
+  }
+}

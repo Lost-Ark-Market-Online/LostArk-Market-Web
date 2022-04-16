@@ -1,0 +1,51 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <mat-toolbar>Menu</mat-toolbar>
+        <mat-nav-list class="nav-list">
+            <a class="nav-header" mat-list-item href="#all" (click)="selectFilter(undefined,undefined)" [ngClass]="{'selected' : filter.category == undefined && filter.subCategory === undefined}">All</a>
+            <mat-list-item class="nav-header" [ngClass]="{'active' : enhancementMaterialsSubMenu}" (click)="enhancementMaterialsSubMenu = !enhancementMaterialsSubMenu">
+                <span class="full-width">Enhancement Materials</span>
+                <mat-icon class="menu-button" [ngClass]="{'rotated' : enhancementMaterialsSubMenu}">expand_more</mat-icon>
+            </mat-list-item>
+            <div class="submenu-enhancement-materials" [ngClass]="{'expanded' : enhancementMaterialsSubMenu}">
+                <a class="nav-item" mat-list-item href="#enhancement-materials" (click)="selectFilter('Enhancement Material',undefined)" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subCategory === undefined}">All</a>
+                <a class="nav-item" mat-list-item href="#honing-materials" (click)="selectFilter('Enhancement Material','Honing Materials')" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subCategory === 'Honing Materials'}">Honing Materials</a>
+                <a class="nav-item" mat-list-item href="#additional-honing-materials" (click)="selectFilter('Enhancement Material','Additional Honing Materials')" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subCategory === 'Additional Honing Materials'}">Additional Honing Materials</a>
+                <a class="nav-item" mat-list-item href="#other-enhancement-materials" (click)="selectFilter('Enhancement Material','Other Materials')" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subCategory === 'Other Materials'}">Other Materials</a>
+            </div>
+            <mat-list-item class="nav-header" [ngClass]="{'active' : traderSubMenu}" (click)="traderSubMenu = !traderSubMenu">
+                <span class="full-width">Trader</span>
+                <mat-icon class="menu-button" [ngClass]="{'rotated' : traderSubMenu}">expand_more</mat-icon>
+            </mat-list-item>
+            <div class="submenu-trader" [ngClass]="{'expanded' : traderSubMenu}">
+                <a class="nav-item" mat-list-item href="#trader" (click)="selectFilter('Trader',undefined)" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === undefined}">All</a>
+                <a class="nav-item" mat-list-item href="#foraging-rewards" (click)="selectFilter('Trader','Foraging Rewards')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Foraging Rewards'}">Foraging Rewards</a>
+                <a class="nav-item" mat-list-item href="#loggin-loot" (click)="selectFilter('Trader','Logging Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Logging Loot'}">Logging Loot</a>
+                <a class="nav-item" mat-list-item href="#mining-loot" (click)="selectFilter('Trader','Mining Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Mining Loot'}">Mining Loot</a>
+                <a class="nav-item" mat-list-item href="#hunting-loot" (click)="selectFilter('Trader','Hunting Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Hunting Loot'}">Hunting Loot</a>
+                <a class="nav-item" mat-list-item href="#fishing-loot" (click)="selectFilter('Trader','Fishing Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Fishing Loot'}">Fishing Loot</a>
+                <a class="nav-item" mat-list-item href="#excavating-loot" (click)="selectFilter('Trader','Excavating Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Excavating Loot'}">Excavating Loot</a>
+                <a class="nav-item" mat-list-item href="#other-trading" (click)="selectFilter('Trader','Other')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subCategory === 'Other'}">Other</a>
+            </div>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="toolbar">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+              <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+            <span>LostArk Market Watcher</span>
+            <mat-menu #appMenu="matMenu">
+                <ng-template matMenuContent>
+                    <!-- <button mat-menu-item (click)="selectRegion('West North America')">West North America</button> -->
+                    <button mat-menu-item (click)="selectRegion('East North America')">East North America</button>
+                    <!-- <button mat-menu-item (click)="selectRegion('Central Europe')">Central Europe</button> -->
+                    <!-- <button mat-menu-item (click)="selectRegion('South America')">South America</button> -->
+                </ng-template>
+            </mat-menu>
+            <span class="spacer"></span>
+            <button mat-button [matMenuTriggerFor]="appMenu">{{filter.region}}</button>
+        </mat-toolbar>
+        <app-items-table [region]="filter.region"></app-items-table>
+    </mat-sidenav-content>
+</mat-sidenav-container>
