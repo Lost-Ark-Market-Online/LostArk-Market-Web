@@ -92,3 +92,14 @@
 .submenu-trader.expanded {
     height: 416px;
 }
+
+.github {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.github img {
+    height: 32px;
+    width: 32px;
+}

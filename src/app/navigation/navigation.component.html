@@ -34,7 +34,7 @@
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
               <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
-            <span>LostArk Market Watcher</span>
+            <span>LostArk Market</span>
             <mat-menu #appMenu="matMenu">
                 <ng-template matMenuContent>
                     <!-- <button mat-menu-item (click)="selectRegion('West North America')">West North America</button> -->
@@ -45,6 +45,7 @@
             </mat-menu>
             <span class="spacer"></span>
             <button mat-button [matMenuTriggerFor]="appMenu">{{filter.region}}</button>
+            <a target="_blank" class="github" href="https://github.com/gogodr/LostArk-Market-Web"><img src="/assets/icons/github.png"></a>
         </mat-toolbar>
         <app-items-table [region]="filter.region"></app-items-table>
     </mat-sidenav-content>
