@@ -2,13 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, first } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { MenuCloseReason } from '@angular/material/menu/menu';
 import { ItemsTableComponent } from '../items-table/items-table.component';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "@angular/fire/auth";
+import { getAuth } from "@angular/fire/auth";
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationFormComponent } from '../components/application-form/application-form.component';
 import { createUserWithEmailAndPassword } from '@firebase/auth';
-import { collection, Firestore, addDoc, setDoc, doc } from '@angular/fire/firestore';
+import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -35,7 +34,6 @@ export class NavigationComponent {
       shareReplay()
     );
 
-  provider = new GoogleAuthProvider();
 
   @ViewChild(ItemsTableComponent) marketTable!: ItemsTableComponent;
   constructor(
@@ -44,9 +42,6 @@ export class NavigationComponent {
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
-    this.provider.addScope('https://www.googleapis.com/auth/datastore');
-
-    this.login();
   }
 
   selectRegion(region: string) {

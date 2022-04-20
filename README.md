@@ -1,8 +1,9 @@
 # LostarkMarket
 Web project to share market information from the game on the web.
-This project is meant to be community driven using the Market Watcher app.
+This project is meant to be community driven using the [Market Watcher app](https://github.com/gogodr/LostArk-Market-Watcher).
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.2.
+---
+[LostArkMarket](https://lostarkmarket-79ddf.web.app/)
 
 ## Development server
 
