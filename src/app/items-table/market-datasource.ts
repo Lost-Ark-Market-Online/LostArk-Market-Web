@@ -48,7 +48,6 @@ export class MarketDataSource extends DataSource<MarketItem> {
   connect(): Observable<MarketItem[]> {
     if (this.paginator && this.sort && this.filter) {
       const firestore = this.firestore;
-
       return combineLatest({
         filter: this.filter$.pipe(startWith({
           region: this.filter?.region,
@@ -69,10 +68,10 @@ export class MarketDataSource extends DataSource<MarketItem> {
           query(
             collection(firestore, combined.filter.region).withConverter<MarketItem>({
               fromFirestore: snapshot => {
-                const { name, amount, rarity, category, subcategory, image } = snapshot.data();
+                const { name, amount, rarity, category, subcategory, image, avgPrice, cheapestRemaining, lowPrice, recentPrice, updatedAt } = snapshot.data();
                 const { id } = snapshot;
                 const { hasPendingWrites } = snapshot.metadata;
-                return { name, amount, rarity, category, subcategory, image, id, hasPendingWrites };
+                return { name, amount, rarity, category, subcategory, image, avgPrice, cheapestRemaining, lowPrice, recentPrice, updatedAt: updatedAt?.toDate(), id, hasPendingWrites };
               },
               toFirestore: (it: any) => it // Not writing into Firestore
             }),
@@ -85,27 +84,6 @@ export class MarketDataSource extends DataSource<MarketItem> {
           paginator: combined.paginator,
           collection: collection
         })));
-      }), switchMap((combined) => {
-        const queries = combined.collection.map(item => forkJoin({
-          marketItem: of(item),
-          priceData: collectionData(query(
-            collection(doc(firestore, `${combined.filter.region}/${item.id}`), 'entries'),
-            orderBy('createdAt', 'desc'),
-            limit(2)
-          )).pipe(take(1), map(entries => entries[0]))
-        }).pipe(map(({ marketItem, priceData }) => ({
-          ...marketItem,
-          avgPrice: priceData['avgPrice'],
-          cheapestRemaining: priceData['cheapestRemaining'],
-          lowPrice: priceData['lowPrice'],
-          recentPrice: priceData['recentPrice'],
-          updatedAt: priceData['createdAt'].toDate(),
-        }))));
-        return forkJoin(queries).pipe(map(collection => ({
-          sort: combined.sort,
-          paginator: combined.paginator,
-          collection: collection
-        })))
       }), map(combined => {
         const { subCollection, size } = this.filterCollection(combined.collection, { paginator: combined.paginator, sort: combined.sort });
         this.collectionSize = size;

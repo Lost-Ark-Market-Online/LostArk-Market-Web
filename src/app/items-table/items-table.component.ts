@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { MarketDataSource, MarketItem } from './market-datasource';
 
 
-
 @Component({
   selector: 'app-items-table',
   templateUrl: './items-table.component.html',
@@ -17,7 +16,7 @@ export class ItemsTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<MarketItem>;
-  @Input() region: string = 'East North America';
+  @Input() filter?: { region: string; category?: string; subcategory?: string };
   dataSource: MarketDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -28,13 +27,12 @@ export class ItemsTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    const url = new URL(document.location.href);
+
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    this.dataSource.filter = {
-      region: this.region,
-      category: undefined,
-      subcategory: undefined
-    }
+    this.dataSource.filter = this.filter;
     this.table.dataSource = this.dataSource;
   }
   getImageUrl(filename: string) {

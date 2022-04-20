@@ -9,6 +9,23 @@ import { ApplicationFormComponent } from '../components/application-form/applica
 import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import slugify from 'slugify';
+
+const filterMap: { [hash: string]: { category?: string; subcategory?: string } } = {
+  '#all': { category: undefined, subcategory: undefined },
+  '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
+  '#honing-materials': { category: 'Enhancement Material', subcategory: 'Honing Materials' },
+  '#additional-honing-materials': { category: 'Enhancement Material', subcategory: 'Additional Honing Materials' },
+  '#other-enhancement-materials': { category: 'Enhancement Material', subcategory: 'Other Materials' },
+  '#trader': { category: 'Trader', subcategory: undefined },
+  '#foraging-rewards': { category: 'Trader', subcategory: 'Foraging Rewards' },
+  '#loggin-loot': { category: 'Trader', subcategory: 'Logging Loot' },
+  '#mining-loot': { category: 'Trader', subcategory: 'Mining Loot' },
+  '#hunting-loot': { category: 'Trader', subcategory: 'Hunting Loot' },
+  '#fishing-loot': { category: 'Trader', subcategory: 'Fishing Loot' },
+  '#excavating-loot': { category: 'Trader', subcategory: 'Excavating Loot' },
+  '#other-trading': { category: 'Trader', subcategory: 'Other' },
+};
 
 @Component({
   selector: 'app-navigation',
@@ -23,9 +40,7 @@ export class NavigationComponent {
     category?: string,
     subCategory?: string
   } = {
-      region: 'East North America',
-      category: undefined,
-      subCategory: undefined
+      region: 'East North America'
     }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -42,17 +57,52 @@ export class NavigationComponent {
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
+    const url = new URL(document.location.href);
+    if (url.pathname != '/') {
+      switch (url.pathname) {
+        case '/east-north-america':
+          this.filter.region = 'East North America';
+          break;
+        case '/west-north-america':
+          this.filter.region = 'West North America';
+          break;
+        case '/central-europe':
+          this.filter.region = 'Central Europe';
+          break;
+        case '/south-america':
+          this.filter.region = 'South America';
+          break;
+      }
+    } else {
+      window.history.pushState(null, 'East North America', slugify('East North America').toLowerCase() + url.hash);
+      this.filter.region = 'East North America';
+    }
+    if (url.hash) {
+      this.filter.category = filterMap[url.hash].category;
+      this.filter.subCategory = filterMap[url.hash].subcategory;
+
+      switch (this.filter.category) {
+        case 'Enhancement Material':
+          this.enhancementMaterialsSubMenu = true;
+          break;
+        case 'Trader':
+          this.traderSubMenu = true;
+          break;
+      }
+    }
   }
 
   selectRegion(region: string) {
-    console.log('selectRegion', region);
     if (this.filter.region !== region) {
+      const url = new URL(document.location.href);
+      window.history.pushState(null, region, slugify(region).toLowerCase() + url.hash);
       this.filter.region = region;
       this.refreshMarket();
     }
   }
 
-  selectFilter(category: string | undefined, subCategory: string | undefined) {
+  selectFilter(hash: string, category: string | undefined, subCategory: string | undefined) {
+    window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
     if (this.filter.category != category) {
       this.filter.category = category;
     }
@@ -62,10 +112,6 @@ export class NavigationComponent {
     }
     this.refreshMarket();
 
-  }
-
-  test(event: any) {
-    console.log(event)
   }
 
   refreshMarket() {
