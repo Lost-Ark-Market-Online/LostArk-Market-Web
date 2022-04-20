@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>Apply to become a market watcher</h1>
+<p>This app is driven by the community of collaborators. If you want to join the collaborators and feed the system with data for an specific region you can apply here.</p>
+<div mat-dialog-content>
+    <form (submit)="apply()" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex="100" fxFlex.gt-xs="auto" fxLayoutGap="8">
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input type="email" matInput [(ngModel)]="data.email" name="email" placeholder="user@email.com" required>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input type="password" matInput [(ngModel)]="data.password" name="password" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Region</mat-label>
+                <mat-select [(ngModel)]="data.region" name="region" required>
+                    <mat-option value="West North America">West North America</mat-option>
+                    <mat-option value="East North America">East North America</mat-option>
+                    <mat-option value="Central Europe">Central Europe</mat-option>
+                    <mat-option value="South America">South America</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button type="submit" style="display:none">hidden submit</button>
+        </div>
+    </form>
+
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end end">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="apply()" class="loginBtn">Apply</button>
+</div>

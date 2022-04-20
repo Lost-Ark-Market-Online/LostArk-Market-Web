@@ -23,3 +23,21 @@ body {
 .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
     color: #554f40;
 }
+
+.mat-dialog-container {
+    background-color: #1e2329;
+    box-shadow: inset 0 0 10px #272a2f;
+    color: #ab9c77;
+}
+
+.mat-form-field .mat-form-field-label {
+    color: #ab9c77;
+}
+
+.mat-form-field.mat-focused .mat-form-field-label {
+    color: #ab9c77;
+}
+
+.mat-form-field input::placeholder {
+    color: #ab9c7763;
+}

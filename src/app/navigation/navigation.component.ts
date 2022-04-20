@@ -1,9 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Observable, first } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { MenuCloseReason } from '@angular/material/menu/menu';
 import { ItemsTableComponent } from '../items-table/items-table.component';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "@angular/fire/auth";
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationFormComponent } from '../components/application-form/application-form.component';
+import { createUserWithEmailAndPassword } from '@firebase/auth';
+import { collection, Firestore, addDoc, setDoc, doc } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-navigation',
@@ -29,8 +35,19 @@ export class NavigationComponent {
       shareReplay()
     );
 
+  provider = new GoogleAuthProvider();
+
   @ViewChild(ItemsTableComponent) marketTable!: ItemsTableComponent;
-  constructor(private breakpointObserver: BreakpointObserver) { }
+  constructor(
+    private firestore: Firestore,
+    private breakpointObserver: BreakpointObserver,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
+  ) {
+    this.provider.addScope('https://www.googleapis.com/auth/datastore');
+
+    this.login();
+  }
 
   selectRegion(region: string) {
     console.log('selectRegion', region);
@@ -58,6 +75,41 @@ export class NavigationComponent {
 
   refreshMarket() {
     this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subCategory);
+  }
+
+  login() {
+    this.dialog.open(ApplicationFormComponent, {
+      width: '80%',
+      maxWidth: '460px',
+      data: { email: '', password: '' }
+    }).afterClosed().pipe(first()).subscribe(result => {
+      if (result) {
+        console.log(result)
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, result.email, result.password)
+          .then(async (userCredential) => {
+            const user = userCredential.user;
+            await setDoc(doc(this.firestore, 'applications', user.uid), { region: result.region, email: result.email, uid: user.uid });
+            this._snackBar.open('Application sent', undefined,
+              {
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                duration: 1500
+              });
+          })
+          .catch((error) => {
+            if (error.code == "auth/email-already-in-use") {
+              this._snackBar.open('Application already sent', undefined,
+                {
+                  horizontalPosition: 'center',
+                  verticalPosition: 'bottom',
+                  duration: 1500
+                });
+            }
+          });
+      }
+    });
+
   }
 
 }
