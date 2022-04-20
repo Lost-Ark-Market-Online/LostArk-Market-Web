@@ -40,7 +40,7 @@ export class NavigationComponent {
     category?: string,
     subCategory?: string
   } = {
-      region: 'East North America'
+      region: 'North America East'
     }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -61,21 +61,24 @@ export class NavigationComponent {
     if (url.pathname != '/') {
       switch (url.pathname) {
         case '/east-north-america':
-          this.filter.region = 'East North America';
+          this.filter.region = 'North America East';
           break;
         case '/west-north-america':
-          this.filter.region = 'West North America';
+          this.filter.region = 'North America West';
           break;
-        case '/central-europe':
-          this.filter.region = 'Central Europe';
+        case '/europe-central':
+          this.filter.region = 'Europe Central';
+          break;
+        case '/europe-west':
+          this.filter.region = 'Europe West';
           break;
         case '/south-america':
           this.filter.region = 'South America';
           break;
       }
     } else {
-      window.history.pushState(null, 'East North America', slugify('East North America').toLowerCase() + url.hash);
-      this.filter.region = 'East North America';
+      window.history.pushState(null, 'North America East', slugify('North America East').toLowerCase() + url.hash);
+      this.filter.region = 'North America East';
     }
     if (url.hash) {
       this.filter.category = filterMap[url.hash].category;
