@@ -11,8 +11,7 @@ import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import slugify from 'slugify';
 
-const filterMap: { [hash: string]: { category?: string; subcategory?: string } } = {
-  '#all': { category: undefined, subcategory: undefined },
+const filterMap: { [hash: string]: { category?: string; subcategory?: string; favorites?: boolean } } = {
   '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
   '#honing-materials': { category: 'Enhancement Material', subcategory: 'Honing Materials' },
   '#additional-honing-materials': { category: 'Enhancement Material', subcategory: 'Additional Honing Materials' },
@@ -25,6 +24,13 @@ const filterMap: { [hash: string]: { category?: string; subcategory?: string } }
   '#fishing-loot': { category: 'Trader', subcategory: 'Fishing Loot' },
   '#excavating-loot': { category: 'Trader', subcategory: 'Excavating Loot' },
   '#other-trading': { category: 'Trader', subcategory: 'Other' },
+  '#engraving': { category: 'Engraving Recipe', subcategory: undefined },
+  '#combat': { category: 'Combat Supplies', subcategory: undefined },
+  '#recovery': { category: 'Combat Supplies', subcategory: 'Battle Item - Recovery' },
+  '#offense': { category: 'Combat Supplies', subcategory: 'Battle Item - Offense' },
+  '#utility': { category: 'Combat Supplies', subcategory: 'Battle Item - Utility' },
+  '#buff': { category: 'Combat Supplies', subcategory: 'Battle Item - Buff' },
+  '#favorites': { category: undefined, subcategory: undefined, favorites: true },
 };
 
 @Component({
@@ -35,12 +41,19 @@ const filterMap: { [hash: string]: { category?: string; subcategory?: string } }
 export class NavigationComponent {
   enhancementMaterialsSubMenu = false;
   traderSubMenu = false;
+  combatSubMenu = false;
+  engravingSubMenu = false;
+
+  favorites: string[]
+
   filter: {
     region: string,
     category?: string,
     subCategory?: string
+    favorites: boolean
   } = {
-      region: 'North America East'
+      region: 'North America East',
+      favorites: true
     }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -91,8 +104,16 @@ export class NavigationComponent {
         case 'Trader':
           this.traderSubMenu = true;
           break;
+        case 'Engraving Recipe':
+          this.engravingSubMenu = true;
+          break;
+        case 'Combat Supplies':
+          this.combatSubMenu = true;
+          break;
       }
     }
+
+    this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
   }
 
   selectRegion(region: string) {
@@ -104,21 +125,20 @@ export class NavigationComponent {
     }
   }
 
-  selectFilter(hash: string, category: string | undefined, subCategory: string | undefined) {
-    window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
-    if (this.filter.category != category) {
+  selectFilter(hash: string, category?: string, subCategory?: string, favorites: boolean = false) {
+    if (this.filter) {
+      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
       this.filter.category = category;
-    }
-
-    if (this.filter.subCategory != subCategory) {
       this.filter.subCategory = subCategory;
+      this.filter.favorites = favorites;
+      console.log('selectFilter')
+      console.log(this.filter);
+      this.refreshMarket();
     }
-    this.refreshMarket();
-
   }
 
   refreshMarket() {
-    this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subCategory);
+    this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subCategory, this.filter.favorites);
   }
 
   login() {
@@ -156,4 +176,13 @@ export class NavigationComponent {
 
   }
 
+  toggleFavorite(item: string) {
+    const favIndex = this.favorites.findIndex(i => i == item);
+    if (favIndex >= 0) {
+      this.favorites = this.favorites.splice(favIndex, 1);
+    } else {
+      this.favorites.push(item);
+    }
+    localStorage.setItem('favorites', JSON.stringify(this.favorites));
+  }
 }

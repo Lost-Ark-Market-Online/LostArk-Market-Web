@@ -2,6 +2,10 @@
     width: 100%;
 }
 
+.marketContainer {
+    min-height: calc(100vh - 120px);
+}
+
 .market {
     background-color: #121416;
     border-collapse: separate;
@@ -115,4 +119,12 @@
 .market .row {
     background-color: #090a0c;
     margin-bottom: 8px;
+}
+
+.market .row .favorite {
+    color: #777;
+}
+
+.market .row .favorite.active {
+    color: #FFDF00;
 }

@@ -28,20 +28,22 @@ export interface MarketItem extends DocumentData {
 export class MarketDataSource extends DataSource<MarketItem> {
   data: MarketItem[] = [];
   collectionSize: number = 0;
-  paginator: MatPaginator | undefined;
-  sort: MatSort | undefined;
-  filter: { region: string, category?: string, subcategory?: string } | undefined;
-  filter$: Subject<{ region: string, category?: string, subcategory?: string }> = new Subject();
+  paginator?: MatPaginator;
+  sort?: MatSort;
+  filter?: { region: string, category?: string, subcategory?: string, favorites: boolean };
+  filter$: Subject<{ region: string, category?: string, subcategory?: string, favorites: boolean }> = new Subject();
+  favorites?: string[];
 
   constructor(private firestore: Firestore) {
     super();
   }
 
-  updateFilter(region: string, category?: string, subcategory?: string) {
+  updateFilter(region: string, category?: string, subcategory?: string, favorites: boolean = false) {
     this.filter$.next({
       region: region,
       category: category,
-      subcategory: subcategory
+      subcategory: subcategory,
+      favorites: !!favorites
     });
   }
 
@@ -52,16 +54,22 @@ export class MarketDataSource extends DataSource<MarketItem> {
         filter: this.filter$.pipe(startWith({
           region: this.filter?.region,
           category: this.filter?.category,
-          subcategory: this.filter?.subcategory
+          subcategory: this.filter?.subcategory,
+          favorites: this.filter?.favorites
         })),
         paginator: this.paginator.page.pipe(startWith({ previousPageIndex: 0, pageIndex: 0, pageSize: 10, length: 0 })),
         sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))
       }).pipe(mergeMap((combined) => {
         const queryFilters: QueryConstraint[] = [];
-        if (combined.filter.category) {
-          queryFilters.push(where('category', '==', combined.filter.category));
-          if (combined.filter.subcategory) {
-            queryFilters.push(where('subcategory', '==', combined.filter.subcategory));
+        if(combined.filter.favorites){
+          queryFilters.push(where('name', 'in', this.favorites));
+
+        }else{
+          if (combined.filter.category) {
+            queryFilters.push(where('category', '==', combined.filter.category));
+            if (combined.filter.subcategory) {
+              queryFilters.push(where('subcategory', '==', combined.filter.subcategory));
+            }
           }
         }
         const collectionObservable = collectionData(

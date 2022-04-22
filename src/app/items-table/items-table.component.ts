@@ -16,7 +16,8 @@ export class ItemsTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<MarketItem>;
-  @Input() filter?: { region: string; category?: string; subcategory?: string };
+  @Input() filter?: { region: string; category?: string; subcategory?: string, favorites: boolean };
+  @Input() favorites?: string[];
   dataSource: MarketDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -28,14 +29,33 @@ export class ItemsTableComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const url = new URL(document.location.href);
-
-
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.dataSource.filter = this.filter;
+    this.dataSource.favorites = this.favorites;
     this.table.dataSource = this.dataSource;
   }
   getImageUrl(filename: string) {
     return `/assets/item_icons/${filename}`;
+  }
+
+  toggleFavorite(item: string) {
+    if (!this.favorites) {
+      return;
+    }
+    const favIndex = this.favorites.findIndex(i => i == item);
+    if (favIndex >= 0) {
+      this.favorites.splice(favIndex, 1);
+    } else {
+      this.favorites.push(item);
+    }
+    localStorage.setItem('favorites', JSON.stringify(this.favorites));
+  }
+
+  isFavorite(item: string) {
+    if (!this.favorites) {
+      return false;
+    }
+    return this.favorites.findIndex(i => i == item) >= 0;
   }
 }

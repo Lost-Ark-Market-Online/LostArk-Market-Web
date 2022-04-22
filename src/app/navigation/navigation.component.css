@@ -78,6 +78,8 @@
     box-sizing: border-box;
 }
 
+.submenu-engraving,
+.submenu-combat,
 .submenu-trader,
 .submenu-enhancement-materials {
     overflow: hidden;
@@ -91,6 +93,14 @@
 
 .submenu-trader.expanded {
     height: 416px;
+}
+
+.submenu-engraving.expanded {
+    height: 52px;
+}
+
+.submenu-combat.expanded {
+    height: 260px;
 }
 
 .github {

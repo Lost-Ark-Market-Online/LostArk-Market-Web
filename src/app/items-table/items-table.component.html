@@ -1,56 +1,61 @@
 <div class="mat-elevation-z8">
-    <table mat-table class="full-width-table market" matSort aria-label="Elements">
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-            <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td class="cellContainer" mat-cell *matCellDef="let row" [class.normal]="row.rarity == 0" [class.uncommon]="row.rarity == 1" [class.rare]="row.rarity == 2" [class.epic]="row.rarity == 3" [class.legendary]="row.rarity == 4" [class.relic]="row.rarity == 5">
-                <div class="cell">
-                    <img [src]="getImageUrl(row.image)">
-                    <span>{{row.name}}</span>
-                </div>
-            </td>
-        </ng-container>
+    <div class="marketContainer">
+        <table mat-table class="full-width-table market" matSort aria-label="Elements">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td class="cellContainer" mat-cell *matCellDef="let row" [class.normal]="row.rarity == 0" [class.uncommon]="row.rarity == 1" [class.rare]="row.rarity == 2" [class.epic]="row.rarity == 3" [class.legendary]="row.rarity == 4" [class.relic]="row.rarity == 5">
+                    <div class="cell">
+                        <button class="favorite" [class.active]="isFavorite(row.name)" mat-icon-button (click)="toggleFavorite(row.name)">
+                            <mat-icon>star</mat-icon>
+                        </button>
+                        <img [src]="getImageUrl(row.image)">
+                        <span>{{row.name}}</span>
+                    </div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="avgPrice">
-            <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Avg. Day Price</th>
-            <td class="cellContainer" mat-cell *matCellDef="let row">
-                <div class="cell right">
-                    {{row.avgPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold">
-                </div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="avgPrice">
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Avg. Day Price</th>
+                <td class="cellContainer" mat-cell *matCellDef="let row">
+                    <div class="cell right">
+                        {{row.avgPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold">
+                    </div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="recentPrice">
-            <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Recent Prices</th>
-            <td class="cellContainer" mat-cell *matCellDef="let row">
-                <div class="cell right">{{row.recentPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold"></div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="recentPrice">
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Recent Prices</th>
+                <td class="cellContainer" mat-cell *matCellDef="let row">
+                    <div class="cell right">{{row.recentPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold"></div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="lowPrice">
-            <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Lowest Price</th>
-            <td class="cellContainer" mat-cell *matCellDef="let row">
-                <div class="cell right">{{row.lowPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold"></div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="lowPrice">
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Lowest Price</th>
+                <td class="cellContainer" mat-cell *matCellDef="let row">
+                    <div class="cell right">{{row.lowPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold"></div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="cheapestRemaining">
-            <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Cheapest Remaining</th>
-            <td class="cellContainer" mat-cell *matCellDef="let row">
-                <div class="cell right">{{row.cheapestRemaining}}</div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="cheapestRemaining">
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Cheapest Remaining</th>
+                <td class="cellContainer" mat-cell *matCellDef="let row">
+                    <div class="cell right">{{row.cheapestRemaining}}</div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="updatedAt">
-            <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</th>
-            <td class="cellContainer" mat-cell *matCellDef="let row">
-                <div class="cell right">{{row.updatedAt | amTimeAgo}}</div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="updatedAt">
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</th>
+                <td class="cellContainer" mat-cell *matCellDef="let row">
+                    <div class="cell right">{{row.updatedAt | amTimeAgo}}</div>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr class="row" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="row" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
 
     <mat-paginator class="paginator" #paginator [length]="dataSource?.collectionSize" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 50]" aria-label="Select page">
     </mat-paginator>
