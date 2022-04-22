@@ -16,6 +16,7 @@ import { FormControl } from '@angular/forms';
 
 import packageJson from '../../../package.json';
 import autocompleteOptions from '../../data/autocomplete.json';
+import { Analytics, logEvent } from '@angular/fire/analytics';
 
 const filterMap: { [hash: string]: { category?: string; subcategory?: string; favorites?: boolean } } = {
   '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
@@ -83,10 +84,12 @@ export class NavigationComponent implements OnInit {
     private firestore: Firestore,
     private breakpointObserver: BreakpointObserver,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private analytics: Analytics
   ) {
     this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
   }
+
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -168,6 +171,7 @@ export class NavigationComponent implements OnInit {
   }
 
   selectFilter(hash: string, category?: string, subcategory?: string, favorites: boolean = false) {
+    logEvent(this.analytics, 'select_filter', { hash, category, subcategory, favorites });
     if (this.filter) {
       window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
       this.filter.category = category;
@@ -189,19 +193,20 @@ export class NavigationComponent implements OnInit {
     this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subcategory, this.filter.favorites);
   }
 
-  login() {
+  openApplyDialog() {
+    logEvent(this.analytics, 'application_open_dialog');
     this.dialog.open(ApplicationFormComponent, {
       width: '80%',
       maxWidth: '460px',
       data: { email: '', password: '' }
     }).afterClosed().pipe(first()).subscribe(result => {
       if (result) {
-        console.log(result)
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, result.email, result.password)
           .then(async (userCredential) => {
             const user = userCredential.user;
-            await setDoc(doc(this.firestore, 'applications', user.uid), { region: result.region, email: result.email, uid: user.uid });
+            await setDoc(doc(this.firestore, 'applications', user.uid), { region: result.region, email: result.email, uid: user.uid, createdAt: new Date() });
+            logEvent(this.analytics, 'application_sent');
             this._snackBar.open('Application sent', undefined,
               {
                 horizontalPosition: 'center',
@@ -227,6 +232,7 @@ export class NavigationComponent implements OnInit {
   search() {
     const search = this.myControl.value;
     if (search) {
+      logEvent(this.analytics, 'search', { query: search });
       window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
     } else {
       window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase());

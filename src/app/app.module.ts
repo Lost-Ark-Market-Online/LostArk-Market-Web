@@ -28,6 +28,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
 
 @NgModule({
   declarations: [
@@ -60,9 +61,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatAutocompleteModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
-    MomentModule
+    MomentModule,
+    AnalyticsModule
   ],
-  providers: [],
+  providers: [ScreenTrackingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
