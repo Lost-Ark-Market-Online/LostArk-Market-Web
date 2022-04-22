@@ -117,3 +117,32 @@
 .applyBtn {
     margin: 0px 4px;
 }
+
+.filters-form {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 4px;
+    padding-right: 8px;
+    gap: 8px;
+}
+
+.searchContainer {
+    background-color: #090a0c;
+    min-width: 450px;
+    box-shadow: -1px -1px 1px 1px #272a2e inset;
+}
+
+.searchContainer ::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -1.34375em;
+}
+
+.searchContainer ::ng-deep input {
+    color: white;
+}
+
+.filters-form .searchBtn {
+    background-color: #2e3640;
+    box-shadow: inset 0 0 5px #1e2228;
+    color: #ab9c77;
+}

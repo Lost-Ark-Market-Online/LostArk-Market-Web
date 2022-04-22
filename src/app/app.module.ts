@@ -22,11 +22,12 @@ import { MomentModule } from 'ngx-moment';
 import { ApplicationFormComponent } from './components/application-form/application-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -51,10 +52,12 @@ import { MatSelectModule } from '@angular/material/select';
     MatMenuModule,
     MatFormFieldModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatSnackBarModule,
     MatInputModule,
     MatSelectModule,
+    MatAutocompleteModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     MomentModule

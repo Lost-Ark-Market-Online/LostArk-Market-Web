@@ -1,7 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, first } from 'rxjs';
+import { Observable, first, startWith } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import slugify from 'slugify';
 import { ItemsTableComponent } from '../items-table/items-table.component';
 import { getAuth } from "@angular/fire/auth";
 import { MatDialog } from '@angular/material/dialog';
@@ -9,9 +10,12 @@ import { ApplicationFormComponent } from '../components/application-form/applica
 import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import slugify from 'slugify';
 import { FavoriteItem } from '../items-table/market-datasource';
+import { FormControl } from '@angular/forms';
+
+
 import packageJson from '../../../package.json';
+import autocompleteOptions from '../../data/autocomplete.json';
 
 const filterMap: { [hash: string]: { category?: string; subcategory?: string; favorites?: boolean } } = {
   '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
@@ -35,12 +39,20 @@ const filterMap: { [hash: string]: { category?: string; subcategory?: string; fa
   '#favorites': { category: undefined, subcategory: undefined, favorites: true },
 };
 
+export interface Filter {
+  region: string,
+  category?: string,
+  subcategory?: string
+  favorites: boolean,
+  search?: string
+}
+
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css']
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
   enhancementMaterialsSubMenu = false;
   traderSubMenu = false;
   combatSubMenu = false;
@@ -49,15 +61,15 @@ export class NavigationComponent {
   favorites: FavoriteItem[]
   version: string = packageJson.version;
 
-  filter: {
-    region: string,
-    category?: string,
-    subcategory?: string
-    favorites: boolean
-  } = {
-      region: 'North America East',
-      favorites: true
-    }
+
+  myControl = new FormControl();
+  options: string[] = autocompleteOptions;
+  filteredOptions?: Observable<string[]>;
+
+  filter: Filter = {
+    region: 'North America East',
+    favorites: true
+  }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -73,6 +85,13 @@ export class NavigationComponent {
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
+    this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
+  }
+  ngOnInit(): void {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value)),
+    );
     const url = new URL(document.location.href);
     if (url.pathname != '/') {
       switch (url.pathname) {
@@ -96,27 +115,47 @@ export class NavigationComponent {
       window.history.pushState(null, 'North America East', slugify('North America East').toLowerCase() + url.hash);
       this.filter.region = 'North America East';
     }
-    if (url.hash) {
-      this.filter.category = filterMap[url.hash].category;
-      this.filter.subcategory = filterMap[url.hash].subcategory;
-      this.filter.favorites = filterMap[url.hash].favorites || false;
+    const search = url.searchParams.get('search');
+    if (search) {
+      this.myControl.setValue(search);
+      if (url.hash) {
+        window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
+      }
+      this.filter.category = undefined;
+      this.filter.subcategory = undefined;
+      this.filter.favorites = false;
+      this.filter.search = search;
+    } else {
+      if (url.hash) {
+        this.filter.category = filterMap[url.hash].category;
+        this.filter.subcategory = filterMap[url.hash].subcategory;
+        this.filter.favorites = filterMap[url.hash].favorites || false;
 
-      switch (this.filter.category) {
-        case 'Enhancement Material':
-          this.enhancementMaterialsSubMenu = true;
-          break;
-        case 'Trader':
-          this.traderSubMenu = true;
-          break;
-        case 'Engraving Recipe':
-          this.engravingSubMenu = true;
-          break;
-        case 'Combat Supplies':
-          this.combatSubMenu = true;
-          break;
+        switch (this.filter.category) {
+          case 'Enhancement Material':
+            this.enhancementMaterialsSubMenu = true;
+            break;
+          case 'Trader':
+            this.traderSubMenu = true;
+            break;
+          case 'Engraving Recipe':
+            this.engravingSubMenu = true;
+            break;
+          case 'Combat Supplies':
+            this.combatSubMenu = true;
+            break;
+        }
       }
     }
-    this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    if (!value || value.length < 3) {
+      return [];
+    }
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   selectRegion(region: string) {
@@ -124,7 +163,7 @@ export class NavigationComponent {
       const url = new URL(document.location.href);
       window.history.pushState(null, region, slugify(region).toLowerCase() + url.hash);
       this.filter.region = region;
-      this.refreshMarket();
+      this.marketTable.dataSource.refreshMarket();
     }
   }
 
@@ -134,7 +173,15 @@ export class NavigationComponent {
       this.filter.category = category;
       this.filter.subcategory = subcategory;
       this.filter.favorites = favorites;
-      this.refreshMarket();
+      this.filter.search = undefined;
+      this.myControl.setValue('');
+      this.marketTable.dataSource.refreshMarket();
+      if (favorites) {
+        this.enhancementMaterialsSubMenu = false;
+        this.traderSubMenu = false;
+        this.combatSubMenu = false;
+        this.engravingSubMenu = false;
+      }
     }
   }
 
@@ -175,5 +222,23 @@ export class NavigationComponent {
       }
     });
 
+  }
+
+  search() {
+    const search = this.myControl.value;
+    if (search) {
+      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
+    } else {
+      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase());
+    }
+    this.filter.category = undefined;
+    this.filter.subcategory = undefined;
+    this.filter.favorites = false;
+    this.filter.search = search;
+    this.enhancementMaterialsSubMenu = false;
+    this.traderSubMenu = false;
+    this.combatSubMenu = false;
+    this.engravingSubMenu = false;
+    this.marketTable.dataSource.refreshMarket();
   }
 }

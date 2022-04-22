@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Observable } from 'rxjs';
+import { Filter } from '../navigation/navigation.component';
 import { FavoriteItem, MarketDataSource, MarketItem } from './market-datasource';
 
 
@@ -16,7 +17,7 @@ export class ItemsTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<MarketItem>;
-  @Input() filter?: { region: string; category?: string; subcategory?: string, favorites: boolean };
+  @Input() filter?: Filter;
   @Input() favorites?: FavoriteItem[];
   dataSource: MarketDataSource;
 
@@ -35,6 +36,7 @@ export class ItemsTableComponent implements AfterViewInit {
     this.dataSource.favorites = this.favorites;
     this.table.dataSource = this.dataSource;
   }
+  
   getImageUrl(filename: string) {
     return `/assets/item_icons/${filename}`;
   }

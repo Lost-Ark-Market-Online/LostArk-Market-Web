@@ -73,6 +73,20 @@
             </button>
             <a target="_blank" class="github" href="https://github.com/gogodr/LostArk-Market-Web"><img src="/assets/icons/github.png"></a>
         </mat-toolbar>
+        <form class="filters-form">
+            <mat-form-field class="searchContainer" appearance="fill">
+                <mat-label>Search</mat-label>
+                <input type="text" placeholder="Pick one" aria-label="Search" matInput [formControl]="myControl" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </form>
         <app-items-table [filter]="filter" [favorites]="favorites"></app-items-table>
     </mat-sidenav-content>
 </mat-sidenav-container>

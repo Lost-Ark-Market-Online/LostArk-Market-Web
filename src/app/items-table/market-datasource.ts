@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Observable, of, take, mergeMap, forkJoin, combineLatest, startWith, switchMap, Subject, last, map } from 'rxjs';
 import { collection, collectionData, doc, DocumentData, Firestore, getFirestore, limit, orderBy, query, QueryConstraint, where } from '@angular/fire/firestore';
+import { Filter } from '../navigation/navigation.component';
 
 // TODO: Replace this with your own data model type
 export interface MarketItem extends DocumentData {
@@ -34,8 +35,8 @@ export class MarketDataSource extends DataSource<MarketItem> {
   collectionSize: number = 0;
   paginator?: MatPaginator;
   sort?: MatSort;
-  filter?: { region: string, category?: string, subcategory?: string, favorites: boolean };
-  filter$: Subject<{ region: string, category?: string, subcategory?: string, favorites: boolean }> = new Subject();
+  filter?: Filter;
+  filter$: Subject<Filter> = new Subject();
   favorites?: FavoriteItem[];
 
   constructor(private firestore: Firestore) {
@@ -51,6 +52,10 @@ export class MarketDataSource extends DataSource<MarketItem> {
     });
   }
 
+  refreshMarket() {
+    this.filter$.next({ ...this.filter! });
+  }
+
   connect(): Observable<MarketItem[]> {
     if (this.paginator && this.sort && this.filter) {
       const firestore = this.firestore;
@@ -59,7 +64,8 @@ export class MarketDataSource extends DataSource<MarketItem> {
           region: this.filter?.region,
           category: this.filter?.category,
           subcategory: this.filter?.subcategory,
-          favorites: this.filter?.favorites
+          favorites: this.filter?.favorites,
+          search: this.filter?.search
         })),
         paginator: this.paginator.page.pipe(startWith({ previousPageIndex: 0, pageIndex: 0, pageSize: 10, length: 0 })),
         sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))
@@ -77,6 +83,18 @@ export class MarketDataSource extends DataSource<MarketItem> {
             });
           }
         } else {
+          if (combined.filter.search !== undefined) {
+            if(!combined.filter.search){
+              return of({
+                sort: combined.sort,
+                filter: combined.filter,
+                paginator: combined.paginator,
+                collection: []
+              });
+            }
+            queryFilters.push(where('name', '>=', combined.filter.search));
+            queryFilters.push(where('name', '<', combined.filter.search.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1))));
+          }
           if (combined.filter.category) {
             queryFilters.push(where('category', '==', combined.filter.category));
             if (combined.filter.subcategory) {
@@ -115,6 +133,13 @@ export class MarketDataSource extends DataSource<MarketItem> {
   }
 
   filterCollection(collection: MarketItem[], filter: any): { subCollection: MarketItem[], size: number } {
+    collection = collection.sort((a, b) => {
+      if (a.name == b.name) {
+        return a.rarity - b.rarity;
+      } else {
+        return a.name > b.name ? -1 : 1;
+      }
+    })
     if (filter.favorites) {
       collection = collection.filter(item => this.favorites!.findIndex(i => i.name == item.name && i.rarity == item.rarity) >= 0);
     }
