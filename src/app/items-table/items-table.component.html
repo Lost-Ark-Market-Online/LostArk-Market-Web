@@ -6,7 +6,7 @@
                 <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                 <td class="cellContainer" mat-cell *matCellDef="let row" [class.normal]="row.rarity == 0" [class.uncommon]="row.rarity == 1" [class.rare]="row.rarity == 2" [class.epic]="row.rarity == 3" [class.legendary]="row.rarity == 4" [class.relic]="row.rarity == 5">
                     <div class="cell">
-                        <button class="favorite" [class.active]="isFavorite(row.name)" mat-icon-button (click)="toggleFavorite(row.name)">
+                        <button class="favorite" [class.active]="isFavorite(row)" mat-icon-button (click)="toggleFavorite(row)">
                             <mat-icon>star</mat-icon>
                         </button>
                         <img [src]="getImageUrl(row.image)">

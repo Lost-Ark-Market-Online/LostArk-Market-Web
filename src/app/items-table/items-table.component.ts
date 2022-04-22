@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { MarketDataSource, MarketItem } from './market-datasource';
+import { FavoriteItem, MarketDataSource, MarketItem } from './market-datasource';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class ItemsTableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<MarketItem>;
   @Input() filter?: { region: string; category?: string; subcategory?: string, favorites: boolean };
-  @Input() favorites?: string[];
+  @Input() favorites?: FavoriteItem[];
   dataSource: MarketDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -39,11 +39,11 @@ export class ItemsTableComponent implements AfterViewInit {
     return `/assets/item_icons/${filename}`;
   }
 
-  toggleFavorite(item: string) {
+  toggleFavorite(item: FavoriteItem) {
     if (!this.favorites) {
       return;
     }
-    const favIndex = this.favorites.findIndex(i => i == item);
+    const favIndex = this.favorites.findIndex(i => i.name == item.name && i.rarity == item.rarity);
     if (favIndex >= 0) {
       this.favorites.splice(favIndex, 1);
     } else {
@@ -52,10 +52,10 @@ export class ItemsTableComponent implements AfterViewInit {
     localStorage.setItem('favorites', JSON.stringify(this.favorites));
   }
 
-  isFavorite(item: string) {
+  isFavorite(item: FavoriteItem) {
     if (!this.favorites) {
       return false;
     }
-    return this.favorites.findIndex(i => i == item) >= 0;
+    return this.favorites.findIndex(i => i.name == item.name && i.rarity == item.rarity) >= 0;
   }
 }

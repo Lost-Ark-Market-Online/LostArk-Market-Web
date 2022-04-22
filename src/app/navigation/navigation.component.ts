@@ -10,6 +10,7 @@ import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import slugify from 'slugify';
+import { FavoriteItem } from '../items-table/market-datasource';
 
 const filterMap: { [hash: string]: { category?: string; subcategory?: string; favorites?: boolean } } = {
   '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
@@ -44,7 +45,7 @@ export class NavigationComponent {
   combatSubMenu = false;
   engravingSubMenu = false;
 
-  favorites: string[]
+  favorites: FavoriteItem[]
 
   filter: {
     region: string,
@@ -112,7 +113,6 @@ export class NavigationComponent {
           break;
       }
     }
-
     this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
   }
 
@@ -131,8 +131,6 @@ export class NavigationComponent {
       this.filter.category = category;
       this.filter.subCategory = subCategory;
       this.filter.favorites = favorites;
-      console.log('selectFilter')
-      console.log(this.filter);
       this.refreshMarket();
     }
   }
@@ -174,15 +172,5 @@ export class NavigationComponent {
       }
     });
 
-  }
-
-  toggleFavorite(item: string) {
-    const favIndex = this.favorites.findIndex(i => i == item);
-    if (favIndex >= 0) {
-      this.favorites = this.favorites.splice(favIndex, 1);
-    } else {
-      this.favorites.push(item);
-    }
-    localStorage.setItem('favorites', JSON.stringify(this.favorites));
   }
 }

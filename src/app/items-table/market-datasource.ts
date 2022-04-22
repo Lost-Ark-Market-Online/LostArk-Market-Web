@@ -19,6 +19,10 @@ export interface MarketItem extends DocumentData {
   recentPrice?: number;
   updatedAt?: Date;
 }
+export interface FavoriteItem {
+  name: string;
+  rarity: number;
+}
 
 /**
  * Data source for the ItemsTable view. This class should
@@ -32,7 +36,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
   sort?: MatSort;
   filter?: { region: string, category?: string, subcategory?: string, favorites: boolean };
   filter$: Subject<{ region: string, category?: string, subcategory?: string, favorites: boolean }> = new Subject();
-  favorites?: string[];
+  favorites?: FavoriteItem[];
 
   constructor(private firestore: Firestore) {
     super();
@@ -61,10 +65,18 @@ export class MarketDataSource extends DataSource<MarketItem> {
         sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))
       }).pipe(mergeMap((combined) => {
         const queryFilters: QueryConstraint[] = [];
-        if(combined.filter.favorites){
-          queryFilters.push(where('name', 'in', this.favorites));
-
-        }else{
+        if (combined.filter.favorites) {
+          if (this.favorites!.length > 0) {
+            queryFilters.push(where('name', 'in', this.favorites?.map(a => a.name)));
+          } else {
+            return of({
+              sort: combined.sort,
+              filter: combined.filter,
+              paginator: combined.paginator,
+              collection: []
+            });
+          }
+        } else {
           if (combined.filter.category) {
             queryFilters.push(where('category', '==', combined.filter.category));
             if (combined.filter.subcategory) {
@@ -93,7 +105,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
           collection: collection
         })));
       }), map(combined => {
-        const { subCollection, size } = this.filterCollection(combined.collection, { paginator: combined.paginator, sort: combined.sort });
+        const { subCollection, size } = this.filterCollection(combined.collection, { paginator: combined.paginator, sort: combined.sort, favorites: combined.filter.favorites });
         this.collectionSize = size;
         return subCollection;
       }));
@@ -103,6 +115,9 @@ export class MarketDataSource extends DataSource<MarketItem> {
   }
 
   filterCollection(collection: MarketItem[], filter: any): { subCollection: MarketItem[], size: number } {
+    if (filter.favorites) {
+      collection = collection.filter(item => this.favorites!.findIndex(i => i.name == item.name && i.rarity == item.rarity) >= 0);
+    }
     let subcol = [...collection];
     if (filter.sort) {
       subcol = subcol.sort((a, b) => {
