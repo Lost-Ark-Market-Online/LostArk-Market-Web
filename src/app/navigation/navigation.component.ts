@@ -11,6 +11,7 @@ import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import slugify from 'slugify';
 import { FavoriteItem } from '../items-table/market-datasource';
+import packageJson from '../../../package.json';
 
 const filterMap: { [hash: string]: { category?: string; subcategory?: string; favorites?: boolean } } = {
   '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
@@ -46,6 +47,7 @@ export class NavigationComponent {
   engravingSubMenu = false;
 
   favorites: FavoriteItem[]
+  version: string = packageJson.version;
 
   filter: {
     region: string,
@@ -97,6 +99,7 @@ export class NavigationComponent {
     if (url.hash) {
       this.filter.category = filterMap[url.hash].category;
       this.filter.subCategory = filterMap[url.hash].subcategory;
+      this.filter.favorites = filterMap[url.hash].favorites || false;
 
       switch (this.filter.category) {
         case 'Enhancement Material':
