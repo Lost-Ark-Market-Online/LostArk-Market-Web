@@ -9,7 +9,7 @@
                         <button class="favorite" [class.active]="isFavorite(row)" mat-icon-button (click)="toggleFavorite(row)">
                             <mat-icon>star</mat-icon>
                         </button>
-                        <img [src]="getImageUrl(row.image)">
+                        <img class="itemImage" [src]="getImageUrl(row.image)">
                         <span>{{row.name}}</span>
                     </div>
                 </td>

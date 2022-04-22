@@ -128,3 +128,9 @@
 .market .row .favorite.active {
     color: #FFDF00;
 }
+
+.market .row .itemImage {
+    height: 64px;
+    width: 64px;
+    clip-path: polygon(10px 0px, 54px 0px, 64px 10px, 64px 54px, 54px 64px, 10px 64px, 0px 54px, 0px 10px);
+}
