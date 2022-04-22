@@ -52,7 +52,7 @@ export class NavigationComponent {
   filter: {
     region: string,
     category?: string,
-    subCategory?: string
+    subcategory?: string
     favorites: boolean
   } = {
       region: 'North America East',
@@ -98,7 +98,7 @@ export class NavigationComponent {
     }
     if (url.hash) {
       this.filter.category = filterMap[url.hash].category;
-      this.filter.subCategory = filterMap[url.hash].subcategory;
+      this.filter.subcategory = filterMap[url.hash].subcategory;
       this.filter.favorites = filterMap[url.hash].favorites || false;
 
       switch (this.filter.category) {
@@ -128,18 +128,18 @@ export class NavigationComponent {
     }
   }
 
-  selectFilter(hash: string, category?: string, subCategory?: string, favorites: boolean = false) {
+  selectFilter(hash: string, category?: string, subcategory?: string, favorites: boolean = false) {
     if (this.filter) {
       window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
       this.filter.category = category;
-      this.filter.subCategory = subCategory;
+      this.filter.subcategory = subcategory;
       this.filter.favorites = favorites;
       this.refreshMarket();
     }
   }
 
   refreshMarket() {
-    this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subCategory, this.filter.favorites);
+    this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subcategory, this.filter.favorites);
   }
 
   login() {
