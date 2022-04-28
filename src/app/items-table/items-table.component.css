@@ -4,12 +4,16 @@
 
 .marketContainer {
     min-height: calc(100vh - 176px);
+    max-width: 100%;
+    overflow-x: auto;
+
 }
 
 .market {
     background-color: #121416;
     border-collapse: separate;
     border-spacing: 0px 4px;
+    min-width: 1200px;
 }
 
 .paginator {

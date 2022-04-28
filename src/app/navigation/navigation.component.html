@@ -56,7 +56,8 @@
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
               <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
-            <span>Lost Ark Market Online</span>
+            <img class="titleIcon" src="/assets/icons/favicon.png">
+            <span class="title">Lost Ark Market Online</span>
             <mat-menu #appMenu="matMenu">
                 <ng-template matMenuContent>
                     <button mat-menu-item (click)="selectRegion('Europe West')">Europe West</button>
