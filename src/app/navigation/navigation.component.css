@@ -78,6 +78,7 @@
   box-sizing: border-box;
 }
 
+.submenu-adventurer,
 .submenu-engraving,
 .submenu-combat,
 .submenu-trader,
@@ -95,6 +96,7 @@
   height: 416px;
 }
 
+.submenu-adventurer.expanded,
 .submenu-engraving.expanded {
   height: 52px;
 }

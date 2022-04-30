@@ -37,6 +37,7 @@ const filterMap: { [hash: string]: { category?: string; subcategory?: string; fa
   '#offense': { category: 'Combat Supplies', subcategory: 'Battle Item - Offense' },
   '#utility': { category: 'Combat Supplies', subcategory: 'Battle Item - Utility' },
   '#buff': { category: 'Combat Supplies', subcategory: 'Battle Item - Buff' },
+  '#adventurer-s-tome': { category: 'Adventurer\'s Tome', subcategory: undefined },
   '#favorites': { category: undefined, subcategory: undefined, favorites: true },
 };
 
@@ -58,6 +59,7 @@ export class NavigationComponent implements OnInit {
   traderSubMenu = false;
   combatSubMenu = false;
   engravingSubMenu = false;
+  adventurersTomeSubMenu = false;
 
   favorites: FavoriteItem[]
   version: string = packageJson.version;
@@ -147,6 +149,9 @@ export class NavigationComponent implements OnInit {
           case 'Combat Supplies':
             this.combatSubMenu = true;
             break;
+            case 'Adventurer\'s Tome':
+              this.adventurersTomeSubMenu = true;
+              break;
         }
       }
     }
