@@ -43,16 +43,10 @@ export class MarketDataSource extends DataSource<MarketItem> {
     super();
   }
 
-  updateFilter(region: string, category?: string, subcategory?: string, favorites: boolean = false) {
-    this.filter$.next({
-      region: region,
-      category: category,
-      subcategory: subcategory,
-      favorites: !!favorites
-    });
-  }
+
 
   refreshMarket() {
+    this.paginator?.firstPage()
     this.filter$.next({ ...this.filter! });
   }
 

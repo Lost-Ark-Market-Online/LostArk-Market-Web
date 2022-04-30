@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Observable } from 'rxjs';
@@ -24,7 +25,8 @@ export class ItemsTableComponent implements AfterViewInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['name', 'avgPrice', 'recentPrice', 'lowPrice', 'cheapestRemaining', 'updatedAt'];
 
-  constructor(private firestore: Firestore) {
+  constructor(private firestore: Firestore,
+    private _snackBar: MatSnackBar) {
     this.dataSource = new MarketDataSource(firestore);
   }
 
@@ -36,7 +38,7 @@ export class ItemsTableComponent implements AfterViewInit {
     this.dataSource.favorites = this.favorites;
     this.table.dataSource = this.dataSource;
   }
-  
+
   getImageUrl(filename: string) {
     return `/assets/item_icons/${filename}`;
   }
@@ -49,6 +51,15 @@ export class ItemsTableComponent implements AfterViewInit {
     if (favIndex >= 0) {
       this.favorites.splice(favIndex, 1);
     } else {
+      if (this.favorites!.length >= 10) {
+        this._snackBar.open('Can only have 10 favorites for now', undefined,
+          {
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            duration: 1500
+          });
+        return;
+      }
       this.favorites.push(item);
     }
     localStorage.setItem('favorites', JSON.stringify(this.favorites));

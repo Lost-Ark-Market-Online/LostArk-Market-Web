@@ -14,5 +14,8 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ### Changelog
+### 0.4.1
+- Limit favorites to 10 to prevent crash because of firestore limitation of in query
+
 ### 0.4.0
 - Add Adventurer's Tome support

@@ -176,7 +176,6 @@ export class NavigationComponent implements OnInit {
   }
 
   selectFilter(hash: string, category?: string, subcategory?: string, favorites: boolean = false) {
-    logEvent(this.analytics, 'select_filter', { hash, category, subcategory, favorites });
     if (this.filter) {
       window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
       this.filter.category = category;
@@ -192,10 +191,6 @@ export class NavigationComponent implements OnInit {
         this.engravingSubMenu = false;
       }
     }
-  }
-
-  refreshMarket() {
-    this.marketTable.dataSource.updateFilter(this.filter.region, this.filter.category, this.filter.subcategory, this.filter.favorites);
   }
 
   openApplyDialog() {
