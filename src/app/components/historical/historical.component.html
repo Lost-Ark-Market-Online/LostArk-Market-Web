@@ -18,6 +18,7 @@
   </div>
   <div class="chartContainer">
     <highcharts-chart
+      *ngIf="loadChart"
       [Highcharts]="Highcharts"
       [constructorType]="'stockChart'"
       [options]="chartOptions"

@@ -38,6 +38,7 @@ export class HistoricalComponent {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions!: Highcharts.Options;
   ohlcData: number[][] = [];
+  loadChart:boolean = false;
 
 
   constructor(
@@ -59,15 +60,14 @@ export class HistoricalComponent {
       }
     })).pipe(map((x) => {
       this.ohlcData = x.timeData.map(td => [td.timestamp, td.open, td.high, td.low, td.close]);
-      console.log(this.ohlcData);
-      this.loadChart();
+      this.loadChartOptions();
       return x;
     })).subscribe()
     
     
   }
 
-  loadChart(){
+  loadChartOptions(){
     this.chartOptions = {
       rangeSelector: {
         selected: 2
@@ -122,6 +122,7 @@ export class HistoricalComponent {
         }
       }]
     };
+    this.loadChart = true;
   }
   
   close(): void {
