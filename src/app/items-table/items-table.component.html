@@ -9,17 +9,19 @@
                         <button class="favorite" [class.active]="isFavorite(row)" mat-icon-button (click)="toggleFavorite(row)">
                             <mat-icon>star</mat-icon>
                         </button>
-                        <img class="itemImage" [src]="getImageUrl(row.image)">
+                        <img class="itemImage" [src]="common.getImageUrl(row.image)">
                         <span>{{row.name}}</span>
                     </div>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="avgPrice">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Avg. Day Price</th>
+                <th class="header" mat-header-cell *matHeaderCellDef>Historical Data</th>
                 <td class="cellContainer" mat-cell *matCellDef="let row">
-                    <div class="cell right">
-                        {{row.avgPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold">
+                    <div class="buttonContainer">
+                        <button class="btnHistory" matSuffix mat-icon-button (click)="openHistory(row)">
+                            <mat-icon>insights</mat-icon>
+                        </button>
                     </div>
                 </td>
             </ng-container>

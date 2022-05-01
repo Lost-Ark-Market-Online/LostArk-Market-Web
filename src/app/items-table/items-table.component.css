@@ -111,7 +111,7 @@
     background: linear-gradient(50deg, #783201 0%, transparent 50%);
 }
 
-.market .normal .relic {
+.market .relic .cell {
     color: #e66516;
 }
 
@@ -137,4 +137,15 @@
     height: 64px;
     width: 64px;
     clip-path: polygon(10px 0px, 54px 0px, 64px 10px, 64px 54px, 54px 64px, 10px 64px, 0px 54px, 0px 10px);
+}
+
+.market .row .buttonContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.market .row .buttonContainer .btnHistory{
+    color: white;
 }

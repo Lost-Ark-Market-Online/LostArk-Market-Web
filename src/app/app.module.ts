@@ -29,13 +29,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
+import { HistoricalComponent } from './components/historical/historical.component';
+import { CommonService } from 'src/services/common';
+import { HighchartsChartModule } from "highcharts-angular";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
     ItemsTableComponent,
-    ApplicationFormComponent
+    ApplicationFormComponent,
+    HistoricalComponent
   ],
   imports: [
     BrowserModule,
@@ -62,9 +66,10 @@ import { AnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics'
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     MomentModule,
-    AnalyticsModule
+    AnalyticsModule,
+    HighchartsChartModule
   ],
-  providers: [ScreenTrackingService],
+  providers: [ScreenTrackingService, CommonService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,29 @@
+<div mat-dialog-content>
+  <div class="itemWrapper">
+    <div
+      class="itemContainer"
+      [class.normal]="data.item.rarity == 0"
+      [class.uncommon]="data.item.rarity == 1"
+      [class.rare]="data.item.rarity == 2"
+      [class.epic]="data.item.rarity == 3"
+      [class.legendary]="data.item.rarity == 4"
+      [class.relic]="data.item.rarity == 5"
+    >
+      <img class="itemImage" [src]="common.getImageUrl(data.item.image)" />
+      <span class="itemName">{{ data.item.name }}</span>
+    </div>    
+    <button class="closeBtn" matSuffix mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="chartContainer">
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [constructorType]="'stockChart'"
+      [options]="chartOptions"
+      class="chart"
+      style="width: 100%; height: 400px; display: block"
+    >
+    </highcharts-chart>
+  </div>
+</div>

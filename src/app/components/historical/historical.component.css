@@ -1,0 +1,81 @@
+.itemWrapper{
+  width: 100%;  
+  background-color: #090a0c;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 8px;
+  box-sizing: border-box;
+}
+
+
+.itemContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  color: white;
+  padding: 4px 16px;
+}
+
+.itemImage {
+  height: 64px;
+  width: 64px;
+  clip-path: polygon(10px 0px, 54px 0px, 64px 10px, 64px 54px, 54px 64px, 10px 64px, 0px 54px, 0px 10px);
+}
+
+.normal {
+  background: linear-gradient(50deg, #5e5e5e 0%, transparent 50%);
+}
+
+.normal .itemName {
+  color: white;
+}
+
+.uncommon {
+  background: linear-gradient(50deg, #203808 0%, transparent 50%);
+}
+
+.uncommon .itemName {
+  color: #93ee24;
+}
+
+.rare {
+  background: linear-gradient(50deg, #064054 0%, transparent 50%);
+}
+
+.rare .itemName {
+  color: white;
+  color: #17a7e6;
+}
+
+.epic {
+  background: linear-gradient(50deg, #440850 0%, transparent 50%);
+}
+
+.epic .itemName {
+  color: #b249d4;
+}
+
+.legendary {
+  background: linear-gradient(50deg, #6a4109 0%, transparent 50%);
+}
+
+.legendary .itemName {
+  color: #e8921b;
+}
+
+.relic {
+  background: linear-gradient(50deg, #783201 0%, transparent 50%);
+}
+
+.relic .itemName {
+  color: #e66516;
+}
+
+.chartContainer{
+  padding: 8px;
+  padding-top: 0px;
+}

@@ -1,10 +1,14 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { Analytics, logEvent } from '@angular/fire/analytics';
 import { Firestore } from '@angular/fire/firestore';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Observable } from 'rxjs';
+import { CommonService } from 'src/services/common';
+import { HistoricalComponent } from '../components/historical/historical.component';
 import { Filter } from '../navigation/navigation.component';
 import { FavoriteItem, MarketDataSource, MarketItem } from './market-datasource';
 
@@ -26,7 +30,10 @@ export class ItemsTableComponent implements AfterViewInit {
   displayedColumns = ['name', 'avgPrice', 'recentPrice', 'lowPrice', 'cheapestRemaining', 'updatedAt'];
 
   constructor(private firestore: Firestore,
-    private _snackBar: MatSnackBar) {
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private analytics: Analytics,
+    public common: CommonService) {
     this.dataSource = new MarketDataSource(firestore);
   }
 
@@ -37,10 +44,6 @@ export class ItemsTableComponent implements AfterViewInit {
     this.dataSource.filter = this.filter;
     this.dataSource.favorites = this.favorites;
     this.table.dataSource = this.dataSource;
-  }
-
-  getImageUrl(filename: string) {
-    return `/assets/item_icons/${filename}`;
   }
 
   toggleFavorite(item: FavoriteItem) {
@@ -70,5 +73,13 @@ export class ItemsTableComponent implements AfterViewInit {
       return false;
     }
     return this.favorites.findIndex(i => i.name == item.name && i.rarity == item.rarity) >= 0;
+  }
+  openHistory(item: MarketItem) {
+    logEvent(this.analytics, 'historical_component', { region: this.dataSource.filter?.region, item: item.id });
+    this.dialog.open(HistoricalComponent, {
+      width: '80%',
+      maxWidth: '800px',
+      data: { item, region: this.dataSource.filter?.region }
+    })
   }
 }
