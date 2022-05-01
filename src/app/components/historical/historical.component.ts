@@ -74,7 +74,7 @@ export class HistoricalComponent {
       },
 
       title: {
-        text: 'Guardian Stone'
+        text: this.data.item.name
       },
 
       legend: {
