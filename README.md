@@ -15,7 +15,10 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### Changelog
 
-### 0.5
+### 0.5.2
+- Store region for root redirects
+
+### 0.5.0
 - The historical data update
 
 ### 0.4.1

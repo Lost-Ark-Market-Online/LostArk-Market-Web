@@ -61,7 +61,7 @@ export class NavigationComponent implements OnInit {
   engravingSubMenu = false;
   adventurersTomeSubMenu = false;
 
-  favorites: FavoriteItem[]
+  favorites: FavoriteItem[];
   version: string = packageJson.version;
 
 
@@ -69,10 +69,7 @@ export class NavigationComponent implements OnInit {
   options: string[] = autocompleteOptions;
   filteredOptions?: Observable<string[]>;
 
-  filter: Filter = {
-    region: 'North America East',
-    favorites: true
-  }
+  filter: Filter;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -90,6 +87,15 @@ export class NavigationComponent implements OnInit {
     private analytics: Analytics
   ) {
     this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
+    this.filter = {
+      region: localStorage.getItem('region') || 'North America East',
+      favorites: true
+    };
+  }
+
+  updateRegion(region: string) {
+    this.filter.region = region;
+    localStorage.setItem('region', region);
   }
 
   ngOnInit(): void {
@@ -101,24 +107,23 @@ export class NavigationComponent implements OnInit {
     if (url.pathname != '/') {
       switch (url.pathname) {
         case '/east-north-america':
-          this.filter.region = 'North America East';
+          this.updateRegion('North America East');
           break;
         case '/west-north-america':
-          this.filter.region = 'North America West';
+          this.updateRegion('North America West');
           break;
         case '/europe-central':
-          this.filter.region = 'Europe Central';
+          this.updateRegion('Europe Central');
           break;
         case '/europe-west':
-          this.filter.region = 'Europe West';
+          this.updateRegion('Europe West');
           break;
         case '/south-america':
-          this.filter.region = 'South America';
+          this.updateRegion('South America');
           break;
       }
     } else {
-      window.history.pushState(null, 'North America East', slugify('North America East').toLowerCase() + url.hash);
-      this.filter.region = 'North America East';
+      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + url.hash);
     }
     const search = url.searchParams.get('search');
     if (search) {
@@ -149,9 +154,9 @@ export class NavigationComponent implements OnInit {
           case 'Combat Supplies':
             this.combatSubMenu = true;
             break;
-            case 'Adventurer\'s Tome':
-              this.adventurersTomeSubMenu = true;
-              break;
+          case 'Adventurer\'s Tome':
+            this.adventurersTomeSubMenu = true;
+            break;
         }
       }
     }
@@ -170,7 +175,7 @@ export class NavigationComponent implements OnInit {
     if (this.filter.region !== region) {
       const url = new URL(document.location.href);
       window.history.pushState(null, region, slugify(region).toLowerCase() + url.hash);
-      this.filter.region = region;
+      this.updateRegion(region);
       this.marketTable.dataSource.refreshMarket();
     }
   }
