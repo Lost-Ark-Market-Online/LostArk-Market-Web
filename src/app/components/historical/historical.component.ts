@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Firestore, docData, doc } from '@angular/fire/firestore';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 import { MarketItem } from 'src/app/items-table/market-datasource';
 import { CommonService } from 'src/services/common';
 import * as Highcharts from "highcharts/highstock";
@@ -58,7 +58,7 @@ export class HistoricalComponent {
       toFirestore(historicItem) {
         return historicItem;
       }
-    })).pipe(map((x) => {
+    })).pipe(take(1),map((x) => {
       this.ohlcData = x.timeData.map(td => [td.timestamp, td.open, td.high, td.low, td.close]);
       this.loadChartOptions();
       return x;

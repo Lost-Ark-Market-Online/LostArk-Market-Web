@@ -82,4 +82,12 @@ export class ItemsTableComponent implements AfterViewInit {
       data: { item, region: this.dataSource.filter?.region }
     })
   }
+  
+  isUntradable(item: MarketItem){
+    if(item.category == 'Engraving Recipe'){
+      return true;
+    }
+    return false;
+  }
+
 }

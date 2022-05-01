@@ -149,3 +149,18 @@
 .market .row .buttonContainer .btnHistory{
     color: white;
 }
+.market .row .name{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+}
+.market .row .name .untradable,
+.market .row .name .bundles{
+    color: white;
+}
+.market .row .name .untradable .status,
+.market .row .name .bundles .amount{
+    color:#faab02;
+}

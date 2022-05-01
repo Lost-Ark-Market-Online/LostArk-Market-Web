@@ -10,7 +10,11 @@
                             <mat-icon>star</mat-icon>
                         </button>
                         <img class="itemImage" [src]="common.getImageUrl(row.image)">
-                        <span>{{row.name}}</span>
+                        <div class="name">
+                            <span>{{row.name}}</span>
+                            <span class="bundles" *ngIf="row.amount>1">[ Sold in bundles of <span class="amount">{{row.amount}} units</span> ]</span>
+                            <span class="untradable" *ngIf="isUntradable(row)">[ <span class="status">Untradable</span> upon purchase ]</span>
+                        </div>
                     </div>
                 </td>
             </ng-container>
