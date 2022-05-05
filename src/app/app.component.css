@@ -1,0 +1,47 @@
+.mainContainer {
+  width: 100%;
+  max-width: 1600px;
+  display: block;
+  margin: auto;
+  background-color: var(--primary-background-color);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.308);
+}
+.mainWrapper {
+  width: 100%;
+  height: 100%;
+  background-repeat:no-repeat;
+  background-position: center center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+}
+.bg-1{
+  background-image: url('/assets/backgrounds/1.png');
+}
+.bg-2{
+  background-image: url('/assets/backgrounds/2.png');
+}
+.bg-3{
+  background-image: url('/assets/backgrounds/3.png');
+}
+.bg-4{
+  background-image: url('/assets/backgrounds/4.png');
+}
+.bg-5{
+  background-image: url('/assets/backgrounds/5.png');
+}
+.bg-6{
+  background-image: url('/assets/backgrounds/6.png');
+}
+.bg-7{
+  background-image: url('/assets/backgrounds/7.png');
+}
+.bg-8{
+  background-image: url('/assets/backgrounds/8.png');
+}
+.bg-9{
+  background-image: url('/assets/backgrounds/9.png');
+}
+.bg-10{
+  background-image: url('/assets/backgrounds/10.png');
+}

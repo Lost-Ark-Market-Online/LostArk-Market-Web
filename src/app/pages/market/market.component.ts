@@ -48,7 +48,30 @@ const categoriesMap: { [slug: string]: { category: string, subcategories?: { [su
   },
   'adventurers-tome': {
     category: 'Adventurer\'s Tome'
-  }
+  },
+  'cooking': {
+    category: 'Cooking'
+  },
+  'gem-chest': {
+    category: 'Gem Chest'
+  },
+  'mount': {
+    category: 'Mount',
+    subcategories: {
+      'mount': 'Mount',
+      'mount-chest': 'Mount Chest',
+    },
+  },
+  'pets': {
+    category: 'Pets',
+    subcategories: {
+      'pets': 'Pets',
+      'pet-chest': 'Pet Chest',
+    }
+  },
+  'sailing': {
+    category: 'Sailing'
+  },
 }
 
 @Component({
@@ -77,6 +100,11 @@ export class MarketComponent implements OnInit, OnDestroy {
     combatSubMenu: false,
     engravingSubMenu: false,
     adventurersTomeSubMenu: false,
+    cookingSubMenu: false,
+    sailingSubMenu: false,
+    petsSubMenu: false,
+    mountSubMenu: false,
+    gemChestSubMenu: false,
   }
 
   @ViewChild(ItemsTableComponent) marketTable!: ItemsTableComponent;
@@ -134,6 +162,7 @@ export class MarketComponent implements OnInit, OnDestroy {
           this.filter.category = undefined;
           this.filter.subcategory = undefined;
         }
+        
         switch (this.filter.category) {
           case 'Enhancement Material':
             this.menu.enhancementMaterialsSubMenu = true;
@@ -149,6 +178,21 @@ export class MarketComponent implements OnInit, OnDestroy {
             break;
           case 'Adventurer\'s Tome':
             this.menu.adventurersTomeSubMenu = true;
+            break;
+          case 'Cooking':
+            this.menu.cookingSubMenu = true;
+            break;
+          case 'Sailing':
+            this.menu.sailingSubMenu = true;
+            break;            
+          case 'Pets':
+            this.menu.petsSubMenu = true;
+            break;
+          case 'Mount':
+            this.menu.mountSubMenu = true;
+            break;
+          case 'Gem Chest':
+            this.menu.gemChestSubMenu = true;
             break;
         }
         if (regionMap[region]) {
@@ -170,6 +214,21 @@ export class MarketComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
+  resetSubMenus(){
+    this.menu = {
+      enhancementMaterialsSubMenu: false,
+      traderSubMenu: false,
+      combatSubMenu: false,
+      engravingSubMenu: false,
+      adventurersTomeSubMenu: false,
+      cookingSubMenu: false,
+      sailingSubMenu: false,
+      petsSubMenu: false,
+      mountSubMenu: false,
+      gemChestSubMenu: false,
+    }
+  }
+
   search() {
     const search = this.searchControl.value;
     if (search) {
@@ -182,13 +241,7 @@ export class MarketComponent implements OnInit, OnDestroy {
     this.filter.subcategory = undefined;
     this.filter.favorites = false;
     this.filter.search = search;
-    this.menu = {
-      enhancementMaterialsSubMenu: false,
-      traderSubMenu: false,
-      combatSubMenu: false,
-      engravingSubMenu: false,
-      adventurersTomeSubMenu: false,
-    }
+    this.resetSubMenus();
     this.marketTable.dataSource.refreshMarket();
   }
 

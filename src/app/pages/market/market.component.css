@@ -1,7 +1,6 @@
 .sidenav-container {
   background-color: var(--primary-background-color);
   height: auto;
-  min-height: calc(100vh - 156px);
 }
 
 .sidenav {
@@ -55,6 +54,11 @@
 }
 
 .submenu-adventurer,
+.submenu-cooking,
+.submenu-pets,
+.submenu-gem-chest,
+.submenu-mount,
+.submenu-sailing,
 .submenu-engraving,
 .submenu-combat,
 .submenu-trader,
@@ -72,6 +76,9 @@
   height: 416px;
 }
 
+.submenu-cooking.expanded,
+.submenu-sailing.expanded,
+.submenu-gem-chest.expanded,
 .submenu-adventurer.expanded,
 .submenu-engraving.expanded {
   height: 52px;
@@ -79,6 +86,11 @@
 
 .submenu-combat.expanded {
   height: 260px;
+}
+
+.submenu-mount.expanded,
+.submenu-pets.expanded{
+  height: 156px;
 }
 
 .applyBtn {

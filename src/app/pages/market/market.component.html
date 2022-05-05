@@ -1,6 +1,12 @@
 <form class="filters-form">
-  
-  <button class="menu-btn" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+  <button
+    class="menu-btn"
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="drawer.toggle()"
+    *ngIf="isHandset$ | async"
+  >
     <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
   </button>
   <div class="spacer"></div>
@@ -203,6 +209,32 @@
 
       <mat-list-item
         class="nav-header"
+        [ngClass]="{ active: menu.cookingSubMenu }"
+        (click)="menu.cookingSubMenu = !menu.cookingSubMenu"
+      >
+        <span class="full-width">Cooking</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.cookingSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-cooking"
+        [ngClass]="{ expanded: menu.cookingSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'cooking']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
         [ngClass]="{ active: menu.traderSubMenu }"
         (click)="menu.traderSubMenu = !menu.traderSubMenu"
       >
@@ -303,6 +335,141 @@
           class="nav-item"
           mat-list-item
           [routerLink]="['/' + regionSlug, 'market', 'adventurers-tome']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+      </div>
+      
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.sailingSubMenu }"
+        (click)="menu.sailingSubMenu = !menu.sailingSubMenu"
+      >
+        <span class="full-width">Sailing</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.sailingSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-sailing"
+        [ngClass]="{ expanded: menu.sailingSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'sailing']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.petsSubMenu }"
+        (click)="menu.petsSubMenu = !menu.petsSubMenu"
+      >
+        <span class="full-width">Pets</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.petsSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-pets"
+        [ngClass]="{ expanded: menu.petsSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'pets']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'pets','pets']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Pets</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'pets','pet-chest']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Pet Chest</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.mountSubMenu }"
+        (click)="menu.mountSubMenu = !menu.mountSubMenu"
+      >
+        <span class="full-width">Mount</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.mountSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-mount"
+        [ngClass]="{ expanded: menu.mountSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'mount']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'mount','mount']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Mount</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'mount','mount-chest']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Mount Chest</a
+        >
+      </div>
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.gemChestSubMenu }"
+        (click)="menu.gemChestSubMenu = !menu.gemChestSubMenu"
+      >
+        <span class="full-width">Gem Chest</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.gemChestSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-gem-chest"
+        [ngClass]="{ expanded: menu.gemChestSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'gem-chest']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a

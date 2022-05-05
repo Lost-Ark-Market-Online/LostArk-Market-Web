@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'lostark-market';
+  bg = 1;
+  constructor(){
+    this.bg = Math.round(Math.random()*10);
+  }
 }
