@@ -14,7 +14,7 @@ import { regionMap } from '../../../app/navigation/navigation.component';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 const categoriesMap: { [slug: string]: { category: string, subcategories?: { [subslug: string]: string } } } = {
-  'enhancement-materials': {
+  'enhancement-material': {
     category: 'Enhancement Material',
     subcategories: {
       'honing-materials': 'Honing Materials',

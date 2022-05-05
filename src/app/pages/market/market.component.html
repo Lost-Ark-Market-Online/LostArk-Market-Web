@@ -78,7 +78,7 @@
           menu.enhancementMaterialsSubMenu = !menu.enhancementMaterialsSubMenu
         "
       >
-        <span class="full-width">Enhancement Materials</span>
+        <span class="full-width">Enhancement Material</span>
         <mat-icon
           class="menu-button"
           [ngClass]="{ rotated: menu.enhancementMaterialsSubMenu }"
@@ -86,13 +86,13 @@
         >
       </mat-list-item>
       <div
-        class="submenu-enhancement-materials"
+        class="submenu-enhancement-material"
         [ngClass]="{ expanded: menu.enhancementMaterialsSubMenu }"
       >
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'enhancement-materials']"
+          [routerLink]="['/' + regionSlug, 'market', 'enhancement-material']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -103,7 +103,7 @@
           [routerLink]="[
             '/' + regionSlug,
             'market',
-            'enhancement-materials',
+            'enhancement-material',
             'honing-materials'
           ]"
           routerLinkActive="active"
@@ -115,7 +115,7 @@
           [routerLink]="[
             '/' + regionSlug,
             'market',
-            'enhancement-materials',
+            'enhancement-material',
             'additional-honing-materials'
           ]"
           routerLinkActive="active"
@@ -127,7 +127,7 @@
           [routerLink]="[
             '/' + regionSlug,
             'market',
-            'enhancement-materials',
+            'enhancement-material',
             'other-materials'
           ]"
           routerLinkActive="active"

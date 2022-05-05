@@ -58,13 +58,13 @@
 .submenu-engraving,
 .submenu-combat,
 .submenu-trader,
-.submenu-enhancement-materials {
+.submenu-enhancement-material {
   overflow: hidden;
   transition: height 300ms ease;
   height: 0px;
 }
 
-.submenu-enhancement-materials.expanded {
+.submenu-enhancement-material.expanded {
   height: 208px;
 }
 
