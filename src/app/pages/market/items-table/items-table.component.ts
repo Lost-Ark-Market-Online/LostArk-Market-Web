@@ -6,12 +6,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { Observable } from 'rxjs';
 import { CommonService } from 'src/services/common';
-import { HistoricalComponent } from '../components/historical/historical.component';
-import { Filter } from '../navigation/navigation.component';
-import { FavoriteItem, MarketDataSource, MarketItem } from './market-datasource';
+import { HistoricalComponent } from '../historical/historical.component';
+import { MarketDataSource } from './items-table.datasource';
 
+import type { Filter } from '../market.interfaces';
+import type { FavoriteItem, MarketItem } from './items-table.interfaces';
 
 @Component({
   selector: 'app-items-table',
@@ -74,6 +74,7 @@ export class ItemsTableComponent implements AfterViewInit {
     }
     return this.favorites.findIndex(i => i.name == item.name && i.rarity == item.rarity) >= 0;
   }
+  
   openHistory(item: MarketItem) {
     logEvent(this.analytics, 'historical_component', { region: this.dataSource.filter?.region, item: item.id });
     this.dialog.open(HistoricalComponent, {
@@ -82,9 +83,9 @@ export class ItemsTableComponent implements AfterViewInit {
       data: { item, region: this.dataSource.filter?.region }
     })
   }
-  
-  isUntradable(item: MarketItem){
-    if(item.category == 'Engraving Recipe'){
+
+  isUntradable(item: MarketItem) {
+    if (item.category == 'Engraving Recipe') {
       return true;
     }
     return false;

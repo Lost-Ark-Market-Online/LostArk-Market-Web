@@ -3,6 +3,7 @@
 html,
 body {
     height: 100%;
+    background-color: #121416;
 }
 
 body {
@@ -40,4 +41,7 @@ body {
 
 .mat-form-field input::placeholder {
     color: #ab9c7763;
+}
+.mat-sort-header-content{
+    text-align: left!important;
 }

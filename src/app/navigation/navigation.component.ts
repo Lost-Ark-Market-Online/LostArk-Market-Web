@@ -1,52 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, first, startWith } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
 import slugify from 'slugify';
-import { ItemsTableComponent } from '../items-table/items-table.component';
+import { filter, first, map, take } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { getAuth } from "@angular/fire/auth";
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationFormComponent } from '../components/application-form/application-form.component';
 import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FavoriteItem } from '../items-table/market-datasource';
-import { FormControl } from '@angular/forms';
-
 
 import packageJson from '../../../package.json';
-import autocompleteOptions from '../../data/autocomplete.json';
 import { Analytics, logEvent } from '@angular/fire/analytics';
+import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 
-const filterMap: { [hash: string]: { category?: string; subcategory?: string; favorites?: boolean } } = {
-  '#enhancement-materials': { category: 'Enhancement Material', subcategory: undefined },
-  '#honing-materials': { category: 'Enhancement Material', subcategory: 'Honing Materials' },
-  '#additional-honing-materials': { category: 'Enhancement Material', subcategory: 'Additional Honing Materials' },
-  '#other-enhancement-materials': { category: 'Enhancement Material', subcategory: 'Other Materials' },
-  '#trader': { category: 'Trader', subcategory: undefined },
-  '#foraging-rewards': { category: 'Trader', subcategory: 'Foraging Rewards' },
-  '#loggin-loot': { category: 'Trader', subcategory: 'Logging Loot' },
-  '#mining-loot': { category: 'Trader', subcategory: 'Mining Loot' },
-  '#hunting-loot': { category: 'Trader', subcategory: 'Hunting Loot' },
-  '#fishing-loot': { category: 'Trader', subcategory: 'Fishing Loot' },
-  '#excavating-loot': { category: 'Trader', subcategory: 'Excavating Loot' },
-  '#other-trading': { category: 'Trader', subcategory: 'Other' },
-  '#engraving': { category: 'Engraving Recipe', subcategory: undefined },
-  '#combat': { category: 'Combat Supplies', subcategory: undefined },
-  '#recovery': { category: 'Combat Supplies', subcategory: 'Battle Item - Recovery' },
-  '#offense': { category: 'Combat Supplies', subcategory: 'Battle Item - Offense' },
-  '#utility': { category: 'Combat Supplies', subcategory: 'Battle Item - Utility' },
-  '#buff': { category: 'Combat Supplies', subcategory: 'Battle Item - Buff' },
-  '#adventurer-s-tome': { category: 'Adventurer\'s Tome', subcategory: undefined },
-  '#favorites': { category: undefined, subcategory: undefined, favorites: true },
-};
-
-export interface Filter {
-  region: string,
-  category?: string,
-  subcategory?: string
-  favorites: boolean,
-  search?: string
+export const regionMap: { [slug: string]: string } = {
+  'north-america-east': 'North America East',
+  'north-america-west': 'North America West',
+  'europe-central': 'Europe Central',
+  'europe-west': 'Europe West',
+  'south-america': 'South America',
 }
 
 @Component({
@@ -55,147 +26,58 @@ export interface Filter {
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
-  enhancementMaterialsSubMenu = false;
-  traderSubMenu = false;
-  combatSubMenu = false;
-  engravingSubMenu = false;
-  adventurersTomeSubMenu = false;
-
-  favorites: FavoriteItem[];
   version: string = packageJson.version;
+  region: string;
+  regionSlug: string = "";
+  activatedRoute: ActivatedRoute;
 
-
-  myControl = new FormControl();
-  options: string[] = autocompleteOptions;
-  filteredOptions?: Observable<string[]>;
-
-  filter: Filter;
-
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
-
-
-  @ViewChild(ItemsTableComponent) marketTable!: ItemsTableComponent;
   constructor(
     private firestore: Firestore,
-    private breakpointObserver: BreakpointObserver,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private analytics: Analytics
+    private analytics: Analytics,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
-    this.filter = {
-      region: localStorage.getItem('region') || 'North America East',
-      favorites: true
-    };
+    this.region = localStorage.getItem('region') || 'North America East';
+    this.activatedRoute = this.route;
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(() => route),
+      map(route => {
+        while (route.firstChild) {
+          route = route.firstChild;
+        }
+        return route;
+      })).subscribe(route => {
+        this.activatedRoute = route;
+        const { region } = route.snapshot.params;
+        if (this.region != region) {
+          if (regionMap[region]) {
+            this.updateRegion(regionMap[region]);
+          } else {
+            this.updateRegion(this.region, true);
+          }
+        }
+      });
   }
 
-  updateRegion(region: string) {
-    this.filter.region = region;
+  updateRegion(region: string, navigate: boolean = false) {
     localStorage.setItem('region', region);
+    this.region = region;
+    this.regionSlug = slugify(region, { lower: true });
+    if (navigate) {
+      const url = this.activatedRoute.snapshot.url;
+      url[0].path = '/' + this.regionSlug;
+      this.router.navigate([...url.map(x => x.path)]);
+    }
   }
 
   ngOnInit(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
-    );
-    const url = new URL(document.location.href);
-    if (url.pathname != '/') {
-      switch (url.pathname) {
-        case '/east-north-america':
-          this.updateRegion('North America East');
-          break;
-        case '/west-north-america':
-          this.updateRegion('North America West');
-          break;
-        case '/europe-central':
-          this.updateRegion('Europe Central');
-          break;
-        case '/europe-west':
-          this.updateRegion('Europe West');
-          break;
-        case '/south-america':
-          this.updateRegion('South America');
-          break;
-      }
-    } else {
-      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + url.hash);
-    }
-    const search = url.searchParams.get('search');
-    if (search) {
-      this.myControl.setValue(search);
-      if (url.hash) {
-        window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
-      }
-      this.filter.category = undefined;
-      this.filter.subcategory = undefined;
-      this.filter.favorites = false;
-      this.filter.search = search;
-    } else {
-      if (url.hash) {
-        this.filter.category = filterMap[url.hash].category;
-        this.filter.subcategory = filterMap[url.hash].subcategory;
-        this.filter.favorites = filterMap[url.hash].favorites || false;
-
-        switch (this.filter.category) {
-          case 'Enhancement Material':
-            this.enhancementMaterialsSubMenu = true;
-            break;
-          case 'Trader':
-            this.traderSubMenu = true;
-            break;
-          case 'Engraving Recipe':
-            this.engravingSubMenu = true;
-            break;
-          case 'Combat Supplies':
-            this.combatSubMenu = true;
-            break;
-          case 'Adventurer\'s Tome':
-            this.adventurersTomeSubMenu = true;
-            break;
-        }
-      }
-    }
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    if (!value || value.length < 3) {
-      return [];
-    }
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   selectRegion(region: string) {
-    if (this.filter.region !== region) {
-      const url = new URL(document.location.href);
-      window.history.pushState(null, region, slugify(region).toLowerCase() + url.hash);
-      this.updateRegion(region);
-      this.marketTable.dataSource.refreshMarket();
-    }
-  }
-
-  selectFilter(hash: string, category?: string, subcategory?: string, favorites: boolean = false) {
-    if (this.filter) {
-      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + hash);
-      this.filter.category = category;
-      this.filter.subcategory = subcategory;
-      this.filter.favorites = favorites;
-      this.filter.search = undefined;
-      this.myControl.setValue('');
-      this.marketTable.dataSource.refreshMarket();
-      if (favorites) {
-        this.enhancementMaterialsSubMenu = false;
-        this.traderSubMenu = false;
-        this.combatSubMenu = false;
-        this.engravingSubMenu = false;
-      }
-    }
+    this.updateRegion(region, true);
   }
 
   openApplyDialog() {
@@ -234,22 +116,4 @@ export class NavigationComponent implements OnInit {
 
   }
 
-  search() {
-    const search = this.myControl.value;
-    if (search) {
-      logEvent(this.analytics, 'search', { query: search });
-      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
-    } else {
-      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase());
-    }
-    this.filter.category = undefined;
-    this.filter.subcategory = undefined;
-    this.filter.favorites = false;
-    this.filter.search = search;
-    this.enhancementMaterialsSubMenu = false;
-    this.traderSubMenu = false;
-    this.combatSubMenu = false;
-    this.engravingSubMenu = false;
-    this.marketTable.dataSource.refreshMarket();
-  }
 }

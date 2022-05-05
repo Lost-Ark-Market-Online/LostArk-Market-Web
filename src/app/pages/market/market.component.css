@@ -1,0 +1,140 @@
+.sidenav-container {
+  background-color: #121416;
+  height: auto;
+  min-height: calc(100vh - 156px);
+}
+
+.sidenav {
+  width: 300px;
+  background-color: #121416;
+  color: #fdf9e0;
+  padding-right: 4px;
+}
+
+.sidenav .mat-toolbar {
+  background-color: #1e2329;
+  box-shadow: inset 0 0 10px #272a2f;
+  color: #ab9c77;
+}
+
+.nav-header {
+  background-color: #1e2329;
+  box-shadow: inset 0 0 10px #272a2f;
+  color: white;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.nav-header:hover {
+  background-color: #252c35;
+}
+
+.nav-list {
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-header.active::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, #27679c5d 0%, transparent 50%);
+  border-bottom: #5881a3 solid 3px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.nav-item {
+  background-color: #090a0c;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.nav-header.selected,
+.nav-item.active {
+  border: #5881a3 solid 1px;
+  box-sizing: border-box;
+}
+
+.submenu-adventurer,
+.submenu-engraving,
+.submenu-combat,
+.submenu-trader,
+.submenu-enhancement-materials {
+  overflow: hidden;
+  transition: height 300ms ease;
+  height: 0px;
+}
+
+.submenu-enhancement-materials.expanded {
+  height: 208px;
+}
+
+.submenu-trader.expanded {
+  height: 416px;
+}
+
+.submenu-adventurer.expanded,
+.submenu-engraving.expanded {
+  height: 52px;
+}
+
+.submenu-combat.expanded {
+  height: 260px;
+}
+
+.applyBtn {
+  margin: 0px 4px;
+}
+
+.filters-form {
+  background-color: #121416;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 4px;
+  padding-right: 8px;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.searchContainer {
+  background-color: #090a0c;
+  flex: 1;
+  max-width: 450px;
+  box-shadow: -1px -1px 1px 1px #272a2e inset;
+}
+
+.searchContainer ::ng-deep .mat-form-field-wrapper {
+  margin-bottom: -1.34375em;
+}
+
+.searchContainer ::ng-deep input {
+  color: white;
+}
+
+.filters-form .searchBtn {
+  background-color: #2e3640;
+  box-shadow: inset 0 0 5px #1e2228;
+  color: #ab9c77;
+}
+
+.sidenav-content{
+  height: auto;
+}
+
+.menu-btn{
+  color: white;
+}
+
+@media only screen and (max-width: 768px) {
+  .sidenav-container{    
+    min-height: calc(100vh - 168px);
+  }
+}

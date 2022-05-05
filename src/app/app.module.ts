@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { ItemsTableComponent } from './items-table/items-table.component';
+import { ItemsTableComponent } from './pages/market/items-table/items-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -29,9 +29,20 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
-import { HistoricalComponent } from './components/historical/historical.component';
+import { HistoricalComponent } from './pages/market/historical/historical.component';
 import { CommonService } from 'src/services/common';
 import { HighchartsChartModule } from "highcharts-angular";
+import { MarketComponent } from './pages/market/market.component';
+import { CraftingComponent } from './pages/crafting/crafting.component';
+import { HoningComponent } from './pages/honing/honing.component';
+import { Routes, RouterModule } from '@angular/router';
+
+const routes: Routes = [
+  { path: ':region/market', component: MarketComponent },
+  { path: ':region/market/:category', component: MarketComponent },
+  { path: ':region/market/:category/:subcategory', component: MarketComponent },
+  { path: '', redirectTo: '/default/market', pathMatch: 'full' },
+]
 
 @NgModule({
   declarations: [
@@ -39,10 +50,14 @@ import { HighchartsChartModule } from "highcharts-angular";
     NavigationComponent,
     ItemsTableComponent,
     ApplicationFormComponent,
-    HistoricalComponent
+    HistoricalComponent,
+    MarketComponent,
+    CraftingComponent,
+    HoningComponent
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(routes),
     BrowserAnimationsModule,
     LayoutModule,
     FlexLayoutModule,

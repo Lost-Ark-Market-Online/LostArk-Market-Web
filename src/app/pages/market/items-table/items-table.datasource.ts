@@ -1,35 +1,12 @@
 import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Observable, of, take, mergeMap, forkJoin, combineLatest, startWith, switchMap, Subject, last, map } from 'rxjs';
-import { collection, collectionData, doc, DocumentData, Firestore, getFirestore, limit, orderBy, query, QueryConstraint, where } from '@angular/fire/firestore';
-import { Filter } from '../navigation/navigation.component';
+import { Observable, of, take, mergeMap, combineLatest, startWith, Subject, map } from 'rxjs';
+import { collection, collectionData, DocumentData, Firestore, query, QueryConstraint, where } from '@angular/fire/firestore';
 
-// TODO: Replace this with your own data model type
-export interface MarketItem extends DocumentData {
-  id: string;
-  name: string;
-  amount: number;
-  rarity: number;
-  category: string;
-  subcategory: string;
-  image: string;
-  avgPrice?: number;
-  cheapestRemaining?: number;
-  lowPrice?: number;
-  recentPrice?: number;
-  updatedAt?: Date;
-}
-export interface FavoriteItem {
-  name: string;
-  rarity: number;
-}
+import type { Filter } from '../market.interfaces';
+import { FavoriteItem, MarketItem } from './items-table.interfaces';
 
-/**
- * Data source for the ItemsTable view. This class should
- * encapsulate all logic for fetching and manipulating the displayed data
- * (including sorting, pagination, and filtering).
- */
 export class MarketDataSource extends DataSource<MarketItem> {
   data: MarketItem[] = [];
   collectionSize: number = 0;
@@ -43,9 +20,8 @@ export class MarketDataSource extends DataSource<MarketItem> {
     super();
   }
 
-
-
   refreshMarket() {
+    console.log('refreshMarket')
     this.paginator?.firstPage()
     this.filter$.next({ ...this.filter! });
   }
@@ -64,6 +40,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
         paginator: this.paginator.page.pipe(startWith({ previousPageIndex: 0, pageIndex: 0, pageSize: 10, length: 0 })),
         sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))
       }).pipe(mergeMap((combined) => {
+        console.log('Datasource connected',combined)
         const queryFilters: QueryConstraint[] = [];
         if (combined.filter.favorites) {
           if (this.favorites!.length > 0) {
@@ -78,7 +55,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
           }
         } else {
           if (combined.filter.search !== undefined) {
-            if(!combined.filter.search){
+            if (!combined.filter.search) {
               return of({
                 sort: combined.sort,
                 filter: combined.filter,

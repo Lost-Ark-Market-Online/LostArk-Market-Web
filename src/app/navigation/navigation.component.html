@@ -1,101 +1,60 @@
-<mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-        <mat-toolbar>Menu</mat-toolbar>
-        <mat-nav-list class="nav-list">
-            <a class="nav-header" (click)="selectFilter('#favorites',undefined, undefined, true)" mat-list-item [ngClass]="{'selected' : filter.category == undefined && filter.subcategory === undefined && filter.favorites}">Favorites ({{favorites.length}}/10)</a>
+<mat-toolbar class="toolbar">
+  <!--button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button-->
 
-            <mat-list-item class="nav-header" [ngClass]="{'active' : engravingSubMenu}" (click)="engravingSubMenu = !engravingSubMenu">
-                <span class="full-width">Engraving Recipe</span>
-                <mat-icon class="menu-button" [ngClass]="{'rotated' : engravingSubMenu}">expand_more</mat-icon>
-            </mat-list-item>
-            <div class="submenu-engraving" [ngClass]="{'expanded' : engravingSubMenu}">
-                <a class="nav-item" mat-list-item (click)="selectFilter('#engraving','Engraving Recipe', undefined)" [ngClass]="{'active' : filter.category == 'Engraving Recipe' && filter.subcategory === undefined}">All</a>
-            </div>
-
-            <mat-list-item class="nav-header" [ngClass]="{'active' : enhancementMaterialsSubMenu}" (click)="enhancementMaterialsSubMenu = !enhancementMaterialsSubMenu">
-                <span class="full-width">Enhancement Materials</span>
-                <mat-icon class="menu-button" [ngClass]="{'rotated' : enhancementMaterialsSubMenu}">expand_more</mat-icon>
-            </mat-list-item>
-            <div class="submenu-enhancement-materials" [ngClass]="{'expanded' : enhancementMaterialsSubMenu}">
-                <a class="nav-item" mat-list-item (click)="selectFilter('#enhancement-materials','Enhancement Material', undefined)" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subcategory === undefined}">All</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#honing-materials','Enhancement Material','Honing Materials')" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subcategory === 'Honing Materials'}">Honing Materials</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#additional-honing-materials','Enhancement Material','Additional Honing Materials')" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subcategory === 'Additional Honing Materials'}">Additional Honing Materials</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#other-enhancement-materials','Enhancement Material','Other Materials')" [ngClass]="{'active' : filter.category == 'Enhancement Material' && filter.subcategory === 'Other Materials'}">Other Materials</a>
-            </div>
-
-            <mat-list-item class="nav-header" [ngClass]="{'active' : combatSubMenu}" (click)="combatSubMenu = !combatSubMenu">
-                <span class="full-width">Combat Supplies</span>
-                <mat-icon class="menu-button" [ngClass]="{'rotated' : combatSubMenu}">expand_more</mat-icon>
-            </mat-list-item>
-            <div class="submenu-combat" [ngClass]="{'expanded' : combatSubMenu}">
-                <a class="nav-item" mat-list-item (click)="selectFilter('#combat','Combat Supplies', undefined)" [ngClass]="{'active' : filter.category == 'Combat Supplies' && filter.subcategory === undefined}">All</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#recovery','Combat Supplies','Battle Item - Recovery')" [ngClass]="{'active' : filter.category == 'Combat Supplies' && filter.subcategory === 'Battle Item - Recovery'}">Battle Item - Recovery</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#offense','Combat Supplies','Battle Item - Offense')" [ngClass]="{'active' : filter.category == 'Combat Supplies' && filter.subcategory === 'Battle Item - Offense'}">Battle Item - Offense</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#utility','Combat Supplies','Battle Item - Utility')" [ngClass]="{'active' : filter.category == 'Combat Supplies' && filter.subcategory === 'Battle Item - Utility'}">Battle Item - Utility</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#buff','Combat Supplies','Battle Item - Buff')" [ngClass]="{'active' : filter.category == 'Combat Supplies' && filter.subcategory === 'Battle Item - Buff'}">Battle Item - Buff</a>
-            </div>
-
-            <mat-list-item class="nav-header" [ngClass]="{'active' : traderSubMenu}" (click)="traderSubMenu = !traderSubMenu">
-                <span class="full-width">Trader</span>
-                <mat-icon class="menu-button" [ngClass]="{'rotated' : traderSubMenu}">expand_more</mat-icon>
-            </mat-list-item>
-            <div class="submenu-trader" [ngClass]="{'expanded' : traderSubMenu}">
-                <a class="nav-item" mat-list-item (click)="selectFilter('#trader','Trader', undefined)" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === undefined}">All</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#foraging-rewards','Trader','Foraging Rewards')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Foraging Rewards'}">Foraging Rewards</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#loggin-loot','Trader','Logging Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Logging Loot'}">Logging Loot</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#mining-loot','Trader','Mining Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Mining Loot'}">Mining Loot</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#hunting-loot','Trader','Hunting Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Hunting Loot'}">Hunting Loot</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#fishing-loot','Trader','Fishing Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Fishing Loot'}">Fishing Loot</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#excavating-loot','Trader','Excavating Loot')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Excavating Loot'}">Excavating Loot</a>
-                <a class="nav-item" mat-list-item (click)="selectFilter('#other-trading','Trader','Other')" [ngClass]="{'active' : filter.category == 'Trader' && filter.subcategory === 'Other'}">Other</a>
-            </div>
-            
-            <mat-list-item class="nav-header" [ngClass]="{'active' : adventurersTomeSubMenu}" (click)="adventurersTomeSubMenu = !adventurersTomeSubMenu">
-                <span class="full-width">Adventurer's Tome</span>
-                <mat-icon class="menu-button" [ngClass]="{'rotated' : adventurersTomeSubMenu}">expand_more</mat-icon>
-            </mat-list-item>
-            <div class="submenu-adventurer" [ngClass]="{'expanded' : adventurersTomeSubMenu}">
-                <a class="nav-item" mat-list-item (click)="selectFilter('#adventurer-s-tome','Adventurer\'s Tome', undefined)" [ngClass]="{'active' : filter.category == 'Adventurer\'s Tome' && filter.subcategory === undefined}">All</a>
-            </div>
-        </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <mat-toolbar class="toolbar">
-            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
-              <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-            </button>
-            <img class="titleIcon" src="/assets/icons/favicon.png">
-            <span class="title">Lost Ark Market Online</span>
-            <mat-menu #appMenu="matMenu">
-                <ng-template matMenuContent>
-                    <button mat-menu-item (click)="selectRegion('Europe West')">Europe West</button>
-                    <button mat-menu-item (click)="selectRegion('Europe Central')">Europe Central</button>
-                    <button mat-menu-item (click)="selectRegion('North America West')">North America West</button>
-                    <button mat-menu-item (click)="selectRegion('North America East')">North America East</button>
-                    <button mat-menu-item (click)="selectRegion('South America')">South America</button>
-                </ng-template>
-            </mat-menu>
-            <span class="spacer"></span>
-            <button mat-button [matMenuTriggerFor]="appMenu">{{filter.region}}</button>
-            <button class="applyBtn" mat-icon-button (click)="openApplyDialog()">
-                <mat-icon>admin_panel_settings</mat-icon>
-            </button>
-            <a target="_blank" class="github" href="https://github.com/gogodr/LostArk-Market-Web"><img src="/assets/icons/github.png"></a>
-        </mat-toolbar>
-        <form class="filters-form">
-            <mat-form-field class="searchContainer" appearance="fill">
-                <mat-label>Search</mat-label>
-                <input type="text" placeholder="Pick one" aria-label="Search" matInput [formControl]="myControl" [matAutocomplete]="auto">
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                        {{option}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
-                <mat-icon>search</mat-icon>
-            </button>
-        </form>
-        <app-items-table [filter]="filter" [favorites]="favorites"></app-items-table>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+  <mat-toolbar-row class="firstRow">
+    <img class="titleIcon" src="/assets/icons/favicon.png" />
+    <span class="title">Lost Ark Market Online</span>
+    <mat-menu #appMenu="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item (click)="updateRegion('Europe West', true)">
+          Europe West
+        </button>
+        <button mat-menu-item (click)="updateRegion('Europe Central', true)">
+          Europe Central
+        </button>
+        <button mat-menu-item (click)="updateRegion('North America West', true)">
+          North America West
+        </button>
+        <button mat-menu-item (click)="updateRegion('North America East', true)">
+          North America East
+        </button>
+        <button mat-menu-item (click)="updateRegion('South America', true)">
+          South America
+        </button>
+      </ng-template>
+    </mat-menu>
+    <span class="spacer"></span>
+    <button mat-button [matMenuTriggerFor]="appMenu">{{ region }}</button>
+    <button class="applyBtn" mat-icon-button (click)="openApplyDialog()">
+      <mat-icon>admin_panel_settings</mat-icon>
+    </button>
+    <a
+      target="_blank"
+      class="github"
+      href="https://github.com/gogodr/LostArk-Market-Web"
+      ><img src="/assets/icons/github.png"
+    /></a>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="secondRow">
+    <a [routerLink]="['/'+regionSlug,'market']" routerLinkActive="active" class="tab">
+      <span>Market</span>
+    </a>
+    <a disabled [routerLink]="null" routerLinkActive="active"  class="tab disabled">
+      <span>Crafting Calculator</span>
+    </a>
+    <a disabled [routerLink]="null" routerLinkActive="active"  class="tab disabled">
+      <span>Honing Calculator</span>
+    </a>
+    <a disabled [routerLink]="null" routerLinkActive="active"  class="tab disabled">
+      <span>Mari Shop</span>
+    </a>
+    <a href="https://documenter.getpostman.com/view/20821530/UyxbppKr" target="_blank"  class="tab">
+      <span>API Doc</span>
+    </a>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="routerContainer">
+  <router-outlet></router-outlet>
+</div>

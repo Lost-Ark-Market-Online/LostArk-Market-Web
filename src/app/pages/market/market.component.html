@@ -1,0 +1,319 @@
+<form class="filters-form">
+  
+  <button class="menu-btn" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <div class="spacer"></div>
+  <mat-form-field class="searchContainer" appearance="fill">
+    <mat-label>Search</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Search"
+      matInput
+      [formControl]="searchControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
+    <mat-icon>search</mat-icon>
+  </button>
+</form>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-nav-list class="nav-list">
+      <a
+        class="nav-header"
+        mat-list-item
+        [routerLink]="['/' + regionSlug, 'market', 'favorites']"
+        routerLinkActive="selected"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Favorites ({{ favorites.length }}/10)</a
+      >
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.engravingSubMenu }"
+        (click)="menu.engravingSubMenu = !menu.engravingSubMenu"
+      >
+        <span class="full-width">Engraving Recipe</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.engravingSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-engraving"
+        [ngClass]="{ expanded: menu.engravingSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'engraving-recipe']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.enhancementMaterialsSubMenu }"
+        (click)="
+          menu.enhancementMaterialsSubMenu = !menu.enhancementMaterialsSubMenu
+        "
+      >
+        <span class="full-width">Enhancement Materials</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.enhancementMaterialsSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-enhancement-materials"
+        [ngClass]="{ expanded: menu.enhancementMaterialsSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'enhancement-materials']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'enhancement-materials',
+            'honing-materials'
+          ]"
+          routerLinkActive="active"
+          >Honing Materials</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'enhancement-materials',
+            'additional-honing-materials'
+          ]"
+          routerLinkActive="active"
+          >Additional Honing Materials</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'enhancement-materials',
+            'other-materials'
+          ]"
+          routerLinkActive="active"
+          >Other Materials</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.combatSubMenu }"
+        (click)="menu.combatSubMenu = !menu.combatSubMenu"
+      >
+        <span class="full-width">Combat Supplies</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.combatSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div class="submenu-combat" [ngClass]="{ expanded: menu.combatSubMenu }">
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'combat-supplies']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'combat-supplies',
+            'recovery'
+          ]"
+          routerLinkActive="active"
+          >Battle Item - Recovery</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'combat-supplies',
+            'offense'
+          ]"
+          routerLinkActive="active"
+          >Battle Item - Offense</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'combat-supplies',
+            'utility'
+          ]"
+          routerLinkActive="active"
+          >Battle Item - Utility</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'combat-supplies', 'buff']"
+          routerLinkActive="active"
+          >Battle Item - Buff</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.traderSubMenu }"
+        (click)="menu.traderSubMenu = !menu.traderSubMenu"
+      >
+        <span class="full-width">Trader</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.traderSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div class="submenu-trader" [ngClass]="{ expanded: menu.traderSubMenu }">
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'trader']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'trader',
+            'foraging-rewards'
+          ]"
+          routerLinkActive="active"
+          >Foraging Rewards</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'trader', 'loggin-loot']"
+          routerLinkActive="active"
+          >Logging Loot</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'trader', 'mining-loot']"
+          routerLinkActive="active"
+          >Mining Loot</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'trader', 'hunting-loot']"
+          routerLinkActive="active"
+          >Hunting Loot</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'trader', 'fishing-loot']"
+          routerLinkActive="active"
+          >Fishing Loot</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="[
+            '/' + regionSlug,
+            'market',
+            'trader',
+            'excavating-loot'
+          ]"
+          routerLinkActive="active"
+          >Excavating Loot</a
+        >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'trader', 'other']"
+          routerLinkActive="active"
+          >Other</a
+        >
+      </div>
+
+      <mat-list-item
+        class="nav-header"
+        [ngClass]="{ active: menu.adventurersTomeSubMenu }"
+        (click)="menu.adventurersTomeSubMenu = !menu.adventurersTomeSubMenu"
+      >
+        <span class="full-width">Adventurer's Tome</span>
+        <mat-icon
+          class="menu-button"
+          [ngClass]="{ rotated: menu.adventurersTomeSubMenu }"
+          >expand_more</mat-icon
+        >
+      </mat-list-item>
+      <div
+        class="submenu-adventurer"
+        [ngClass]="{ expanded: menu.adventurersTomeSubMenu }"
+      >
+        <a
+          class="nav-item"
+          mat-list-item
+          [routerLink]="['/' + regionSlug, 'market', 'adventurers-tome']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All</a
+        >
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content">
+    <app-items-table
+      [filter]="filter"
+      [favorites]="favorites"
+    ></app-items-table>
+  </mat-sidenav-content>
+</mat-sidenav-container>

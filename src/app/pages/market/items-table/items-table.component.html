@@ -3,7 +3,7 @@
         <table mat-table class="full-width-table market" matSort aria-label="Elements">
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <th class="header name" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                 <td class="cellContainer" mat-cell *matCellDef="let row" [class.normal]="row.rarity == 0" [class.uncommon]="row.rarity == 1" [class.rare]="row.rarity == 2" [class.epic]="row.rarity == 3" [class.legendary]="row.rarity == 4" [class.relic]="row.rarity == 5">
                     <div class="cell">
                         <button class="favorite" [class.active]="isFavorite(row)" mat-icon-button (click)="toggleFavorite(row)">
@@ -45,7 +45,7 @@
             </ng-container>
 
             <ng-container matColumnDef="cheapestRemaining">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Cheapest Remaining</th>
+                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Cheapest Rem.</th>
                 <td class="cellContainer" mat-cell *matCellDef="let row">
                     <div class="cell right">{{row.cheapestRemaining}}</div>
                 </td>
