@@ -1,28 +1,23 @@
 .sidenav-container {
-  background-color: #121416;
+  background-color: var(--primary-background-color);
   height: auto;
   min-height: calc(100vh - 156px);
 }
 
 .sidenav {
   width: 300px;
-  background-color: #121416;
+  background-color: var(--primary-background-color);
   color: #fdf9e0;
   padding-right: 4px;
 }
 
-.sidenav .mat-toolbar {
-  background-color: #1e2329;
-  box-shadow: inset 0 0 10px #272a2f;
-  color: #ab9c77;
-}
-
 .nav-header {
-  background-color: #1e2329;
-  box-shadow: inset 0 0 10px #272a2f;
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--secondary-background-box-shadow);
   color: white;
   position: relative;
   margin-bottom: 4px;
+  transition: background-color 200ms;
 }
 
 .nav-header:hover {
@@ -91,7 +86,7 @@
 }
 
 .filters-form {
-  background-color: #121416;
+  background-color: var(--primary-background-color);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -120,9 +115,13 @@
 }
 
 .filters-form .searchBtn {
-  background-color: #2e3640;
-  box-shadow: inset 0 0 5px #1e2228;
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--secondary-background-box-shadow);
   color: #ab9c77;
+  transition: background-color 200ms;
+}
+.filters-form .searchBtn:hover {
+  background-color: #252c35;
 }
 
 .sidenav-content{

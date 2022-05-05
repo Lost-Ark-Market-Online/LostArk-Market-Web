@@ -9,7 +9,7 @@
 }
 
 .toolbar {
-  background-color: #121416;
+  background-color: var(--primary-background-color);
   min-height: 0px;
 }
 
@@ -37,13 +37,13 @@
 .firstRow{
   height: 48px;
   margin-bottom: 4px;
-  background-color: #1e2329;
-  box-shadow: inset 0 0 10px #272a2f;
-  color: #ab9c77;
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--secondary-background-box-shadow);
+  color: var(--text-color);
 }
 
 .secondRow{
-  background-color: #121416;
+  background-color: var(--primary-background-color);
   padding: 0px;
   padding-top: 4px;
   gap: 4px;
@@ -61,7 +61,7 @@
   justify-content: center;
   position: relative;
   text-decoration: none;
-  border-bottom: #ab9c77 solid 2px;
+  border-bottom: var(--text-color) solid 2px;
   box-sizing: border-box;
 }
 

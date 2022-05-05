@@ -8,22 +8,22 @@
 }
 
 .market {
-    background-color: #121416;
+    background-color: var(--primary-background-color);
     border-collapse: separate;
     border-spacing: 0px 4px;
     min-width: 1000px;
 }
 
 .paginator {
-    background-color: #1e2329;
-    box-shadow: inset 0 0 10px #272a2f;
-    color: #ab9c77;
+    background-color: var(--secondary-background-color);
+    box-shadow: var(--secondary-background-box-shadow);
+    color: var(--text-color);
 }
 
 .market .header {
-    background-color: #1e2329;
-    box-shadow: inset 0 0 10px #272a2f;
-    color: #ab9c77;
+    background-color: var(--secondary-background-color);
+    box-shadow: var(--secondary-background-box-shadow);
+    color: var(--text-color);
     padding: 16px;
     font-size: 1em;
     min-width:120px;
@@ -35,7 +35,7 @@
 }
 
 .market .header:not(:first-child) {
-    border-left: #121416 solid 5px;
+    border-left: var(--primary-background-color) solid 5px;
 }
 
 .market {
@@ -126,7 +126,7 @@
 }
 
 .market .row {
-    background-color: #090a0c;
+    background-color: #090909;
     margin-bottom: 8px;
 }
 
@@ -141,7 +141,6 @@
 .market .row .itemImage {
     height: 64px;
     width: 64px;
-    clip-path: polygon(10px 0px, 54px 0px, 64px 10px, 64px 54px, 54px 64px, 10px 64px, 0px 54px, 0px 10px);
 }
 
 .market .row .buttonContainer{
@@ -151,9 +150,11 @@
     align-items: center;
     justify-content: center;
 }
+
 .market .row .buttonContainer .btnHistory{
     color: white;
 }
+
 .market .row .name{
     display: flex;
     flex-direction: column;
