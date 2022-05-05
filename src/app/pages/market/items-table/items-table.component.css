@@ -4,6 +4,7 @@
 
 .marketContainer {
     max-width: 100%;
+    min-height: 834px;
     overflow-x: auto;
 }
 
@@ -40,7 +41,6 @@
 
 .market {
     color: white;
-    min-height: 834px;
 }
 
 .market .cell {
