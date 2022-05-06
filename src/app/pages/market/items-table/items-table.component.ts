@@ -74,7 +74,7 @@ export class ItemsTableComponent implements AfterViewInit {
     }
     return this.favorites.findIndex(i => i.name == item.name && i.rarity == item.rarity) >= 0;
   }
-  
+
   openHistory(item: MarketItem) {
     logEvent(this.analytics, 'historical_component', { region: this.dataSource.filter?.region, item: item.id });
     this.dialog.open(HistoricalComponent, {
@@ -87,6 +87,18 @@ export class ItemsTableComponent implements AfterViewInit {
   isUntradable(item: MarketItem) {
     if (item.category == 'Engraving Recipe') {
       return true;
+    }
+    return false;
+  }
+
+  isHidden(row: string) {
+    switch (row) {
+      case 'cheapestRemaining':
+      case 'recentPrice':
+      case 'favorite':
+        if (this.filter && this.filter.category == 'Currency Exchange') {
+          return true;
+        }
     }
     return false;
   }

@@ -171,3 +171,6 @@
 .market .row .name .bundles .amount{
     color:#faab02;
 }
+.hidden {
+    display: none;
+}

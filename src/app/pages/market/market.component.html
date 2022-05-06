@@ -50,6 +50,14 @@
         [routerLinkActiveOptions]="{ exact: true }"
         >Favorites ({{ favorites.length }}/10)</a
       >
+      <a
+        class="nav-header"
+        mat-list-item
+        [routerLink]="['/' + regionSlug, 'market', 'currency-exchange']"
+        routerLinkActive="selected"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Currency Exchange</a
+      >
 
       <mat-list-item
         class="nav-header"

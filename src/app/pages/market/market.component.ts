@@ -72,6 +72,9 @@ const categoriesMap: { [slug: string]: { category: string, subcategories?: { [su
   'sailing': {
     category: 'Sailing'
   },
+  'currency-exchange': {
+    category: 'Currency Exchange'
+  },
 }
 
 @Component({
