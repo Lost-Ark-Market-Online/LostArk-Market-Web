@@ -8,25 +8,25 @@
     <span class="title">Lost Ark Market Online</span>
     <mat-menu #appMenu="matMenu">
       <ng-template matMenuContent>
-        <button mat-menu-item (click)="updateRegion('Europe West', true)">
+        <button mat-menu-item (click)="common.updateRegion('Europe West', true)">
           Europe West
         </button>
-        <button mat-menu-item (click)="updateRegion('Europe Central', true)">
+        <button mat-menu-item (click)="common.updateRegion('Europe Central', true)">
           Europe Central
         </button>
-        <button mat-menu-item (click)="updateRegion('North America West', true)">
+        <button mat-menu-item (click)="common.updateRegion('North America West', true)">
           North America West
         </button>
-        <button mat-menu-item (click)="updateRegion('North America East', true)">
+        <button mat-menu-item (click)="common.updateRegion('North America East', true)">
           North America East
         </button>
-        <button mat-menu-item (click)="updateRegion('South America', true)">
+        <button mat-menu-item (click)="common.updateRegion('South America', true)">
           South America
         </button>
       </ng-template>
     </mat-menu>
     <span class="spacer"></span>
-    <button mat-button [matMenuTriggerFor]="appMenu">{{ region }}</button>
+    <button mat-button [matMenuTriggerFor]="appMenu">{{ common.region }}</button>
     <button class="applyBtn" mat-icon-button (click)="openApplyDialog()">
       <mat-icon>admin_panel_settings</mat-icon>
     </button>
@@ -38,16 +38,16 @@
     /></a>
   </mat-toolbar-row>
   <mat-toolbar-row class="secondRow">
-    <a [routerLink]="['/'+regionSlug,'market']" routerLinkActive="active" class="tab">
+    <a [routerLink]="['/'+common.regionSlug,'market']" routerLinkActive="active" class="tab">
       <span>Market</span>
     </a>
-    <a disabled [routerLink]="null" routerLinkActive="active"  class="tab disabled">
+    <a disabled [routerLink]="['/'+common.regionSlug,'crafting']" routerLinkActive="active"  class="tab">
       <span>Crafting Calculator</span>
     </a>
-    <a disabled [routerLink]="null" routerLinkActive="active"  class="tab disabled">
+    <a href="https://lostark-helper.com/honing-cost-optimizer" target="_blank" class="tab">
       <span>Honing Calculator</span>
     </a>
-    <a disabled [routerLink]="null" routerLinkActive="active"  class="tab disabled">
+    <a href="https://lostark-helper.com/mari-optimizer" target="_blank"  class="tab">
       <span>Mari Shop</span>
     </a>
     <a href="https://documenter.getpostman.com/view/20821530/UyxbppKr" target="_blank"  class="tab">

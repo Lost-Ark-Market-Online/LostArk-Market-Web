@@ -35,9 +35,38 @@ import { HighchartsChartModule } from "highcharts-angular";
 import { MarketComponent } from './pages/market/market.component';
 import { CraftingComponent } from './pages/crafting/crafting.component';
 import { HoningComponent } from './pages/honing/honing.component';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, UrlSegment, UrlMatchResult } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSliderModule } from '@angular/material/slider';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ApiService } from '../services/api';
+
+
+
+function craftingPageMatcher(segments: UrlSegment[]): UrlMatchResult {
+  if (segments.length >= 2 && segments[1].path == 'crafting') {
+    let posParams: any = {};
+    posParams['region'] = segments[0];
+    if (segments.length > 2) {
+      posParams['category'] = segments[2]
+    }
+    if (segments.length > 3) {
+      posParams['subcategory'] = segments[3]
+    }
+    if (segments.length > 4) {
+      posParams['item'] = segments[4]
+    }
+    return {
+      consumed: segments,
+      posParams
+    };
+  }
+  return <UrlMatchResult>(null as any);
+}
 
 const routes: Routes = [
+  { matcher: craftingPageMatcher, component: CraftingComponent },
   { path: ':region/market', component: MarketComponent },
   { path: ':region/market/:category', component: MarketComponent },
   { path: ':region/market/:category/:subcategory', component: MarketComponent },
@@ -58,6 +87,7 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes),
+    HttpClientModule,
     BrowserAnimationsModule,
     LayoutModule,
     FlexLayoutModule,
@@ -82,9 +112,12 @@ const routes: Routes = [
     provideFirestore(() => getFirestore()),
     MomentModule,
     AnalyticsModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    MatTooltipModule,
+    MatSliderModule,
+    MatSlideToggleModule
   ],
-  providers: [ScreenTrackingService, CommonService],
+  providers: [ScreenTrackingService, CommonService, ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

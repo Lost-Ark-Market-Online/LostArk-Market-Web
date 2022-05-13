@@ -4,8 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { Observable, of, take, mergeMap, combineLatest, startWith, Subject, map } from 'rxjs';
 import { collection, collectionData, DocumentData, Firestore, query, QueryConstraint, where } from '@angular/fire/firestore';
 
-import type { Filter } from '../market.interfaces';
 import { FavoriteItem, MarketItem } from './items-table.interfaces';
+import { Filter } from 'src/interfaces/common';
 
 export class MarketDataSource extends DataSource<MarketItem> {
   data: MarketItem[] = [];

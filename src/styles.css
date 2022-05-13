@@ -1,55 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
-:root{
-    --text-color: #c1a979;
-    --text-color-focused: #554f40;
-    --primary-background-color: #121416;
-    --secondary-background-color: #1e2329;
-    --secondary-background-box-shadow: inset 0 0 10px #272a2f;
+:root {
+  --text-color: #c1a979;
+  --text-color-focused: #554f40;
+  --primary-background-color: #121416;
+  --secondary-background-color: #1e2329;
+  --secondary-background-box-shadow: inset 0 0 10px #272a2f;
 }
 
 html,
 body {
-    height: 100%;
-    background-color: #050608;
+  height: 100%;
+  background-color: #050608;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .mat-select-value {
-    color: var(--text-color);
+  color: var(--text-color);
 }
 
 .mat-paginator,
 .mat-paginator-page-size .mat-select-trigger,
 .mat-select-arrow {
-    color: var(--text-color);
+  color: var(--text-color);
 }
 
 .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
-    color: var(--text-color-focused);
+  color: var(--text-color-focused);
 }
 
 .mat-dialog-container {
-    background-color: var(--secondary-background-color);
-    box-shadow: var(--secondary-background-box-shadow);
-    color: var(--text-color);
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--secondary-background-box-shadow);
+  color: var(--text-color);
 }
 
 .mat-form-field .mat-form-field-label {
-    color: var(--text-color);
+  color: var(--text-color);
 }
 
 .mat-form-field.mat-focused .mat-form-field-label {
-    color: var(--text-color);
+  color: var(--text-color);
 }
 
 .mat-form-field input::placeholder {
-    color: var(--text-color);
-    opacity: 0.6;
+  color: var(--text-color);
+  opacity: 0.6;
 }
-.mat-sort-header-content{
-    text-align: left!important;
+.mat-sort-header-content {
+  text-align: left !important;
+}
+
+.rarity_0 {
+  background: linear-gradient(50deg, #5e5e5e 0%, #050505a1 50%) !important;
+  color: white !important;
+}
+.rarity_1 {
+  background: linear-gradient(50deg, #203808 0%, #050505a1 50%) !important;
+  color: #93ee24 !important;
+}
+.rarity_2 {
+  background: linear-gradient(50deg, #064054 0%, #050505a1 50%) !important;
+  color: #17a7e6 !important;
+}
+.rarity_3 {
+  background: linear-gradient(50deg, #440850 0%, #050505a1 50%) !important;
+  color: #b249d4 !important;
+}
+.rarity_4 {
+  background: linear-gradient(50deg, #6a4109 0%, #050505a1 50%) !important;
+  color: #e8921b !important;
+}
+.rarity_5 {
+  background: linear-gradient(50deg, #783201 0%, #050505a1 50%) !important;
+  color: #e66516 !important;
 }

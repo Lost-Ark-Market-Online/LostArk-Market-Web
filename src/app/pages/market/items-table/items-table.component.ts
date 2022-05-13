@@ -6,11 +6,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
+import { Filter } from 'src/interfaces/common';
 import { CommonService } from 'src/services/common';
 import { HistoricalComponent } from '../historical/historical.component';
 import { MarketDataSource } from './items-table.datasource';
 
-import type { Filter } from '../market.interfaces';
 import type { FavoriteItem, MarketItem } from './items-table.interfaces';
 
 @Component({

@@ -1,1 +1,1001 @@
-<p>crafting works!</p>
+<div class="toolbar">  
+  <button
+    class="menu-btn"
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="bonuses.toggle()"
+    *ngIf="isLarge$ | async"
+  >
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <button
+    class="menu-btn"
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="filterNav.toggle()"
+    *ngIf="isMedium$ | async"
+  >
+    <mat-icon aria-label="Side nav toggle icon">filter_list</mat-icon>
+  </button>
+  <a
+    class="category"
+    *ngFor="let category of menu"
+    [routerLink]="['/' + common.regionSlug, 'crafting', category.id]"
+    routerLinkActive="selected"
+    >{{ category.name }}</a
+  >
+  <mat-form-field class="searchContainer" appearance="fill">
+    <mat-label>Search</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Search"
+      matInput
+      [formControl]="searchControl"
+      (keyup.enter)="search()"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #bonuses
+    class="bonusesContainer"
+    [attr.role]="(isLarge$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isLarge$ | async) ? 'over' : 'side'"
+    [opened]="(isLarge$ | async) === false"
+  >
+    <div class="header">
+      <h3 class="title">Stronghold Bonuses</h3>
+    </div>
+    <form class="bonusesForm" [formGroup]="bonusForm">
+      <mat-form-field class="inputField" appearance="outline">
+        <mat-label>Crafting Cost Reduction</mat-label>
+        <input
+          class="numberInput"
+          type="number"
+          formControlName="costReduction"
+          min="-30"
+          max="0"
+          matInput
+        />
+        <span matSuffix>%</span>
+        <mat-error *ngIf="bonusForm.get('costReduction')?.hasError('min')"
+          >Maximum value is -30%</mat-error
+        >
+        <mat-error *ngIf="bonusForm.get('costReduction')?.hasError('max')"
+          >Maximum value is 0%</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field class="inputField" appearance="outline">
+        <mat-label>Crafting Time Reduction</mat-label>
+        <input
+          class="numberInput"
+          type="number"
+          formControlName="craftingTimeReduction"
+          min="-30"
+          max="0"
+          matInput
+        />
+        <span matSuffix>%</span>
+        <mat-error
+          *ngIf="bonusForm.get('craftingTimeReduction')?.hasError('min')"
+          >Maximum value is -30%</mat-error
+        >
+        <mat-error
+          *ngIf="bonusForm.get('craftingTimeReduction')?.hasError('max')"
+          >Maximum value is 0%</mat-error
+        >
+      </mat-form-field>
+      <div
+        class="sliderField"
+        [class.active]="bonusForm.get('showEnergy')?.value"
+      >
+        <mat-slide-toggle formControlName="showEnergy"
+          >Calculate Crafting Energy</mat-slide-toggle
+        >
+      </div>
+      <mat-form-field
+        *ngIf="bonusForm.get('showEnergy')?.value"
+        class="inputField"
+        appearance="outline"
+      >
+        <mat-label>Energy Consumption Reduction</mat-label>
+        <input
+          class="numberInput"
+          type="number"
+          formControlName="energyReduction"
+          min="-30"
+          max="0"
+          matInput
+        />
+        <span matSuffix>%</span>
+        <mat-error *ngIf="bonusForm.get('energyReduction')?.hasError('min')"
+          >Maximum value is -30%</mat-error
+        >
+        <mat-error *ngIf="bonusForm.get('energyReduction')?.hasError('max')"
+          >Maximum value is 0%</mat-error
+        >
+      </mat-form-field>
+      <div
+        class="sliderField"
+        [class.active]="bonusForm.get('showStrongholdXp')?.value"
+      >
+        <mat-slide-toggle formControlName="showStrongholdXp"
+          >Calculate Stronghold XP</mat-slide-toggle
+        >
+      </div>
+      <mat-form-field
+        *ngIf="bonusForm.get('showStrongholdXp')?.value"
+        class="inputField"
+        appearance="outline"
+      >
+        <mat-label>Stronghold XP Increase</mat-label>
+        <input
+          class="numberInput"
+          type="number"
+          formControlName="strongholdXpIncrease"
+          min="0"
+          max="30"
+          matInput
+        />
+        <span matSuffix>%</span>
+        <mat-error
+          *ngIf="bonusForm.get('strongholdXpIncrease')?.hasError('max')"
+          >Maximum value 30%</mat-error
+        >
+        <mat-error
+          *ngIf="bonusForm.get('strongholdXpIncrease')?.hasError('min')"
+          >Minimum value is 0%</mat-error
+        >
+      </mat-form-field>
+    </form>
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content">
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav class="submenu"
+      #filterNav
+      [attr.role]="(isMedium$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isMedium$ | async) ? 'over' : 'side'"
+      [opened]="(isMedium$ | async) === false">
+        <mat-nav-list class="nav-list">
+          <ng-container *ngFor="let subCategory of submenu">
+            <mat-list-item
+              class="submenu-header"
+              [routerLink]="
+                filter.subcategory == subCategory.id
+                  ? ['/' + common.regionSlug, 'crafting', filter.category]
+                  : [
+                      '/' + common.regionSlug,
+                      'crafting',
+                      filter.category,
+                      subCategory.id
+                    ]
+              "
+              routerLinkActive="active"
+              queryParamsHandling="merge"
+              [class.active]="subCategory.id == 'all'"
+            >
+              <span class="full-width">{{ subCategory.name == 'All'? category : subCategory.name }}</span>
+              <mat-icon class="menu-button" *ngIf="subCategory.id != 'all'"
+                >expand_more</mat-icon
+              >
+            </mat-list-item>
+            <div
+              class="submenu-content items-{{
+                subCategory.items.length < 21 ? subCategory.items.length : 'all'
+              }}"
+            >
+              <a
+                *ngFor="let item of subCategory.items"
+                class="submenu-item"
+                mat-list-item
+                [routerLink]="[
+                  '/' + common.regionSlug,
+                  'crafting',
+                  filter.category,
+                  subCategory.id,
+                  item.id
+                ]"
+                class="rarity_{{ item.rarity }}"
+                routerLinkActive="active"
+                queryParamsHandling="merge"
+                [routerLinkActiveOptions]="{ exact: true }"
+              >
+                <div class="itemContainer">
+                  <button
+                    class="favorite"
+                    [class.active]="isFavorite(item.id)"
+                    mat-icon-button
+                    (click)="toggleFavorite(item.id)"
+                  >
+                    <mat-icon>star</mat-icon>
+                  </button>
+                  <span class="itemName">{{ item.name }}</span>
+                  <span
+                    *ngIf="recipes[item.id].craftvsbuy"
+                    class="price"
+                    [class.overprice]="recipes[item.id].craftvsbuy! > 0"
+                    [class.discount]="recipes[item.id].craftvsbuy! < 0"
+                    >( {{ recipes[item.id].craftvsbuy }} % )</span
+                  >
+                </div>
+              </a>
+            </div>
+          </ng-container>
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content class="crafting">
+        <div
+          class="craftingWrapper"
+          *ngIf="selectedRecipeId && recipes[selectedRecipeId!]"
+        >
+          <div class="itemInfo">
+            <button
+              class="favorite"
+              [class.active]="isFavorite(selectedRecipeId)"
+              mat-icon-button
+              (click)="toggleFavorite(selectedRecipeId)"
+            >
+              <mat-icon>star</mat-icon>
+            </button>
+            <div class="imageWrapper">
+              <img
+                [src]="'/assets/item_icons/' + recipes[selectedRecipeId!].image"
+              />
+            </div>
+            <div class="infoWrapper">
+              <h2 class="name">
+                {{ recipes[selectedRecipeId!].name
+                }}<span *ngIf="recipes[selectedRecipeId!].amount > 1">
+                  x{{ recipes[selectedRecipeId!].amount }}</span
+                >
+              </h2>
+              <span
+                ><span class="xp">{{
+                  recipes[selectedRecipeId!].strongholdXpIncreased
+                }}</span>
+                Stronghold XP Gained</span
+              >
+            </div>
+          </div>
+          <div class="craftingTime">
+            <span class="title"
+              >Time Left
+              <span
+                class="discount"
+                *ngIf="bonusForm.get('craftingTimeReduction')?.value"
+                >({{ bonusForm.get("craftingTimeReduction")?.value * -1 }}%
+                decrease)</span
+              ></span
+            >
+            <div class="timeWrapper">
+              <span class="time">{{
+                calculateTime(
+                  recipes[selectedRecipeId!].craftingTimeSecondsDiscounted!
+                )
+              }}</span>
+            </div>
+          </div>
+          <div class="craftingRequirementsWrapper">
+            <span class="title">Crafting Requirements</span>
+            <div class="requeriments">
+              <span
+                class="requirement"
+                *ngFor="
+                  let requirement of recipes[selectedRecipeId!].requirements
+                "
+              >
+                <span>Complete ⬥ </span>
+                <span *ngIf="requirement.start">{{ requirement.start }}</span>
+                <a
+                  [href]="requirement.href"
+                  target="_blank"
+                  *ngIf="requirement.href"
+                  >{{ requirement.text }}</a
+                >
+                <span *ngIf="!requirement.href">{{ requirement.text }}</span>
+                <span *ngIf="requirement.end">{{ requirement.end }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="requiredMaterials">
+            <span class="title">Required Materials</span>
+            <span class="materialsContainer">
+              <div class="row">
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[0]
+                        ? recipes[selectedRecipeId!].ingredients[0].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[0]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[0].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[0].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[0].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[0].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[0].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[0].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[0].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[0].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[0]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[0].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[1]
+                        ? recipes[selectedRecipeId!].ingredients[1].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[1]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[1].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[1].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[1].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[1].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[1].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[1].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[1].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[1].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[1]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[1].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[2]
+                        ? recipes[selectedRecipeId!].ingredients[2].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[2]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[2].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[2].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[2].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[2].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[2].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[2].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[2].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[2].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[2]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[2].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[3]
+                        ? recipes[selectedRecipeId!].ingredients[3].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[3]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[3].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[3].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[3].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[3].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[3].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[3].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[3].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[3].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[3]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[3].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[4]
+                        ? recipes[selectedRecipeId!].ingredients[4].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[4]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[4].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[4].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[4].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[4].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[4].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[4].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[4].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[4].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[4]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[4].amount
+                    }}</span
+                  >
+                </div>
+              </div>
+              <div class="row">
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[5]
+                        ? recipes[selectedRecipeId!].ingredients[5].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[5]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[5].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[5].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[5].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[5].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[5].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[5].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[5].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[5].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[5]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[5].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[6]
+                        ? recipes[selectedRecipeId!].ingredients[6].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[6]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[6].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[6].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[6].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[6].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[6].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[6].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[6].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[6].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[6]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[6].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[7]
+                        ? recipes[selectedRecipeId!].ingredients[7].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[7]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[7].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[7].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[7].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[7].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[7].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[7].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[7].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[7].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[7]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[7].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[8]
+                        ? recipes[selectedRecipeId!].ingredients[8].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[8]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[8].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[8].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[8].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[8].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[8].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[8].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[8].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[8].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[8]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[8].amount
+                    }}</span
+                  >
+                </div>
+                <div class="material">
+                  <div
+                    class="imageContainer"
+                    class="rarity_{{
+                      recipes[selectedRecipeId!].ingredients[9]
+                        ? recipes[selectedRecipeId!].ingredients[9].rarity
+                        : -1
+                    }}"
+                  >
+                    <img
+                      *ngIf="recipes[selectedRecipeId!].ingredients[9]"
+                      [src]="
+                        '/assets/item_icons/' +
+                        recipes[selectedRecipeId!].ingredients[9].image
+                      "
+                      [matTooltip]="
+                        recipes[selectedRecipeId!].ingredients[9].name!
+                      "
+                      [matTooltipClass]="{
+                        rarity_0:
+                          recipes[selectedRecipeId!].ingredients[9].rarity == 0,
+                        rarity_1:
+                          recipes[selectedRecipeId!].ingredients[9].rarity == 1,
+                        rarity_2:
+                          recipes[selectedRecipeId!].ingredients[9].rarity == 2,
+                        rarity_3:
+                          recipes[selectedRecipeId!].ingredients[9].rarity == 3,
+                        rarity_4:
+                          recipes[selectedRecipeId!].ingredients[9].rarity == 4,
+                        rarity_5:
+                          recipes[selectedRecipeId!].ingredients[9].rarity == 5
+                      }"
+                    />
+                  </div>
+                  <span
+                    *ngIf="recipes[selectedRecipeId!].ingredients[9]"
+                    class="amount"
+                    >{{
+                      recipes[selectedRecipeId!].ingredients[9].amount
+                    }}</span
+                  >
+                </div>
+              </div>
+            </span>
+          </div>
+
+          <div class="requiredMaterials">
+            <span class="title">Required Materials Detail</span>
+            <div class="materialsContainer">
+              <ng-container
+                *ngFor="
+                  let recipeRow of recipes[selectedRecipeId!].ingredients;
+                  index as recipeRowIndex
+                "
+              >
+                <div class="detailRow">
+                  <span class="item"
+                    >{{ recipeRow.name }} x{{ recipeRow.amount }}
+                    <button
+                      *ngIf="recipeRow.ingredients"
+                      mat-button
+                      class="craftBtn"
+                      (click)="toggleCraft(recipeRowIndex)"
+                    >
+                      {{ recipeRow.open ? "Craft" : "Buy" }}
+                    </button></span
+                  >
+                  <span
+                    class="price"
+                    *ngIf="
+                      recipeRow.price &&
+                      !(recipeRow.ingredients && recipeRow.open)
+                    "
+                    >{{ recipeRow.price
+                    }}<img class="currency" src="/assets/icons/gold.png"
+                  /></span>
+                </div>
+                <div
+                  class="subRecipe items_{{
+                    (recipeRow.ingredients?.length || 0) +
+                      (bonusForm.get('showEnergy')?.value ? 1 : 0) +
+                      (bonusForm.get('showStrongholdXp')?.value ? 1 : 0)
+                  }}"
+                  *ngIf="recipeRow.ingredients"
+                  [class.open]="recipeRow.open"
+                >
+                  <div
+                    class="detailRow"
+                    *ngFor="let subRecipeRow of recipeRow.ingredients"
+                  >
+                    <span class="item"
+                      >{{ subRecipeRow.name }} x{{ subRecipeRow.amount }}</span
+                    >
+                    <span class="price" *ngIf="subRecipeRow.price"
+                      >{{ subRecipeRow.price
+                      }}<img class="currency" src="/assets/icons/gold.png"
+                    /></span>
+                  </div>
+                  <div class="detailRow">
+                    <span class="item"
+                      >Crafting Cost
+                      <span
+                        class="discount"
+                        *ngIf="bonusForm.get('costReduction')?.value"
+                        >({{ bonusForm.get("costReduction")?.value * -1 }}%
+                        decrease)</span
+                      ></span
+                    >
+                    <span class="price"
+                      >{{ recipeRow.costDiscounted
+                      }}<img class="currency" src="/assets/icons/gold.png"
+                    /></span>
+                  </div>
+                  <div
+                    class="detailRow"
+                    *ngIf="bonusForm.get('showEnergy')?.value"
+                  >
+                    <span class="item"
+                      >Energy Cost
+                      <span
+                        class="discount"
+                        *ngIf="bonusForm.get('energyReduction')?.value"
+                        >({{ bonusForm.get("energyReduction")?.value * -1 }}%
+                        decrease)</span
+                      ></span
+                    >
+                    <span class="price"
+                      >{{ recipeRow.energyDiscounted
+                      }}<img class="currency" src="/assets/icons/energy.webp"
+                    /></span>
+                  </div>
+                  <div
+                    class="detailRow"
+                    *ngIf="bonusForm.get('showStrongholdXp')?.value"
+                  >
+                    <span class="item"
+                      >Stronghold XP Gained
+                      <span
+                        class="discount"
+                        *ngIf="bonusForm.get('strongholdXpIncrease')?.value"
+                        >({{ bonusForm.get("strongholdXpIncrease")?.value }}%
+                        increase)</span
+                      ></span
+                    >
+                    <span class="price"
+                      >{{ recipeRow.strongholdXpIncreased
+                      }}<img
+                        class="currency"
+                        src="/assets/icons/strongholdxp.webp"
+                    /></span>
+                  </div>
+                  <div class="detailRow">
+                    <span class="item"
+                      >Total Crafting Cost<span class="discount"></span
+                    ></span>
+                    <span class="price"
+                      >{{ recipeRow.craftTotal
+                      }}<img class="currency" src="/assets/icons/gold.png"
+                    /></span>
+                  </div>
+                  <div class="detailRow" *ngIf="recipeRow.price">
+                    <span class="item">Craft vs Buy</span>
+                    <span
+                      class="price"
+                      [class.overprice]="recipeRow.craftvsbuy! > 0"
+                      [class.discount]="recipeRow.craftvsbuy! < 0"
+                      ><span
+                        >{{
+                          recipeRow.craftvsbuy! > 0 ? "Overprice" : "Discount"
+                        }}
+                        of </span
+                      >{{ recipeRow.craftvsbuy }} % by crafting</span
+                    >
+                  </div>
+                </div>
+              </ng-container>
+              <div class="detailRow">
+                <span class="item"
+                  >Crafting Cost
+                  <span
+                    class="discount"
+                    *ngIf="bonusForm.get('costReduction')?.value"
+                    >({{ bonusForm.get("costReduction")?.value * -1 }}%
+                    decrease)</span
+                  ></span
+                >
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].costDiscounted
+                  }}<img class="currency" src="/assets/icons/gold.png"
+                /></span>
+              </div>
+              <div class="detailRow" *ngIf="bonusForm.get('showEnergy')?.value">
+                <span class="item"
+                  >Energy Cost
+                  <span
+                    class="discount"
+                    *ngIf="bonusForm.get('energyReduction')?.value"
+                    >({{ bonusForm.get("energyReduction")?.value * -1 }}%
+                    decrease)</span
+                  ></span
+                >
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].energyDiscounted
+                  }}<img class="currency" src="/assets/icons/energy.webp"
+                /></span>
+              </div>
+              <div
+                class="detailRow"
+                *ngIf="bonusForm.get('showStrongholdXp')?.value"
+              >
+                <span class="item"
+                  >Stronghold XP Gained
+                  <span
+                    class="discount"
+                    *ngIf="bonusForm.get('strongholdXpIncrease')?.value"
+                    >({{ bonusForm.get("strongholdXpIncrease")?.value }}%
+                    increase)</span
+                  ></span
+                >
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].strongholdXpIncreased
+                  }}<img class="currency" src="/assets/icons/strongholdxp.webp"
+                /></span>
+              </div>
+              <div class="detailRow total">
+                <span class="item">Total Crafting Cost</span>
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].total
+                  }}<img class="currency" src="/assets/icons/gold.png"
+                /></span>
+              </div>
+              <div
+                class="detailRow total"
+                *ngIf="recipes[selectedRecipeId!].price"
+              >
+                <span class="item">Market Value</span>
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].price
+                  }}<img class="currency" src="/assets/icons/gold.png"
+                /></span>
+              </div>
+              <div
+                class="detailRow total"
+                *ngIf="recipes[selectedRecipeId!].price"
+              >
+                <span class="item">Craft vs Buy</span>
+                <span
+                  class="price"
+                  [class.overprice]="recipes[selectedRecipeId!].craftvsbuy! > 0"
+                  [class.discount]="recipes[selectedRecipeId!].craftvsbuy! < 0"
+                  ><span
+                    >{{
+                      recipes[selectedRecipeId!].craftvsbuy! > 0
+                        ? "Overprice"
+                        : "Discount"
+                    }}
+                    of </span
+                  >{{ recipes[selectedRecipeId!].craftvsbuy }} % by
+                  crafting</span
+                >
+              </div>
+              <div
+                class="detailRow total"
+                *ngIf="recipes[selectedRecipeId!].price"
+              >
+                <span class="item">Recommendation</span>
+                <span class="price">{{
+                  recipes[selectedRecipeId!].recomendation
+                }}</span>
+              </div>
+              <div
+                class="detailRow total"
+                *ngIf="
+                  bonusForm.get('showEnergy')?.value &&
+                  recipes[selectedRecipeId!].energyDiscounted
+                "
+              >
+                <span class="item">Total Energy Cost</span>
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].energyDiscounted
+                  }}<img class="currency" src="/assets/icons/energy.webp"
+                /></span>
+              </div>
+              <div
+                class="detailRow total"
+                *ngIf="
+                  bonusForm.get('showStrongholdXp')?.value &&
+                  recipes[selectedRecipeId!].strongholdXpIncreased
+                "
+              >
+                <span class="item">Total Stronghold XP</span>
+                <span class="price"
+                  >{{ recipes[selectedRecipeId!].strongholdXpIncreased
+                  }}<img class="currency" src="/assets/icons/strongholdxp.webp"
+                /></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>

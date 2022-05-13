@@ -9,5 +9,6 @@ export const environment = {
     messagingSenderId: '694220529164',
     measurementId: 'G-TNPV3RVV4K',
   },
-  production: true
+  production: true,
+  apiHost: "https://www.lostarkmarket.online/api"
 };

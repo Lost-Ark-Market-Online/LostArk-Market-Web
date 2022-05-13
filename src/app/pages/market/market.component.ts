@@ -6,12 +6,12 @@ import { ItemsTableComponent } from './items-table/items-table.component';
 import { Analytics, logEvent } from '@angular/fire/analytics';
 import slugify from 'slugify';
 
-import type { Filter } from './market.interfaces';
 import type { FavoriteItem } from './items-table/items-table.interfaces';
 
-import autocompleteOptions from '../../../data/autocomplete.json';
-import { regionMap } from '../../../app/navigation/navigation.component';
+import autocompleteOptions from '../../../data/market_autocomplete.json';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { regionMap } from 'src/services/common';
+import { Filter } from 'src/interfaces/common';
 
 const categoriesMap: { [slug: string]: { category: string, subcategories?: { [subslug: string]: string } } } = {
   'enhancement-material': {

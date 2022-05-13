@@ -69,7 +69,8 @@
                             "browserTarget": "lostark-market:build:production"
                         },
                         "development": {
-                            "browserTarget": "lostark-market:build:development"
+                            "browserTarget": "lostark-market:build:development",
+                            "proxyConfig": "proxy.conf.json"
                         }
                     },
                     "defaultConfiguration": "development"
