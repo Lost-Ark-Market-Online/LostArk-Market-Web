@@ -40,7 +40,6 @@ export class MarketDataSource extends DataSource<MarketItem> {
         paginator: this.paginator.page.pipe(startWith({ previousPageIndex: 0, pageIndex: 0, pageSize: 10, length: 0 })),
         sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))
       }).pipe(mergeMap((combined) => {
-        console.log('Datasource connected',combined)
         const queryFilters: QueryConstraint[] = [];
         if (combined.filter.favorites) {
           if (this.favorites!.length > 0) {
@@ -77,10 +76,125 @@ export class MarketDataSource extends DataSource<MarketItem> {
           query(
             collection(firestore, combined.filter.region).withConverter<MarketItem>({
               fromFirestore: snapshot => {
-                const { name, amount, rarity, category, subcategory, image, avgPrice, cheapestRemaining, lowPrice, recentPrice, updatedAt } = snapshot.data();
+                const { name, amount, rarity, category, subcategory, image, avgPrice, cheapestRemaining, lowPrice, recentPrice, updatedAt, shortHistoric } = snapshot.data();
                 const { id } = snapshot;
                 const { hasPendingWrites } = snapshot.metadata;
-                return { name, amount, rarity, category, subcategory, image, avgPrice, cheapestRemaining, lowPrice, recentPrice, updatedAt: updatedAt?.toDate(), id, hasPendingWrites };
+
+                const shortHistoricOrdererd = Object.keys(shortHistoric).sort().reduce((acc,key)=>{
+                  acc[key] = shortHistoric[key];
+                  return acc;
+                },{});
+
+                const labels: string[] = Object.keys(shortHistoricOrdererd);
+                const data: number[] = Object.values(shortHistoricOrdererd);
+                const variation = Math.round(((data[6] / data[0]) - 1) * 10000) / 100;
+                let color = '#AED6F1';
+                if(variation > 5){
+                  color = 'limegreen'
+                }
+                if(variation < -5){
+                  color = '#ff2020';
+                }
+                return {
+                  name,
+                  amount,
+                  rarity,
+                  category,
+                  subcategory,
+                  image,
+                  avgPrice,
+                  cheapestRemaining,
+                  lowPrice,
+                  recentPrice,
+                  updatedAt: updatedAt?.toDate(),
+                  id,
+                  hasPendingWrites,
+                  variation,
+                  shortHistoric,
+                  chartOptions: {
+                    chart: {
+                      backgroundColor: 'transparent',
+                      borderWidth: 0,
+                      type: "spline",
+                      height: 40,
+                      width: 150
+                    },
+                    title: {
+                      text: ""
+                    },
+                    credits: {
+                      enabled: false
+                    },
+                    xAxis: {
+                      visible: false,
+                      endOnTick: false,
+                      startOnTick: false,
+                      labels: {
+                        enabled: false
+                      },
+                      title: {
+                        text: null
+                      },
+                      tickPositions: [0]
+                    },
+                    yAxis: {
+                      visible: false,
+                      endOnTick: false,
+                      startOnTick: false,
+                      labels: {
+                        enabled: false
+                      },
+                      title: {
+                        text: null
+                      },
+                      tickPositions: [0]
+                    },
+                    legend: {
+                      enabled: false
+                    },
+                    tooltip: {
+                      hideDelay: 0,
+                      outside: true,
+                      shared: true,
+                      useHTML: true,
+                      formatter() {
+                        return `<div class="price-tooltip">
+                          <span class="date">${labels[this.x]}</span>
+                          <span class="price">${this.y}<img src="/assets/icons/gold.png" alt="gold" class="gold"></span>
+                          </div>
+                          `
+                      },
+                    },
+                    plotOptions: {
+                      series: {
+                        animation: false,
+                        lineWidth: 3,
+                        shadow: false,
+                        color: color,
+                        states: {
+                          hover: {
+                            lineWidth: 3
+                          }
+                        },
+                        marker: {
+                          radius: 1,
+                          states: {
+                            hover: {
+                              radius: 2
+                            }
+                          }
+                        }
+                      },
+                    },
+                    series: [
+                      {
+                        name: '',
+                        type: 'spline',
+                        data: data
+                      }
+                    ]
+                  }
+                };
               },
               toFirestore: (it: any) => it // Not writing into Firestore
             }),

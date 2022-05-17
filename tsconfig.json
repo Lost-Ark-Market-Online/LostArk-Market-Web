@@ -18,12 +18,14 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
+    "noImplicitThis": false,
+    "noImplicitAny": false,
     "lib": [
       "es2020",
       "dom"
     ],
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

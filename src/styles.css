@@ -78,3 +78,62 @@ body {
   background: linear-gradient(50deg, #783201 0%, #050505a1 50%) !important;
   color: #e66516 !important;
 }
+
+img.gold {
+  height: 20px;
+  width: 20px;
+}
+
+.highcharts-exporting-group
+  .highcharts-contextbutton.highcharts-button-pressed
+  .highcharts-button-box,
+.highcharts-exporting-group
+  .highcharts-contextbutton.highcharts-button-hover
+  .highcharts-button-box {
+  fill: transparent;
+}
+.highcharts-exporting-group
+  .highcharts-contextbutton.highcharts-button-hover
+  .highcharts-button-symbol {
+  stroke: white;
+}
+.highcharts-exporting-group
+  .highcharts-contextbutton.highcharts-button-pressed
+  .highcharts-button-symbol {
+  stroke: rgb(187, 187, 187);
+}
+.highcharts-contextmenu .highcharts-menu {
+  box-shadow: rgba(136, 136, 136, 0.541) 1px 1px 5px !important;
+  border-radius: 4px;
+}
+.price-tooltip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.price-tooltip .date {
+  border-bottom: grey 1px solid;
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+.price-tooltip .price {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+@media screen {
+  .highcharts-title {
+    opacity: 0;
+    height: 0px;
+  }
+}
+@media print {
+  .highcharts-title {
+    opacity: 1;
+  }
+}

@@ -11,6 +11,8 @@ import { CommonService } from 'src/services/common';
 import { HistoricalComponent } from '../historical/historical.component';
 import { MarketDataSource } from './items-table.datasource';
 
+import * as Highcharts from "highcharts";
+
 import type { FavoriteItem, MarketItem } from './items-table.interfaces';
 
 @Component({
@@ -25,6 +27,7 @@ export class ItemsTableComponent implements AfterViewInit {
   @Input() filter?: Filter;
   @Input() favorites?: FavoriteItem[];
   dataSource: MarketDataSource;
+  Highcharts: typeof Highcharts = Highcharts;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['name', 'avgPrice', 'recentPrice', 'lowPrice', 'cheapestRemaining', 'updatedAt'];

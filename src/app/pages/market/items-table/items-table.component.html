@@ -1,68 +1,183 @@
 <div class="mat-elevation-z8">
-    <div class="marketContainer">
-        <table mat-table class="full-width-table market" matSort aria-label="Elements">
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-                <th class="header name" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                <td class="cellContainer" mat-cell *matCellDef="let row" [class.normal]="row.rarity == 0" [class.uncommon]="row.rarity == 1" [class.rare]="row.rarity == 2" [class.epic]="row.rarity == 3" [class.legendary]="row.rarity == 4" [class.relic]="row.rarity == 5">
-                    <div class="cell">
-                        <button class="favorite" [class.active]="isFavorite(row)" [class.hidden]="isHidden('favorite')" mat-icon-button (click)="toggleFavorite(row)">
-                            <mat-icon>star</mat-icon>
-                        </button>
-                        <img class="itemImage" [src]="common.getImageUrl(row.image)">
-                        <div class="name">
-                            <span>{{row.name}}</span>
-                            <span class="bundles" *ngIf="row.amount>1">[ Sold in bundles of <span class="amount">{{row.amount}} units</span> ]</span>
-                            <span class="untradable" *ngIf="isUntradable(row)">[ <span class="status">Untradable</span> upon purchase ]</span>
-                        </div>
-                    </div>
-                </td>
-            </ng-container>
+  <div class="marketContainer">
+    <table
+      mat-table
+      class="full-width-table market"
+      matSort
+      aria-label="Elements"
+    >
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th
+          class="header name"
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+        >
+          Name
+        </th>
+        <td
+          class="cellContainer"
+          mat-cell
+          *matCellDef="let row"
+          [class.normal]="row.rarity == 0"
+          [class.uncommon]="row.rarity == 1"
+          [class.rare]="row.rarity == 2"
+          [class.epic]="row.rarity == 3"
+          [class.legendary]="row.rarity == 4"
+          [class.relic]="row.rarity == 5"
+        >
+          <div class="cell">
+            <button
+              class="favorite"
+              [class.active]="isFavorite(row)"
+              [class.hidden]="isHidden('favorite')"
+              mat-icon-button
+              (click)="toggleFavorite(row)"
+            >
+              <mat-icon>star</mat-icon>
+            </button>
+            <img class="itemImage" [src]="common.getImageUrl(row.image)" />
+            <div class="name">
+              <span>{{ row.name }}</span>
+              <span class="bundles" *ngIf="row.amount > 1"
+                >[ Sold in bundles of
+                <span class="amount">{{ row.amount }} units</span> ]</span
+              >
+              <span class="untradable" *ngIf="isUntradable(row)"
+                >[ <span class="status">Untradable</span> upon purchase ]</span
+              >
+            </div>
+          </div>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="avgPrice">
-                <th class="header" mat-header-cell *matHeaderCellDef [class.hidden]="isHidden('avgPrice')">Historical Data</th>
-                <td class="cellContainer" mat-cell *matCellDef="let row" [class.hidden]="isHidden('avgPrice')">
-                    <div class="buttonContainer">
-                        <button class="btnHistory" matSuffix mat-icon-button (click)="openHistory(row)">
-                            <mat-icon>insights</mat-icon>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="avgPrice">
+        <th
+          class="header"
+          mat-header-cell
+          *matHeaderCellDef
+          [class.hidden]="isHidden('avgPrice')"
+        >
+          Historical Data
+        </th>
+        <td
+          class="cellContainer"
+          mat-cell
+          *matCellDef="let row"
+          [class.hidden]="isHidden('avgPrice')"
+        >
+          <div class="historical">
+            <div class="chartContainer">
+              <highcharts-chart
+                *ngIf="row.chartOptions"
+                [Highcharts]="Highcharts"
+                [options]="row.chartOptions"
+                class="chart"
+              >
+              </highcharts-chart>
+              <span class="variation" [class.negative]="row.variation < -5"
+                [class.positive]="row.variation > 5"
+                >{{ row.variation }}% 7d</span
+              >
+            </div>
+            <div class="buttonContainer">
+              <button
+                class="btnHistory"
+                matSuffix
+                mat-icon-button
+                matTooltip="View More"
+                matTooltipPosition="above"
+                (click)="openHistory(row)"
+              >
+                <mat-icon>insights</mat-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="recentPrice">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header [class.hidden]="isHidden('recentPrice')">Recent Prices</th>
-                <td class="cellContainer" mat-cell *matCellDef="let row" [class.hidden]="isHidden('recentPrice')">
-                    <div class="cell right">{{row.recentPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold"></div>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="recentPrice">
+        <th
+          class="header"
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          [class.hidden]="isHidden('recentPrice')"
+        >
+          Recent Prices
+        </th>
+        <td
+          class="cellContainer"
+          mat-cell
+          *matCellDef="let row"
+          [class.hidden]="isHidden('recentPrice')"
+        >
+          <div class="cell right">
+            {{ row.recentPrice }}
+            <img class="gold" src="/assets/icons/gold.png" alt="gold" />
+          </div>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="lowPrice">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Lowest Price</th>
-                <td class="cellContainer" mat-cell *matCellDef="let row">
-                    <div class="cell right">{{row.lowPrice}} <img class="gold" src="/assets/icons/gold.png" alt="gold"></div>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="lowPrice">
+        <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Lowest Price
+        </th>
+        <td class="cellContainer" mat-cell *matCellDef="let row">
+          <div class="cell right">
+            {{ row.lowPrice }}
+            <img class="gold" src="/assets/icons/gold.png" alt="gold" />
+          </div>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="cheapestRemaining">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header [class.hidden]="isHidden('cheapestRemaining')">Cheapest Rem.</th>
-                <td class="cellContainer" mat-cell *matCellDef="let row" [class.hidden]="isHidden('cheapestRemaining')">
-                    <div class="cell right">{{row.cheapestRemaining}}</div>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="cheapestRemaining">
+        <th
+          class="header"
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          [class.hidden]="isHidden('cheapestRemaining')"
+        >
+          Cheapest Rem.
+        </th>
+        <td
+          class="cellContainer"
+          mat-cell
+          *matCellDef="let row"
+          [class.hidden]="isHidden('cheapestRemaining')"
+        >
+          <div class="cell right">{{ row.cheapestRemaining }}</div>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="updatedAt">
-                <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</th>
-                <td class="cellContainer" mat-cell *matCellDef="let row">
-                    <div class="cell right">{{row.updatedAt | amTimeAgo}}</div>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="updatedAt">
+        <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Last Updated
+        </th>
+        <td class="cellContainer" mat-cell *matCellDef="let row">
+          <div class="cell right">{{ row.updatedAt | amTimeAgo }}</div>
+        </td>
+      </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr class="row" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </div>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        class="row"
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
+    </table>
+  </div>
 
-    <mat-paginator class="paginator" #paginator [length]="dataSource?.collectionSize" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 50]" aria-label="Select page">
-    </mat-paginator>
+  <mat-paginator
+    class="paginator"
+    #paginator
+    [length]="dataSource?.collectionSize"
+    [pageIndex]="0"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
 </div>

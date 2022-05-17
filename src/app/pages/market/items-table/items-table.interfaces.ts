@@ -13,6 +13,10 @@ export interface MarketItem extends DocumentData {
   lowPrice?: number;
   recentPrice?: number;
   updatedAt?: Date;
+  chartOptions?: any;
+  variation?: number;
+  shortHistoric?: { [day: string]: number }
+
 }
 export interface FavoriteItem {
   name: string;

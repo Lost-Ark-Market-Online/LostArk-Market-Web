@@ -22,6 +22,7 @@
         "@angular/platform-browser": "~13.3.0",
         "@angular/platform-browser-dynamic": "~13.3.0",
         "@angular/router": "~13.3.0",
+        "@types/highcharts": "^7.0.0",
         "highcharts-angular": "^3.0.0",
         "moment": "^2.29.2",
         "ngx-moment": "^6.0.2",
