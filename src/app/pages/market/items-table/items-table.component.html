@@ -52,12 +52,13 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="avgPrice">
+      <ng-container matColumnDef="variation">
         <th
           class="header"
           mat-header-cell
+          mat-sort-header
           *matHeaderCellDef
-          [class.hidden]="isHidden('avgPrice')"
+          [class.hidden]="isHidden('variation')"
         >
           Historical Data
         </th>
@@ -65,7 +66,7 @@
           class="cellContainer"
           mat-cell
           *matCellDef="let row"
-          [class.hidden]="isHidden('avgPrice')"
+          [class.hidden]="isHidden('variation')"
         >
           <div class="historical">
             <div class="chartContainer">

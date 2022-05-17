@@ -30,7 +30,7 @@ export class ItemsTableComponent implements AfterViewInit {
   Highcharts: typeof Highcharts = Highcharts;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['name', 'avgPrice', 'recentPrice', 'lowPrice', 'cheapestRemaining', 'updatedAt'];
+  displayedColumns = ['name', 'variation', 'recentPrice', 'lowPrice', 'cheapestRemaining', 'updatedAt'];
 
   constructor(private firestore: Firestore,
     private _snackBar: MatSnackBar,
