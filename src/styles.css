@@ -5,6 +5,24 @@
   --primary-background-color: #121416;
   --secondary-background-color: #1e2329;
   --secondary-background-box-shadow: inset 0 0 10px #272a2f;
+  --rarity-text-0: white;
+  --rarity-text-1: #93ee24;
+  --rarity-text-2: #17a7e6;
+  --rarity-text-3: #b249d4;
+  --rarity-text-4: #e8921b;
+  --rarity-text-5: #e66516;
+  --rarity-bg-1: linear-gradient(50deg, #5e5e5e 0%, #050505a1 50%);
+  --rarity-bg-1: linear-gradient(50deg, #203808 0%, #050505a1 50%);
+  --rarity-bg-2: linear-gradient(50deg, #064054 0%, #050505a1 50%);
+  --rarity-bg-3: linear-gradient(50deg, #440850 0%, #050505a1 50%);
+  --rarity-bg-4: linear-gradient(50deg, #6a4109 0%, #050505a1 50%);
+  --rarity-bg-5: linear-gradient(50deg, #783201 0%, #050505a1 50%);
+  --positive: #32cd32;
+  --negative: #ff2020;
+  --neutral: #AED6F1;
+  --gold: #faab02;
+  --disabled: #707070;
+  --bg-color: #090909;
 }
 
 html,

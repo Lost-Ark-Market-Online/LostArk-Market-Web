@@ -1,0 +1,38 @@
+<div class="shopContainer">
+  <div
+    *ngFor="let item of shopItems"
+    class="shopItem rarity_bg_{{ item.rarity }}"
+  >
+    <img class="itemImage" [src]="'/assets/cash_shop/' + item.image" />
+    <div class="nameContainer">
+      <span class="name">{{ item.name }}</span>
+    </div>
+    <div class="exclusive" *ngIf="item.class">{{ item.class }} Exclusive</div>
+    <div class="discount" *ngIf="item.discount">{{ item.discount }}</div>
+    <div class="price">
+      <span class="blueCrystal"
+        >{{ item.blueCrystals }}<img src="/assets/icons/bluecrystal.png"
+      /></span>
+      <span class="spacer">/</span>
+      <span class="gold" *ngIf="item.goldPrice"
+        ><div class="goldPrices">
+          <span
+            class="market"
+            [class.striked]="item.marketGoldPrice > item.goldPrice"
+            *ngIf="item.marketGoldPrice"
+            >{{ item.marketGoldPrice }}<img src="/assets/icons/gold.png"
+          /></span>
+          <span
+            class="shop"
+            [class.striked]="
+              item.marketGoldPrice
+                ? item.marketGoldPrice < item.goldPrice
+                : false
+            "
+            >{{ item.goldPrice }} <img src="/assets/icons/gold.png"
+          /></span>
+        </div>
+      </span>
+    </div>
+  </div>
+</div>

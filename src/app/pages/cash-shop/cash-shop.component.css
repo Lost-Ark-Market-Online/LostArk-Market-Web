@@ -1,0 +1,145 @@
+.shopContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px;
+}
+.shopItem {
+  height: 262px;
+  width: 224px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  position: relative;
+}
+.shopItem .itemImage {
+  position: absolute;
+  top: 50px;
+  height: 80px;
+}
+.shopItem.rarity_bg_0 {
+  background-image: url("/assets/cash_shop/cs-bg-0.png");
+}
+.shopItem.rarity_bg_1 {
+  background-image: url("/assets/cash_shop/cs-bg-1.png");
+}
+.shopItem.rarity_bg_2 {
+  background-image: url("/assets/cash_shop/cs-bg-2.png");
+}
+.shopItem.rarity_bg_3 {
+  background-image: url("/assets/cash_shop/cs-bg-3.png");
+}
+.shopItem.rarity_bg_4 {
+  background-image: url("/assets/cash_shop/cs-bg-4.png");
+}
+.shopItem .price {
+  display: flex;
+  position: absolute;
+  align-items: end;
+  color: white;
+  bottom: 24px;
+  gap: 4px;
+}
+.shopItem .price .gold,
+.shopItem .price .blueCrystal {
+  display: flex;
+  gap: 4px;
+  color: white;
+  align-items: center;
+  font-size: 16px;
+  align-items: end;
+}
+.shopItem .price img {
+  width: 24px;
+}
+.shopItem .spacer {
+  color: #555;
+}
+.shopItem .price .goldPrices {
+  display: flex;
+  flex-direction: column;
+}
+.shopItem .price .goldPrices .shop{
+  display: flex;
+  align-items: end;
+  gap: 2px;
+  line-height: 18px;
+}
+.shopItem .price .goldPrices .shop img{
+  height: 20px;
+  width: 20px;
+}
+.shopItem .price .goldPrices .market {
+  font-size: 10px;
+  line-height: 10px;
+  display: flex;
+  align-items: end;
+  gap: 2px;
+}
+.shopItem .price .goldPrices .market img{
+  height: 12px;
+  width: 12px;
+}
+.shopItem .price .goldPrices .striked {
+  color: #aaa;
+  text-decoration: line-through;
+}
+.shopItem .price .goldPrices .striked img{
+  opacity: 0.5;
+}
+
+.shopItem .nameContainer {
+  position: absolute;
+  bottom: 60px;
+  margin: 0px 20px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.shopItem.rarity_bg_0 .nameContainer {
+  color: white;
+}
+.shopItem.rarity_bg_1 .nameContainer {
+  color: var(--rarity-text-1);
+}
+.shopItem.rarity_bg_2 .nameContainer {
+  color: var(--rarity-text-2);
+}
+.shopItem.rarity_bg_3 .nameContainer {
+  color: var(--rarity-text-3);
+}
+.shopItem.rarity_bg_4 .nameContainer {
+  color: var(--rarity-text-4);
+}
+.shopItem .exclusive {
+  position: absolute;
+  left: 0px;
+  bottom: 106px;
+  height: 24px;
+  width: 131px;
+  background: url("/assets/cash_shop/exclusive.png");
+  color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  font-size: 11px;
+}
+.shopItem .discount {
+  position: absolute;
+  color: white;
+  background: url(/assets/cash_shop/discount.webp);
+  background-repeat: no-repeat;
+  left: 21px;
+  bottom: 44px;
+  width: 49px;
+  height: 24px;
+  display: flex;
+  align-items: end;
+  padding-left: 16px;
+  text-shadow: black 1px 1px 2px;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: 12px;
+}

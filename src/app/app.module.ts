@@ -41,6 +41,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ApiService } from '../services/api';
+import { CashShopComponent } from './pages/cash-shop/cash-shop.component';
 
 
 
@@ -67,6 +68,8 @@ function craftingPageMatcher(segments: UrlSegment[]): UrlMatchResult {
 
 const routes: Routes = [
   { matcher: craftingPageMatcher, component: CraftingComponent },
+  { path: ':region/cash-shop', component: CashShopComponent },
+  { path: ':region/cash-shop/:category', component: CashShopComponent },
   { path: ':region/market', component: MarketComponent },
   { path: ':region/market/:category', component: MarketComponent },
   { path: ':region/market/:category/:subcategory', component: MarketComponent },
@@ -82,7 +85,8 @@ const routes: Routes = [
     HistoricalComponent,
     MarketComponent,
     CraftingComponent,
-    HoningComponent
+    HoningComponent,
+    CashShopComponent
   ],
   imports: [
     BrowserModule,
