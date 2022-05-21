@@ -1,9 +1,21 @@
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
-import { startWith, Subscription, take } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { map, Observable, shareReplay, startWith, Subscription, take } from 'rxjs';
 import { ApiService, MarketLiveItem } from 'src/services/api';
 import { CommonService } from 'src/services/common';
 
 import cashshopdata from '../../../data/cashshop.json';
+
+export interface CashShopFavoriteItem {
+  name: string;
+}
+
+export interface Category{
+  id:string;
+  name:string
+  subcategories?: Category[];
+}
 
 export interface CashShopItem {
   id?: string;
@@ -33,12 +45,29 @@ export class CashShopComponent implements OnInit {
   shopItems: CashShopItem[];
   regionSubscription: Subscription;
   marketData?: { [itemId: string]: MarketLiveItem };
+  searchControl = new FormControl();
+  filteredOptions?: Observable<string[]>;
+  options: string[];
+  favorites: CashShopFavoriteItem[];
+
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Large, Breakpoints.XLarge])
+    .pipe(
+      map(result => !result.matches),
+      shareReplay()
+    );
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     public common: CommonService,
     private api: ApiService,
   ) {
+    this.favorites = JSON.parse(localStorage.getItem('cashShopFavorites') || 'null') || [];
+    this.options = [...new Set(cashshopdata.map(a=>a.name))];
     this.shopItems = cashshopdata.sort((a, b) => a.category == b.category ? (a.name > b.name ? 1 : -1) : (a.category > b.category ? 1 : -1));
+    this.filteredOptions = this.searchControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value)),
+    );
 
     this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {
       this.api.getLiveData().pipe(take(1)).subscribe((data) => {
@@ -71,6 +100,10 @@ export class CashShopComponent implements OnInit {
     }
   }
 
+  search(){
+
+  }
+
   ngOnInit(): void {
   }
 
@@ -78,6 +111,14 @@ export class CashShopComponent implements OnInit {
     if (this.regionSubscription) {
       this.regionSubscription.unsubscribe();
     }
+  }
+  
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    if (!value || value.length < 3) {
+      return [];
+    }
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
 }

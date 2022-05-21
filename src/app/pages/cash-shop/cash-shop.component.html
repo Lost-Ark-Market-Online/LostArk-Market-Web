@@ -1,38 +1,98 @@
-<div class="shopContainer">
-  <div
-    *ngFor="let item of shopItems"
-    class="shopItem rarity_bg_{{ item.rarity }}"
+<form class="filters-form">
+  <button
+    class="menu-btn"
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="drawer.toggle()"
+    *ngIf="isHandset$ | async"
   >
-    <img class="itemImage" [src]="'/assets/cash_shop/' + item.image" />
-    <div class="nameContainer">
-      <span class="name">{{ item.name }}</span>
-    </div>
-    <div class="exclusive" *ngIf="item.class">{{ item.class }} Exclusive</div>
-    <div class="discount" *ngIf="item.discount">{{ item.discount }}</div>
-    <div class="price">
-      <span class="blueCrystal"
-        >{{ item.blueCrystals }}<img src="/assets/icons/bluecrystal.png"
-      /></span>
-      <span class="spacer">/</span>
-      <span class="gold" *ngIf="item.goldPrice"
-        ><div class="goldPrices">
-          <span
-            class="market"
-            [class.striked]="item.marketGoldPrice > item.goldPrice"
-            *ngIf="item.marketGoldPrice"
-            >{{ item.marketGoldPrice }}<img src="/assets/icons/gold.png"
-          /></span>
-          <span
-            class="shop"
-            [class.striked]="
-              item.marketGoldPrice
-                ? item.marketGoldPrice < item.goldPrice
-                : false
-            "
-            >{{ item.goldPrice }} <img src="/assets/icons/gold.png"
-          /></span>
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <div class="spacer"></div>
+  <mat-form-field class="searchContainer" appearance="fill">
+    <mat-label>Search</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Search"
+      matInput
+      [formControl]="searchControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
+    <mat-icon>search</mat-icon>
+  </button>
+</form>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+  <mat-nav-list class="nav-list">
+    <a
+      class="nav-header"
+      mat-list-item
+      [routerLink]="['/' + this.common.regionSlug, 'cash-shop', 'favorites']"
+      routerLinkActive="selected"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Favorites ({{ favorites.length }})</a
+    >
+    </mat-nav-list>
+    
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content">
+    <div class="shopContainer">
+      <div
+        *ngFor="let item of shopItems"
+        class="shopItem rarity_bg_{{ item.rarity }}"
+      >
+        <img class="itemImage" [src]="'/assets/cash_shop/' + item.image" />
+        <div class="nameContainer">
+          <span class="name">{{ item.name }}</span>
         </div>
-      </span>
+        <div class="exclusive" *ngIf="item.class">
+          {{ item.class }} Exclusive
+        </div>
+        <div class="discount" *ngIf="item.discount">{{ item.discount }}</div>
+        <div class="price">
+          <span class="blueCrystal"
+            >{{ item.blueCrystals }}<img src="/assets/icons/bluecrystal.png"
+          /></span>
+          <span class="spacer">/</span>
+          <span class="gold" *ngIf="item.goldPrice"
+            ><div class="goldPrices">
+              <span
+                class="market"
+                [class.striked]="item.marketGoldPrice > item.goldPrice"
+                *ngIf="item.marketGoldPrice"
+                >{{ item.marketGoldPrice }}<img src="/assets/icons/gold.png"
+              /></span>
+              <span
+                class="shop"
+                [class.striked]="
+                  item.marketGoldPrice
+                    ? item.marketGoldPrice < item.goldPrice
+                    : false
+                "
+                >{{ item.goldPrice }} <img src="/assets/icons/gold.png"
+              /></span>
+            </div>
+          </span>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

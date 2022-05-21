@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  justify-content: space-around;
   margin: 16px;
 }
 .shopItem {
@@ -142,4 +143,111 @@
   overflow: hidden;
   box-sizing: border-box;
   font-size: 12px;
+}
+
+.sidenav-container {
+  background-color: var(--primary-background-color);
+  height: auto;
+}
+
+.sidenav {
+  width: 300px;
+  background-color: var(--primary-background-color);
+  color: #fdf9e0;
+  padding-right: 4px;
+}
+.filters-form {
+  background-color: var(--primary-background-color);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 4px;
+  padding-right: 8px;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.searchContainer {
+  background-color: #090a0c;
+  flex: 1;
+  max-width: 450px;
+  box-shadow: -1px -1px 1px 1px #272a2e inset;
+}
+
+.searchContainer ::ng-deep .mat-form-field-wrapper {
+  margin-bottom: -1.34375em;
+}
+
+.searchContainer ::ng-deep input {
+  color: white;
+}
+
+.filters-form .searchBtn {
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--secondary-background-box-shadow);
+  color: #ab9c77;
+  transition: background-color 200ms;
+}
+.filters-form .searchBtn:hover {
+  background-color: #252c35;
+}
+
+.sidenav-content{
+  height: auto;
+}
+
+.menu-btn{
+  color: white;
+}
+
+.nav-header {
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--secondary-background-box-shadow);
+  color: white;
+  position: relative;
+  margin-bottom: 4px;
+  transition: background-color 200ms;
+}
+
+.nav-header:hover {
+  background-color: #252c35;
+}
+
+.nav-list {
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-header.active::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, #27679c5d 0%, transparent 50%);
+  border-bottom: #5881a3 solid 3px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.nav-item {
+  background-color: #090a0c;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.nav-header.selected,
+.nav-item.active {
+  border: #5881a3 solid 1px;
+  box-sizing: border-box;
+}
+
+@media only screen and (max-width: 768px) {
+  .sidenav-container{    
+    min-height: calc(100vh - 168px);
+  }
 }
