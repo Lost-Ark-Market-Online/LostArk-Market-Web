@@ -68,10 +68,12 @@
           *matCellDef="let row"
           [class.hidden]="isHidden('variation')"
         >
-          <div class="historical">
+        <div *ngIf="!row.chartOptions" class="historical"><span style="color: white;">Not enough historical data</span></div>
+        
+          <div class="historical"
+          *ngIf="row.chartOptions">
             <div class="chartContainer">
               <highcharts-chart
-                *ngIf="row.chartOptions"
                 [Highcharts]="Highcharts"
                 [options]="row.chartOptions"
                 class="chart"
