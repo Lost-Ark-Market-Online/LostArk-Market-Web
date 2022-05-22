@@ -1227,7 +1227,7 @@
     "marketId": "caldarr-fusion-material-2",
     "cashShopId": "caldarr-fusion-material-bound-15",
     "name": "Caldarr Fusion Material (Bound) [15]",
-    "amount": 450,
+    "amount": 15,
     "blueCrystals": 60,
     "rarity": 2
   },
@@ -1238,7 +1238,7 @@
     "marketId": "simple-oreha-fusion-material-1",
     "cashShopId": "simple-oreha-fusion-material-bound-20",
     "name": "Simple Oreha Fusion Material (Bound) [20]",
-    "amount": 600,
+    "amount": 20,
     "blueCrystals": 54,
     "rarity": 2
   },
@@ -1249,7 +1249,7 @@
     "marketId": "basic-oreha-fusion-material-2",
     "cashShopId": "basic-oreha-fusion-material-bound-20",
     "name": "Basic Oreha Fustion Material (Bound) [20]",
-    "amount": 600,
+    "amount": 20,
     "blueCrystals": 72,
     "rarity": 3
   },
