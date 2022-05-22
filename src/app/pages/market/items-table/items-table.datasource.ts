@@ -80,21 +80,24 @@ export class MarketDataSource extends DataSource<MarketItem> {
                 const { id } = snapshot;
                 const { hasPendingWrites } = snapshot.metadata;
 
-                const shortHistoricOrdererd = Object.keys(shortHistoric).sort().reduce((acc,key)=>{
-                  acc[key] = shortHistoric[key];
-                  return acc;
-                },{});
+                let shortHistoricOrdererd, labels, data, variation, color;
+                if (shortHistoric) {
+                  shortHistoricOrdererd = Object.keys(shortHistoric).sort().reduce((acc, key) => {
+                    acc[key] = shortHistoric[key];
+                    return acc;
+                  }, {});
+                  labels = Object.keys(shortHistoricOrdererd);
+                  data = Object.values(shortHistoricOrdererd);
+                  variation = Math.round(((data[6] / data[0]) - 1) * 10000) / 100;
+                  color = '#AED6F1';
+                  if (variation > 5) {
+                    color = 'limegreen'
+                  }
+                  if (variation < -5) {
+                    color = '#ff2020';
+                  }
+                }
 
-                const labels: string[] = Object.keys(shortHistoricOrdererd);
-                const data: number[] = Object.values(shortHistoricOrdererd);
-                const variation = Math.round(((data[6] / data[0]) - 1) * 10000) / 100;
-                let color = '#AED6F1';
-                if(variation > 5){
-                  color = 'limegreen'
-                }
-                if(variation < -5){
-                  color = '#ff2020';
-                }
                 return {
                   name,
                   amount,
@@ -111,7 +114,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
                   hasPendingWrites,
                   variation,
                   shortHistoric,
-                  chartOptions: {
+                  chartOptions: shortHistoricOrdererd ? {
                     chart: {
                       backgroundColor: 'transparent',
                       borderWidth: 0,
@@ -193,7 +196,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
                         data: data
                       }
                     ]
-                  }
+                  } : undefined
                 };
               },
               toFirestore: (it: any) => it // Not writing into Firestore
