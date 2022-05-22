@@ -14,6 +14,9 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ### Changelog
+### 0.9.0
+- Cash Shop
+
 ### 0.8.0
 - Craftin Calculator
 

@@ -63,7 +63,6 @@
       <span>Market</span>
     </a>
     <a
-      disabled
       [routerLink]="['/' + common.regionSlug, 'crafting']"
       routerLinkActive="active"
       class="tab"
@@ -71,14 +70,18 @@
       <span>Crafting Calculator</span>
     </a>
     <a
+      [routerLink]="['/' + common.regionSlug, 'cash-shop']"
+      routerLinkActive="active"
+      class="tab"
+    >
+      <span>Cash Shop</span>
+    </a>
+    <a
       href="https://lostark-helper.com/honing-cost-optimizer"
       target="_blank"
       class="tab"
     >
       <span>Honing Calculator</span>
-    </a>
-    <a [routerLink]="['/' + common.regionSlug, 'cash-shop']" class="tab">
-      <span>Cash Shop</span>
     </a>
     <a
       href="https://documenter.getpostman.com/view/20821530/UyxbppKr"
