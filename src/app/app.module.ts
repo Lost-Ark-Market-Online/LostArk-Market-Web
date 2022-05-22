@@ -39,40 +39,39 @@ import { Routes, RouterModule, UrlSegment, UrlMatchResult } from '@angular/route
 import { HttpClientModule } from '@angular/common/http';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ApiService } from '../services/api';
 import { CashShopComponent } from './pages/cash-shop/cash-shop.component';
 
-
-
-function craftingPageMatcher(segments: UrlSegment[]): UrlMatchResult {
-  if (segments.length >= 2 && segments[1].path == 'crafting') {
-    let posParams: any = {};
-    posParams['region'] = segments[0];
-    if (segments.length > 2) {
-      posParams['category'] = segments[2]
+function pageMatcherFactory(page: string) {
+  return function craftingPageMatcher(segments: UrlSegment[]): UrlMatchResult {
+    if (segments.length >= 2 && segments[1].path == page) {
+      let posParams: any = {};
+      posParams['region'] = segments[0];
+      if (segments.length > 2) {
+        posParams['category'] = segments[2]
+      }
+      if (segments.length > 3) {
+        posParams['subcategory'] = segments[3]
+      }
+      if (segments.length > 4) {
+        posParams['item'] = segments[4]
+      }
+      return {
+        consumed: segments,
+        posParams
+      };
     }
-    if (segments.length > 3) {
-      posParams['subcategory'] = segments[3]
-    }
-    if (segments.length > 4) {
-      posParams['item'] = segments[4]
-    }
-    return {
-      consumed: segments,
-      posParams
-    };
+    return <UrlMatchResult>(null as any);
   }
-  return <UrlMatchResult>(null as any);
 }
 
+
+
 const routes: Routes = [
-  { matcher: craftingPageMatcher, component: CraftingComponent },
-  { path: ':region/cash-shop', component: CashShopComponent },
-  { path: ':region/cash-shop/:category', component: CashShopComponent },
-  { path: ':region/market', component: MarketComponent },
-  { path: ':region/market/:category', component: MarketComponent },
-  { path: ':region/market/:category/:subcategory', component: MarketComponent },
+  { matcher: pageMatcherFactory('crafting'), component: CraftingComponent },
+  { matcher: pageMatcherFactory('cash-shop'), component: CashShopComponent },
+  { matcher: pageMatcherFactory('market'), component: MarketComponent },
   { path: '', redirectTo: '/default/market', pathMatch: 'full' },
 ]
 

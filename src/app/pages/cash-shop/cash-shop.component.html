@@ -41,17 +41,71 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false"
   >
-  <mat-nav-list class="nav-list">
-    <a
-      class="nav-header"
-      mat-list-item
-      [routerLink]="['/' + this.common.regionSlug, 'cash-shop', 'favorites']"
-      routerLinkActive="selected"
-      [routerLinkActiveOptions]="{ exact: true }"
-      >Favorites ({{ favorites.length }})</a
-    >
+    <mat-nav-list class="nav-list">
+      <a
+        class="nav-header"
+        mat-list-item
+        [routerLink]="['/' + this.common.regionSlug, 'cash-shop', 'favorites']"
+        routerLinkActive="selected"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Favorites ({{ favorites.length }})</a
+      >
+      <ng-container *ngFor="let category of categories; index as categoryIndex">
+        <mat-list-item
+          *ngIf="(category.subcategories || []).length >= 2"
+          class="nav-header"
+          [ngClass]="{ active: category.open }"
+          (click)="
+            categories[categoryIndex].open = !categories[categoryIndex].open
+          "
+        >
+          <span class="full-width">{{ category.name }}</span>
+          <mat-icon class="menu-button" [ngClass]="{ rotated: category.open }"
+            >expand_more</mat-icon
+          >
+        </mat-list-item>
+        <div
+          *ngIf="category.subcategories"
+          class="submenu items_{{ category.subcategories.length }}"
+          [ngClass]="{ expanded: category.open }"
+        >
+          <a
+            class="nav-item"
+            mat-list-item
+            [routerLink]="['/' + common.regionSlug, 'cash-shop', category.id]"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            All
+          </a>
+          <a
+            class="nav-item"
+            *ngFor="let subcategory of category.subcategories"
+            mat-list-item
+            [routerLink]="[
+              '/' + common.regionSlug,
+              'cash-shop',
+              category.id,
+              subcategory.id
+            ]"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            {{ subcategory.name }}
+          </a>
+        </div>
+
+        <a
+          class="nav-header"
+          *ngIf="(category.subcategories || []).length < 2"
+          mat-list-item
+          [routerLink]="['/' + common.regionSlug, 'cash-shop', category.id]"
+          routerLinkActive="selected"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >{{ category.name }}</a
+        >
+      </ng-container>
     </mat-nav-list>
-    
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     <div class="shopContainer">
@@ -59,6 +113,14 @@
         *ngFor="let item of shopItems"
         class="shopItem rarity_bg_{{ item.rarity }}"
       >
+        <button
+          class="favorite"
+          [class.active]="isFavorite(item.cashShopId)"
+          mat-icon-button
+          (click)="toggleFavorite(item.cashShopId)"
+        >
+          <mat-icon>star</mat-icon>
+        </button>
         <img class="itemImage" [src]="'/assets/cash_shop/' + item.image" />
         <div class="nameContainer">
           <span class="name">{{ item.name }}</span>
