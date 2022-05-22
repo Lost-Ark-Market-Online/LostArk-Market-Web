@@ -94,16 +94,4 @@ export class ItemsTableComponent implements AfterViewInit {
     return false;
   }
 
-  isHidden(row: string) {
-    switch (row) {
-      case 'cheapestRemaining':
-      case 'recentPrice':
-      case 'favorite':
-        if (this.filter && this.filter.category == 'Currency Exchange') {
-          return true;
-        }
-    }
-    return false;
-  }
-
 }

@@ -31,7 +31,6 @@
             <button
               class="favorite"
               [class.active]="isFavorite(row)"
-              [class.hidden]="isHidden('favorite')"
               mat-icon-button
               (click)="toggleFavorite(row)"
             >
@@ -58,7 +57,6 @@
           mat-header-cell
           mat-sort-header
           *matHeaderCellDef
-          [class.hidden]="isHidden('variation')"
         >
           Historical Data
         </th>
@@ -66,7 +64,6 @@
           class="cellContainer"
           mat-cell
           *matCellDef="let row"
-          [class.hidden]="isHidden('variation')"
         >
         <div *ngIf="!row.chartOptions" class="historical"><span style="color: white;">Not enough historical data</span></div>
         
@@ -106,7 +103,6 @@
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
-          [class.hidden]="isHidden('recentPrice')"
         >
           Recent Prices
         </th>
@@ -114,7 +110,6 @@
           class="cellContainer"
           mat-cell
           *matCellDef="let row"
-          [class.hidden]="isHidden('recentPrice')"
         >
           <div class="cell right">
             {{ row.recentPrice }}
@@ -141,7 +136,6 @@
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
-          [class.hidden]="isHidden('cheapestRemaining')"
         >
           Cheapest Rem.
         </th>
@@ -149,7 +143,6 @@
           class="cellContainer"
           mat-cell
           *matCellDef="let row"
-          [class.hidden]="isHidden('cheapestRemaining')"
         >
           <div class="cell right">{{ row.cheapestRemaining }}</div>
         </td>
