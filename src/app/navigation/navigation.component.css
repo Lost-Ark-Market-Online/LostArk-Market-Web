@@ -17,21 +17,34 @@
   transform: rotate(180deg);
 }
 
-.github {
+.toolbar .titleWrapper,
+.toolbar .buttons{
+  display: flex;
+  gap: 8px;
+}
+
+.iconBtn {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  filter: sepia(19%) saturate(5175%) hue-rotate(322deg) brightness(75%) contrast(95%);
+}
+.applyBtn ::ng-deep .mat-button-wrapper{
+  height: 24px;
+  display: flex;
+  justify-content: center;
 }
 
-.github img {
+.iconBtn img {
   height: 24px;
   width: 24px;
+  object-fit: cover;
 }
 
 .titleIcon{
     height: 32px;
     width: 32px;
-    padding: 0px 8px;
 }
 
 .firstRow{

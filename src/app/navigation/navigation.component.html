@@ -1,11 +1,9 @@
 <mat-toolbar class="toolbar">
-  <!--button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-    </button-->
-
   <mat-toolbar-row class="firstRow">
-    <img class="titleIcon" src="/assets/icons/favicon.png" />
-    <span class="title">Lost Ark Market Online</span>
+    <div class="titleWrapper">
+      <img class="titleIcon" src="/assets/icons/favicon.png" />
+      <span class="title">Lost Ark Market Online</span>
+    </div>
     <mat-menu #appMenu="matMenu">
       <ng-template matMenuContent>
         <button
@@ -41,18 +39,41 @@
       </ng-template>
     </mat-menu>
     <span class="spacer"></span>
-    <button mat-button [matMenuTriggerFor]="appMenu">
+    <button
+      matTooltip="Pick your region"
+      matTooltipPosition="below"
+      mat-button
+      [matMenuTriggerFor]="appMenu"
+    >
       {{ common.region }}
     </button>
-    <button class="applyBtn" mat-icon-button (click)="openApplyDialog()">
-      <mat-icon>admin_panel_settings</mat-icon>
-    </button>
-    <a
-      target="_blank"
-      class="github"
-      href="https://github.com/gogodr/LostArk-Market-Web"
-      ><img src="/assets/icons/github.png"
-    /></a>
+    <div class="buttons">
+      <button
+        class="applyBtn"
+        matTooltip="Apply to become a Watcher"
+        matTooltipPosition="below"
+        mat-icon-button
+        (click)="openApplyDialog()"
+      >
+        <mat-icon>admin_panel_settings</mat-icon>
+      </button>
+      <a
+        target="_blank"
+        class="iconBtn"
+        href="https://discord.gg/ZBzgXeRY"
+        matTooltip="Join us on Discord"
+        matTooltipPosition="below"
+        ><img src="/assets/icons/discord.png"
+      /></a>
+      <a
+        target="_blank"
+        class="iconBtn"
+        href="https://github.com/gogodr/LostArk-Market-Web"
+        matTooltip="Follow the project on Github"
+        matTooltipPosition="below"
+        ><img src="/assets/icons/github.png"
+      /></a>
+    </div>
   </mat-toolbar-row>
   <mat-toolbar-row class="secondRow">
     <a
