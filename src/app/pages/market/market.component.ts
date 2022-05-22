@@ -10,7 +10,7 @@ import type { FavoriteItem } from './items-table/items-table.interfaces';
 
 import autocompleteOptions from '../../../data/market_autocomplete.json';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { regionMap } from 'src/services/common';
+import { CommonService, regionMap } from 'src/services/common';
 import { Filter } from 'src/interfaces/common';
 
 const categoriesMap: { [slug: string]: { category: string, subcategories?: { [subslug: string]: string } } } = {
@@ -88,7 +88,6 @@ export class MarketComponent implements OnInit, OnDestroy {
   filteredOptions?: Observable<string[]>;
   favorites: FavoriteItem[];
   filter: Filter;
-  regionSlug: string = "";
   routeSubscription: Subscription;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Large, Breakpoints.XLarge])
@@ -116,11 +115,11 @@ export class MarketComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private analytics: Analytics,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public common: CommonService
   ) {
     this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
     this.filter = {
-      region: localStorage.getItem('region') || 'North America East',
       favorites: true
     };
     this.filteredOptions = this.searchControl.valueChanges.pipe(
@@ -198,10 +197,6 @@ export class MarketComponent implements OnInit, OnDestroy {
             this.menu.gemChestSubMenu = true;
             break;
         }
-        if (regionMap[region]) {
-          this.filter.region = regionMap[region];
-        }
-        this.regionSlug = slugify(this.filter.region, { lower: true });
         if (this.marketTable?.dataSource) {
           this.marketTable.dataSource.refreshMarket();
         }
@@ -236,9 +231,9 @@ export class MarketComponent implements OnInit, OnDestroy {
     const search = this.searchControl.value;
     if (search) {
       logEvent(this.analytics, 'search', { query: search });
-      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
+      window.history.pushState(null, this.common.region, slugify(this.common.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
     } else {
-      window.history.pushState(null, this.filter.region, slugify(this.filter.region).toLowerCase());
+      window.history.pushState(null, this.common.region, slugify(this.common.region).toLowerCase());
     }
     this.filter.category = undefined;
     this.filter.subcategory = undefined;

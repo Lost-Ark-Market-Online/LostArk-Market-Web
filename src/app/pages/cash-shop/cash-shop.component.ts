@@ -70,7 +70,6 @@ export class CashShopComponent implements OnInit {
   ) {
     this.favorites = JSON.parse(localStorage.getItem('cashShopFavorites') || 'null') || [];
     this.filter = {
-      region: localStorage.getItem('region') || 'North America East',
       favorites: true
     };
     this.options = [...new Set(cashshopdata.map(a => a.name))];
@@ -146,7 +145,6 @@ export class CashShopComponent implements OnInit {
         }
         return route;
       })).subscribe(route => {
-        console.log('route', route)
         const { search } = route.snapshot.queryParams;
         if (search) {
           this.searchControl.setValue(search);

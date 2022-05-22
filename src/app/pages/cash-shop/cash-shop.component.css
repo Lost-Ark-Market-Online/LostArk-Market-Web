@@ -145,6 +145,22 @@
   box-sizing: border-box;
   font-size: 12px;
 }
+.shopItem.striked .itemImage{
+  opacity: 0.4;
+}
+.shopItem.striked::before{
+  content: "";
+  position: absolute;
+  background-image: url(/assets/cash_shop/fail.png);
+  background-position: center;
+  background-size: contain;
+  top: 48px;
+  width: 90px;
+  height: 90px;
+  z-index: 9999999999;
+  opacity: 1;
+  display: block;
+}
 
 .sidenav-container {
   background-color: var(--primary-background-color);

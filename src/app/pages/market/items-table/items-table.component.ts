@@ -37,7 +37,7 @@ export class ItemsTableComponent implements AfterViewInit {
     public dialog: MatDialog,
     private analytics: Analytics,
     public common: CommonService) {
-    this.dataSource = new MarketDataSource(firestore);
+    this.dataSource = new MarketDataSource(firestore, common);
   }
 
   ngAfterViewInit(): void {
@@ -79,11 +79,11 @@ export class ItemsTableComponent implements AfterViewInit {
   }
 
   openHistory(item: MarketItem) {
-    logEvent(this.analytics, 'historical_component', { region: this.dataSource.filter?.region, item: item.id });
+    logEvent(this.analytics, 'historical_component', { region: this.common.region, item: item.id });
     this.dialog.open(HistoricalComponent, {
       width: '80%',
       maxWidth: '800px',
-      data: { item, region: this.dataSource.filter?.region }
+      data: { item, region: this.common.region }
     })
   }
 

@@ -198,7 +198,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
       map(value => this._filter(value)),
     );
     this.filter = {
-      region: this.common.region,
       favorites: true
     };
     this.menu = this.buildMenu();
@@ -213,7 +212,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
         }
         return route;
       })).subscribe(route => {
-        const { region, category, subcategory, item } = route.snapshot.params;
+        const { category, subcategory, item } = route.snapshot.params;
         const { search } = route.snapshot.queryParams;
         const previousCategory = `${this.filter.category}`;
         if (search) {
@@ -222,7 +221,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
           this.filter.subcategory = 'all';
           this.filter.favorites = false;
           this.filter.search = search;
-          this.filter.region = regionMap[region];
           this.buildSubMenu('search');
           if (item) {
             this.selectedRecipeId = item;
@@ -270,9 +268,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
           this.filter.category = undefined;
           this.filter.subcategory = undefined;
           this.router.navigate([this.common.regionSlug, 'crafting', 'recommendations']);
-        }
-        if (regionMap[region]) {
-          this.filter.region = regionMap[region];
         }
       });
     this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {

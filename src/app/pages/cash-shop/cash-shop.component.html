@@ -112,6 +112,11 @@
       <div
         *ngFor="let item of shopItems"
         class="shopItem rarity_bg_{{ item.rarity }}"
+        [class.striked]="
+          item.marketGoldPrice && item.goldPrice
+            ? item.marketGoldPrice < item.goldPrice
+            : false
+        "
       >
         <button
           class="favorite"

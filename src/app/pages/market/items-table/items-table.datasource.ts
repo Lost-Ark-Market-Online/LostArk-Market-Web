@@ -6,6 +6,7 @@ import { collection, collectionData, DocumentData, Firestore, query, QueryConstr
 
 import { FavoriteItem, MarketItem } from './items-table.interfaces';
 import { Filter } from 'src/interfaces/common';
+import { CommonService } from 'src/services/common';
 
 export class MarketDataSource extends DataSource<MarketItem> {
   data: MarketItem[] = [];
@@ -16,12 +17,11 @@ export class MarketDataSource extends DataSource<MarketItem> {
   filter$: Subject<Filter> = new Subject();
   favorites?: FavoriteItem[];
 
-  constructor(private firestore: Firestore) {
+  constructor(private firestore: Firestore, private common: CommonService) {
     super();
   }
 
   refreshMarket() {
-    console.log('refreshMarket')
     this.paginator?.firstPage()
     this.filter$.next({ ...this.filter! });
   }
@@ -31,7 +31,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
       const firestore = this.firestore;
       return combineLatest({
         filter: this.filter$.pipe(startWith({
-          region: this.filter?.region,
+          region: this.common.region,
           category: this.filter?.category,
           subcategory: this.filter?.subcategory,
           favorites: this.filter?.favorites,
@@ -74,7 +74,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
         }
         const collectionObservable = collectionData(
           query(
-            collection(firestore, combined.filter.region).withConverter<MarketItem>({
+            collection(firestore, this.common.region).withConverter<MarketItem>({
               fromFirestore: snapshot => {
                 const { name, amount, rarity, category, subcategory, image, avgPrice, cheapestRemaining, lowPrice, recentPrice, updatedAt, shortHistoric } = snapshot.data();
                 const { id } = snapshot;

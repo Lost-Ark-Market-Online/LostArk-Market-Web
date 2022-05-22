@@ -45,7 +45,7 @@
       <a
         class="nav-header"
         mat-list-item
-        [routerLink]="['/' + regionSlug, 'market', 'favorites']"
+        [routerLink]="['/' + common.regionSlug, 'market', 'favorites']"
         routerLinkActive="selected"
         [routerLinkActiveOptions]="{ exact: true }"
         >Favorites ({{ favorites.length }}/10)</a
@@ -53,7 +53,7 @@
       <a
         class="nav-header"
         mat-list-item
-        [routerLink]="['/' + regionSlug, 'market', 'currency-exchange']"
+        [routerLink]="['/' + common.regionSlug, 'market', 'currency-exchange']"
         routerLinkActive="selected"
         [routerLinkActiveOptions]="{ exact: true }"
         >Currency Exchange</a
@@ -78,7 +78,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'engraving-recipe']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'engraving-recipe']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -106,7 +106,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'enhancement-material']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'enhancement-material']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -115,7 +115,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'enhancement-material',
             'honing-materials'
@@ -127,7 +127,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'enhancement-material',
             'additional-honing-materials'
@@ -139,7 +139,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'enhancement-material',
             'other-materials'
@@ -165,7 +165,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'combat-supplies']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'combat-supplies']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -174,7 +174,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'combat-supplies',
             'recovery'
@@ -186,7 +186,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'combat-supplies',
             'offense'
@@ -198,7 +198,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'combat-supplies',
             'utility'
@@ -209,7 +209,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'combat-supplies', 'buff']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'combat-supplies', 'buff']"
           routerLinkActive="active"
           >Battle Item - Buff</a
         >
@@ -234,7 +234,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'cooking']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'cooking']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -257,7 +257,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'trader']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'trader']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -266,7 +266,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'trader',
             'foraging-rewards'
@@ -277,28 +277,28 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'trader', 'loggin-loot']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'trader', 'loggin-loot']"
           routerLinkActive="active"
           >Logging Loot</a
         >
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'trader', 'mining-loot']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'trader', 'mining-loot']"
           routerLinkActive="active"
           >Mining Loot</a
         >
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'trader', 'hunting-loot']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'trader', 'hunting-loot']"
           routerLinkActive="active"
           >Hunting Loot</a
         >
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'trader', 'fishing-loot']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'trader', 'fishing-loot']"
           routerLinkActive="active"
           >Fishing Loot</a
         >
@@ -306,7 +306,7 @@
           class="nav-item"
           mat-list-item
           [routerLink]="[
-            '/' + regionSlug,
+            '/' + common.regionSlug,
             'market',
             'trader',
             'excavating-loot'
@@ -317,7 +317,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'trader', 'other']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'trader', 'other']"
           routerLinkActive="active"
           >Other</a
         >
@@ -342,7 +342,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'adventurers-tome']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'adventurers-tome']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -368,7 +368,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'sailing']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'sailing']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -394,7 +394,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'pets']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'pets']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -402,7 +402,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'pets','pets']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'pets','pets']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >Pets</a
@@ -410,7 +410,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'pets','pet-chest']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'pets','pet-chest']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >Pet Chest</a
@@ -436,7 +436,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'mount']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'mount']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
@@ -444,7 +444,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'mount','mount']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'mount','mount']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >Mount</a
@@ -452,7 +452,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'mount','mount-chest']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'mount','mount-chest']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >Mount Chest</a
@@ -477,7 +477,7 @@
         <a
           class="nav-item"
           mat-list-item
-          [routerLink]="['/' + regionSlug, 'market', 'gem-chest']"
+          [routerLink]="['/' + common.regionSlug, 'market', 'gem-chest']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >All</a
