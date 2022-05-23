@@ -5,14 +5,14 @@ import { environment } from "src/environments/environment";
 
 
 export interface MarketLiveItem {
-  id:string;
-  name:string;
-  amount:number;
-  avgPrice:number;
-  lowPrice:number;
-  image:string;
-  recentPrice:number;
-  cheapestRemaining:number;
+  id: string;
+  name: string;
+  amount: number;
+  avgPrice: number;
+  lowPrice: number;
+  image: string;
+  recentPrice: number;
+  cheapestRemaining: number;
   updatedAt: Date;
 }
 
@@ -31,13 +31,16 @@ export class ApiService {
     });
   }
 
-  getLiveData(category?: string, subcategory?: string) {
+  getLiveData(request: { category?: string, subcategory?: string, categories?: string }) {
     let params: any = {};
-    if (category) {
-      params['category'] = category;
+    if (request.category) {
+      params['category'] = request.category;
     }
-    if (subcategory) {
-      params['subcategory'] = subcategory;
+    if (request.subcategory) {
+      params['subcategory'] = request.subcategory;
+    }
+    if (request.categories) {
+      params['categories'] = request.categories;
     }
     return this.http.get<MarketLiveItem[]>(`${this.endpoint}/export-market-live/${this.common.region}`, {
       params

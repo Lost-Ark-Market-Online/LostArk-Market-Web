@@ -271,7 +271,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
         }
       });
     this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {
-      this.api.getLiveData().pipe(take(1)).subscribe((data) => {
+      this.api.getLiveData({categories:"Combat Supplies,Cooking,Trader,Sailing,Enhancement Material"}).pipe(take(1)).subscribe((data) => {
         this.marketData = data.reduce<{ [itemId: string]: MarketLiveItem }>((acc, item) => {
           acc[item.id] = item;
           return acc;
