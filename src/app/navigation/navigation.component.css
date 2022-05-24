@@ -76,7 +76,12 @@
   text-decoration: none;
   border-bottom: var(--text-color) solid 2px;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
+
 
 .secondRow .tab.disabled{
   cursor: not-allowed;
@@ -106,6 +111,10 @@
 .secondRow .tab.active::before {
   background: linear-gradient(0deg, #4486dba6 0%, #27679c1c 50%);
   opacity: 1;
+}
+
+.secondRow .tab mat-icon{
+  color: white;
 }
 
 .secondRow .tab span{
