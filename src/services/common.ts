@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { filter, map, Observable, Subject } from "rxjs";
+import { ConnectableObservable, filter, map, Observable, Subject } from "rxjs";
 import slugify from "slugify";
 
 export const regionMap: { [slug: string]: string } = {
@@ -45,8 +45,11 @@ export class CommonService {
       })).subscribe(route => {
         this.activatedRoute = route;
         const { region } = route.snapshot.params;
+        if (region == 'default' && this.region) {
+          return this.updateRegion(this.region, true);
+        }
         if (this.region != regionMap[region]) {
-          this.updateRegion(regionMap[region], true);
+          return this.updateRegion(regionMap[region], true);
         }
       });
   }
@@ -56,6 +59,7 @@ export class CommonService {
   }
 
   updateRegion(region: string, navigate: boolean = false) {
+    console.log('updateRegion', region, navigate)
     if (!region) {
       region = 'North America East'
     }
