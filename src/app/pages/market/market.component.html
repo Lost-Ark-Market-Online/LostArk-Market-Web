@@ -48,7 +48,7 @@
         [routerLink]="['/' + common.regionSlug, 'market', 'favorites']"
         routerLinkActive="selected"
         [routerLinkActiveOptions]="{ exact: true }"
-        >Favorites ({{ favorites.length }}/10)</a
+        >Favorites ({{ common.marketFavorites.length }})</a
       >
       <a
         class="nav-header"
@@ -488,7 +488,6 @@
   <mat-sidenav-content class="sidenav-content">
     <app-items-table
       [filter]="filter"
-      [favorites]="favorites"
     ></app-items-table>
   </mat-sidenav-content>
 </mat-sidenav-container>

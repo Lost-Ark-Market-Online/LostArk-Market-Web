@@ -6,15 +6,36 @@ import { environment } from "src/environments/environment";
 
 export interface MarketLiveItem {
   id: string;
-  name: string;
-  amount: number;
   avgPrice: number;
   lowPrice: number;
-  image: string;
   recentPrice: number;
   cheapestRemaining: number;
   updatedAt: Date;
+  name: string;
+  amount: number;
+  rarity: number;
+  image: string;
+  category: string;
+  subcategory?: string;
+  shortHistoric?: {
+    [datetime: string]: number;
+  }
 }
+export interface MarketHistoricalItem {
+  id: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  timestamp: number;
+}
+
+export interface GetLiveDataRequest {
+  category?: string
+  subcategory?: string;
+  categories?: string;
+  items?: string;
+};
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +52,7 @@ export class ApiService {
     });
   }
 
-  getLiveData(request: { category?: string, subcategory?: string, categories?: string }) {
+  getLiveData(request: GetLiveDataRequest) {
     let params: any = {};
     if (request.category) {
       params['category'] = request.category;
@@ -42,8 +63,14 @@ export class ApiService {
     if (request.categories) {
       params['categories'] = request.categories;
     }
+    if (request.items) {
+      params['items'] = request.items;
+    }
     return this.http.get<MarketLiveItem[]>(`${this.endpoint}/export-market-live/${this.common.region}`, {
       params
     });
+  }
+  getHistoricalData(itemId: string) {
+    return this.http.get<MarketHistoricalItem[][]>(`${this.endpoint}/export-item-history/${this.common.region}/${itemId}`);
   }
 }

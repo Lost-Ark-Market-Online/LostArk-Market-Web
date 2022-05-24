@@ -164,7 +164,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
   regionSubscription: Subscription;
   bonusesSubscription: Subscription;
   recipes: { [itemId: string]: Recipe } = {};
-  favorites: string[] = [];
   recommendations: { [itemId: string]: Recipe } = {};
   recipeMenu: { [id: string]: { open: boolean } } = {};
   marketData: { [itemId: string]: MarketLiveItem } = {};
@@ -191,7 +190,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.favorites = JSON.parse(localStorage.getItem('craftFavorites') || "[]");
     this.options = Object.values(craftingdata).map(r => r.name);
     this.filteredOptions = this.searchControl.valueChanges.pipe(
       startWith(''),
@@ -331,7 +329,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
       this.submenu = [{
         id: 'all',
         name: "All",
-        items: craftingdata.filter(cd => this.favorites.indexOf(cd.id) >= 0).sort((a, b) => a.name > b.name ? 1 : -1)
+        items: craftingdata.filter(cd => this.common.craftingFavorites.indexOf(cd.id) >= 0).sort((a, b) => a.name > b.name ? 1 : -1)
       }];
     } else if (categoryId == 'recommendations') {
       this.submenu = [{
@@ -600,25 +598,5 @@ export class CraftingComponent implements OnInit, OnDestroy {
     time = (time - m) / 60;
     const h = time % 60;
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-  }
-
-  toggleFavorite(recipeId: string) {
-    if (!this.favorites) {
-      return;
-    }
-    const favIndex = this.favorites.findIndex(i => i == recipeId);
-    if (favIndex >= 0) {
-      this.favorites.splice(favIndex, 1);
-    } else {
-      this.favorites.push(recipeId);
-    }
-    localStorage.setItem('craftFavorites', JSON.stringify(this.favorites));
-  }
-
-  isFavorite(recipeId: string) {
-    if (!this.favorites) {
-      return false;
-    }
-    return this.favorites.findIndex(i => i == recipeId) >= 0;
   }
 }

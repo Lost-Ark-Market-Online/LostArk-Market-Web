@@ -24,7 +24,7 @@
 }
 
 .nav-list {
-  padding-top: 4px;
+  padding-top: 0px;
   display: flex;
   flex-direction: column;
 }

@@ -49,7 +49,6 @@ export class CashShopComponent implements OnInit {
   searchControl = new FormControl();
   filteredOptions?: Observable<string[]>;
   options: string[];
-  favorites: string[];
   categoriesMap: { [categoryId: string]: { id: string; name: string; subcategories: { [subcategoryId: string]: { id: string; name: string; } } } };
   categories: Category[];
   routeSubscription: Subscription;
@@ -68,7 +67,6 @@ export class CashShopComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.favorites = JSON.parse(localStorage.getItem('cashShopFavorites') || 'null') || [];
     this.filter = {
       favorites: true
     };
@@ -175,16 +173,18 @@ export class CashShopComponent implements OnInit {
               }
             }
           } else {
-            this.filter.favorites = true;
-            this.filter.category = undefined;
-            this.filter.subcategory = undefined;
+            if (this.common.cashShopFavorites.length > 0) {
+              this.router.navigate([this.common.regionSlug, 'cash-shop', 'favorites']);
+            } else {
+              this.router.navigate([this.common.regionSlug, 'cash-shop', "mari's-secret-shop","enhancement-rec."]);
+            }
           }
         }
         this.filterItems();
       });
 
     this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {
-      this.api.getLiveData({categories: "Currency Exchange,Enhancement Material,Combat Supplies"}).pipe(take(1)).subscribe((data) => {
+      this.api.getLiveData({ categories: "Currency Exchange,Enhancement Material,Combat Supplies" }).pipe(take(1)).subscribe((data) => {
         this.marketData = data.reduce<{ [itemId: string]: MarketLiveItem }>((acc, item) => {
           acc[item.id] = item;
           return acc;
@@ -242,7 +242,7 @@ export class CashShopComponent implements OnInit {
         return item.name.toLowerCase().indexOf(this.filter.search.toLowerCase()) >= 0
       }
       if (this.filter.favorites) {
-        return this.favorites.indexOf(item.cashShopId) >= 0;
+        return this.common.cashShopFavorites.indexOf(item.cashShopId) >= 0;
       }
       if (this.filter.subcategory) {
         return item.category == this.filter.category && item.subcategory == this.filter.subcategory;
@@ -260,25 +260,4 @@ export class CashShopComponent implements OnInit {
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
-
-  toggleFavorite(itemId: string) {
-    if (!this.favorites) {
-      return;
-    }
-    const favIndex = this.favorites.findIndex(i => i == itemId);
-    if (favIndex >= 0) {
-      this.favorites.splice(favIndex, 1);
-    } else {
-      this.favorites.push(itemId);
-    }
-    localStorage.setItem('cashShopFavorites', JSON.stringify(this.favorites));
-  }
-
-  isFavorite(itemId: string) {
-    if (!this.favorites) {
-      return false;
-    }
-    return this.favorites.findIndex(i => i == itemId) >= 0;
-  }
-
 }

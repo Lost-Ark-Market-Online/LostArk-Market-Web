@@ -41,7 +41,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ApiService } from '../services/api';
-import { CashShopComponent } from './pages/cash-shop/cash-shop.component';
+import { CashShopComponent } from './pages/cash-shop/cash-shop.component'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 function pageMatcherFactory(page: string) {
   return function craftingPageMatcher(segments: UrlSegment[]): UrlMatchResult {
@@ -118,7 +119,8 @@ const routes: Routes = [
     HighchartsChartModule,
     MatTooltipModule,
     MatSliderModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatProgressSpinnerModule
   ],
   providers: [ScreenTrackingService, CommonService, ApiService],
   bootstrap: [AppComponent]

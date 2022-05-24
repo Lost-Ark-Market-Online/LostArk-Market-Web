@@ -23,6 +23,8 @@
   --gold: #faab02;
   --disabled: #707070;
   --bg-color: #090909;
+  --scrollbarBG: #181b1f;
+  --thumbBG: #554f40;
 }
 
 html,
@@ -142,6 +144,44 @@ img.gold {
   align-items: center;
   justify-content: center;
   font-weight: bold;
+}
+
+
+html::-webkit-scrollbar,
+mat-sidenav .mat-drawer-inner-container::-webkit-scrollbar,
+.scrollable::-webkit-scrollbar {
+  width: 16px;
+}
+
+html,
+mat-sidenav .mat-drawer-inner-container,
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+html::-webkit-scrollbar-corner,
+mat-sidenav .mat-drawer-inner-container::-webkit-scrollbar-corner,
+.scrollable::-webkit-scrollbar-corner{
+  background: var(--bg-color);  
+}
+
+html::-webkit-scrollbar-track,
+mat-sidenav .mat-drawer-inner-container::-webkit-scrollbar-track,
+.scrollable::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+
+html::-webkit-scrollbar-thumb,
+mat-sidenav .mat-drawer-inner-container::-webkit-scrollbar-thumb,
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 6px;
+  border: 4px solid var(--scrollbarBG);
+}
+
+mat-nav-list.mat-list-base{
+  padding-top: 0px;
 }
 
 @media screen {

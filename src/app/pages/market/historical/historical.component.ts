@@ -11,6 +11,7 @@ import IndicatorSupertrend from "highcharts/indicators/supertrend";
 import HC_exporting from 'highcharts/modules/exporting';
 import HC_heikinashi from 'highcharts/modules/heikinashi';
 import { MarketItem } from '../items-table/items-table.interfaces';
+import { ApiService } from 'src/services/api';
 IndicatorsCore(Highcharts);
 IndicatorEma(Highcharts);
 IndicatorAtr(Highcharts);
@@ -54,27 +55,15 @@ export class HistoricalComponent {
   constructor(
     public dialogRef: MatDialogRef<HistoricalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: HistoricalData,
-    private firestore: Firestore,
+    private apiService: ApiService,
     public common: CommonService
   ) {
-    docData(doc(this.firestore, `${this.data.region}-historic/${this.data.item.id}`).withConverter<HistoricItem>({
-      fromFirestore(snapshot) {
-        const { timeData, updatedAt } = snapshot.data();
-        return {
-          timeData,
-          updatedAt: updatedAt.toDate()
-        };
-      },
-      toFirestore(historicItem) {
-        return historicItem;
-      }
-    })).pipe(take(1), map((x) => {
-      this.ohlcData = x.timeData.map(td => [td.timestamp, td.open, td.high, td.low, td.close]);
+
+    apiService.getHistoricalData(this.data.item.id).pipe(take(1), map((x) => {
+      this.ohlcData = x[0].map(td => [td.timestamp, td.open, td.high, td.low, td.close]);
       this.loadChartOptions();
       return x;
-    })).subscribe()
-
-
+    })).subscribe();
   }
 
   loadChartOptions() {
@@ -260,5 +249,4 @@ export class HistoricalComponent {
 
 export type HistoricalData = {
   item: MarketItem;
-  region: string;
 }

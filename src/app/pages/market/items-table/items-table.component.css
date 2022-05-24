@@ -3,8 +3,9 @@
 }
 
 .marketContainer {
+  background-color: var(--primary-background-color);
   max-width: 100%;
-  min-height: 834px;
+  height: 856px;
   overflow-x: auto;
 }
 
@@ -200,4 +201,57 @@
 }
 .cellContainer .chartContainer .variation.negative {
   color: #ff2020;
+}
+
+.cellContainer .price{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1px;
+}
+.pricesWrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.cellContainer .prices{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+
+}
+
+.market .row{
+  opacity: 1;
+  transition: opacity 200ms;
+}
+.market.loading .row{
+  opacity: 0;
+}
+.market .loadingHeader{    
+  position: absolute;
+  width: 100%;
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  height: 0px;
+  transition: height 400ms;
+  background-color: transparent;
+}
+
+.market.loading .loadingHeader{
+  height: 46px;
+}
+
+.loadingContainer{
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.loadingSpinner ::ng-deep circle{
+  stroke: var(--text-color);
 }

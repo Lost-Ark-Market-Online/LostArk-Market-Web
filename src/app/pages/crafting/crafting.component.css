@@ -10,6 +10,7 @@
   gap: 8px;
   background-color: var(--primary-background-color);
   padding: 0px 8px;
+  margin-bottom: 8px;
 }
 .toolbar .category {
   padding: 4px 16px;
@@ -49,6 +50,12 @@
   flex: 1;
   box-shadow: -1px -1px 1px 1px #272a2e inset;
 }
+.searchWrapperr{
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+}
 
 .searchContainer ::ng-deep .mat-form-field-wrapper {
   margin-bottom: -1.34375em;
@@ -73,7 +80,7 @@
 }
 
 .sidenav-content {
-  min-height: 600px;
+  height: 908px;
 }
 
 .submenu {
@@ -232,12 +239,12 @@
   color: #e66516;
 }
 .crafting {
-  margin-top: 8px;
   background-color: var(--secondary-background-color);
   color: white;
   padding: 32px;
   min-height: 600px;
   padding-bottom: 64px;
+  height: 812px;
 }
 .itemInfo {
   display: flex;
@@ -479,9 +486,6 @@
 .sliderField ::ng-deep .mat-checked .mat-slide-toggle-bar {
   background-color: rgba(50, 205, 50, 0.548);
 }
-.bonusesContainer {
-  margin-top: 8px;
-}
 
 .bonusesContainer .header {
   background-color: var(--secondary-background-color);
@@ -514,5 +518,10 @@
   .sidenav-container{    
     min-height: calc(100vh - 168px);
   }
-  
+  .sidenav-content{
+    height: auto;
+  }
+  .crafting {
+    height: auto;
+  }
 }

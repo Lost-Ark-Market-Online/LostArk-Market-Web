@@ -48,7 +48,7 @@
         [routerLink]="['/' + this.common.regionSlug, 'cash-shop', 'favorites']"
         routerLinkActive="selected"
         [routerLinkActiveOptions]="{ exact: true }"
-        >Favorites ({{ favorites.length }})</a
+        >Favorites ({{ common.cashShopFavorites.length }})</a
       >
       <ng-container *ngFor="let category of categories; index as categoryIndex">
         <mat-list-item
@@ -107,7 +107,7 @@
       </ng-container>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content class="sidenav-content">
+  <mat-sidenav-content class="sidenav-content scrollable">
     <div class="shopContainer">
       <div
         *ngFor="let item of shopItems"
@@ -120,9 +120,9 @@
       >
         <button
           class="favorite"
-          [class.active]="isFavorite(item.cashShopId)"
+          [class.active]="common.isCashShopFavorite(item.cashShopId)"
           mat-icon-button
-          (click)="toggleFavorite(item.cashShopId)"
+          (click)="common.toggleCashShopFavorite(item.cashShopId)"
         >
           <mat-icon>star</mat-icon>
         </button>

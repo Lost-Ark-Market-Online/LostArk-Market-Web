@@ -1,4 +1,4 @@
-<div class="toolbar">  
+<div class="toolbar">
   <button
     class="menu-btn"
     type="button"
@@ -26,29 +26,31 @@
     routerLinkActive="selected"
     >{{ category.name }}</a
   >
-  <mat-form-field class="searchContainer" appearance="fill">
-    <mat-label>Search</mat-label>
-    <input
-      type="text"
-      placeholder="Pick one"
-      aria-label="Search"
-      matInput
-      [formControl]="searchControl"
-      (keyup.enter)="search()"
-      [matAutocomplete]="auto"
-    />
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option
-        *ngFor="let option of filteredOptions | async"
-        [value]="option"
-      >
-        {{ option }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
-    <mat-icon>search</mat-icon>
-  </button>
+  <div class="searchWrapperr">
+    <mat-form-field class="searchContainer" appearance="fill">
+      <mat-label>Search</mat-label>
+      <input
+        type="text"
+        placeholder="Pick one"
+        aria-label="Search"
+        matInput
+        [formControl]="searchControl"
+        (keyup.enter)="search()"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button class="searchBtn" matSuffix mat-icon-button (click)="search()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
 </div>
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
@@ -166,11 +168,13 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     <mat-sidenav-container class="sidenav-container">
-      <mat-sidenav class="submenu"
-      #filterNav
-      [attr.role]="(isMedium$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isMedium$ | async) ? 'over' : 'side'"
-      [opened]="(isMedium$ | async) === false">
+      <mat-sidenav
+        class="submenu"
+        #filterNav
+        [attr.role]="(isMedium$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isMedium$ | async) ? 'over' : 'side'"
+        [opened]="(isMedium$ | async) === false"
+      >
         <mat-nav-list class="nav-list">
           <ng-container *ngFor="let subCategory of submenu">
             <mat-list-item
@@ -189,7 +193,9 @@
               queryParamsHandling="merge"
               [class.active]="subCategory.id == 'all'"
             >
-              <span class="full-width">{{ subCategory.name == 'All'? category : subCategory.name }}</span>
+              <span class="full-width">{{
+                subCategory.name == "All" ? category : subCategory.name
+              }}</span>
               <mat-icon class="menu-button" *ngIf="subCategory.id != 'all'"
                 >expand_more</mat-icon
               >
@@ -218,9 +224,9 @@
                 <div class="itemContainer">
                   <button
                     class="favorite"
-                    [class.active]="isFavorite(item.id)"
+                    [class.active]="common.isCraftingFavorite(item.id)"
                     mat-icon-button
-                    (click)="toggleFavorite(item.id)"
+                    (click)="common.toggleCraftingFavorite(item.id)"
                   >
                     <mat-icon>star</mat-icon>
                   </button>
@@ -238,7 +244,7 @@
           </ng-container>
         </mat-nav-list>
       </mat-sidenav>
-      <mat-sidenav-content class="crafting">
+      <mat-sidenav-content class="crafting scrollable">
         <div
           class="craftingWrapper"
           *ngIf="selectedRecipeId && recipes[selectedRecipeId!]"
@@ -246,9 +252,9 @@
           <div class="itemInfo">
             <button
               class="favorite"
-              [class.active]="isFavorite(selectedRecipeId)"
+              [class.active]="common.isCraftingFavorite(selectedRecipeId)"
               mat-icon-button
-              (click)="toggleFavorite(selectedRecipeId)"
+              (click)="common.toggleCraftingFavorite(selectedRecipeId)"
             >
               <mat-icon>star</mat-icon>
             </button>

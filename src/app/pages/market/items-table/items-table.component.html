@@ -1,10 +1,12 @@
 <div class="mat-elevation-z8">
-  <div class="marketContainer">
+  <div class="marketContainer scrollable">
     <table
       mat-table
-      class="full-width-table market"
+      class="full-width-table market itemsTable"
+      [class.loading]="dataSource.loading | async"
       matSort
       aria-label="Elements"
+      multiTemplateDataRows
     >
       <!-- Name Column -->
       <ng-container matColumnDef="name">
@@ -30,13 +32,13 @@
           <div class="cell">
             <button
               class="favorite"
-              [class.active]="isFavorite(row)"
+              [class.active]="common.isMarketFavorite(row.id)"
               mat-icon-button
-              (click)="toggleFavorite(row)"
+              (click)="common.toggleMarketFavorite(row.id)"
             >
               <mat-icon>star</mat-icon>
             </button>
-            <img class="itemImage" [src]="common.getImageUrl(row.image)" />
+            <img class="itemImage" [src]="row.image" />
             <div class="name">
               <span>{{ row.name }}</span>
               <span class="bundles" *ngIf="row.amount > 1"
@@ -52,23 +54,15 @@
       </ng-container>
 
       <ng-container matColumnDef="variation">
-        <th
-          class="header"
-          mat-header-cell
-          mat-sort-header
-          *matHeaderCellDef
-        >
+        <th class="header" mat-header-cell mat-sort-header *matHeaderCellDef>
           Historical Data
         </th>
-        <td
-          class="cellContainer"
-          mat-cell
-          *matCellDef="let row"
-        >
-        <div *ngIf="!row.chartOptions" class="historical"><span style="color: white;">Not enough historical data</span></div>
-        
-          <div class="historical"
-          *ngIf="row.chartOptions">
+        <td class="cellContainer" mat-cell *matCellDef="let row">
+          <div *ngIf="!row.chartOptions" class="historical">
+            <span style="color: white">Not enough historical data</span>
+          </div>
+
+          <div class="historical" *ngIf="row.chartOptions">
             <div class="chartContainer">
               <highcharts-chart
                 [Highcharts]="Highcharts"
@@ -76,9 +70,11 @@
                 class="chart"
               >
               </highcharts-chart>
-              <span class="variation" [class.negative]="row.variation < -5"
+              <span
+                class="variation"
+                [class.negative]="row.variation < -5"
                 [class.positive]="row.variation > 5"
-                >{{ row.variation }}% 7d</span
+                >{{ row.variation }}%</span
               >
             </div>
             <div class="buttonContainer">
@@ -98,22 +94,26 @@
       </ng-container>
 
       <ng-container matColumnDef="recentPrice">
-        <th
-          class="header"
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-        >
+        <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>
           Recent Prices
         </th>
-        <td
-          class="cellContainer"
-          mat-cell
-          *matCellDef="let row"
-        >
+        <td class="cellContainer" mat-cell *matCellDef="let row">
           <div class="cell right">
-            {{ row.recentPrice }}
-            <img class="gold" src="/assets/icons/gold.png" alt="gold" />
+            <div class="prices">
+              <div class="price">
+                {{ row.recentPrice }}
+                <img class="gold" src="/assets/icons/gold.png" alt="gold" />
+              </div>
+              <span *ngIf="row.fullPrice">/</span>
+              <div class="price" *ngIf="row.fullPrice">
+                1
+                <img
+                  class="gold"
+                  [src]="row.id == 'blue-crystal-0' ? '/assets/icons/bluecrystal.png' : '/assets/icons/royalcrystal.png'"
+                  alt="bluecrystal"
+                />
+              </div>
+            </div>
           </div>
         </td>
       </ng-container>
@@ -124,26 +124,30 @@
         </th>
         <td class="cellContainer" mat-cell *matCellDef="let row">
           <div class="cell right">
-            {{ row.lowPrice }}
-            <img class="gold" src="/assets/icons/gold.png" alt="gold" />
+            <div class="prices">
+              <div class="price">
+                {{ row.fullPrice || row.lowPrice }}
+                <img class="gold" src="/assets/icons/gold.png" alt="gold" />
+              </div>
+              <span *ngIf="row.fullPrice">/</span>
+              <div class="price" *ngIf="row.fullPrice">
+                95
+                <img
+                  class="gold"
+                  [src]="row.id == 'blue-crystal-0' ? '/assets/icons/bluecrystal.png' : '/assets/icons/royalcrystal.png'"
+                  alt="bluecrystal"
+                />
+              </div>
+            </div>
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="cheapestRemaining">
-        <th
-          class="header"
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-        >
+        <th class="header" mat-header-cell *matHeaderCellDef mat-sort-header>
           Cheapest Rem.
         </th>
-        <td
-          class="cellContainer"
-          mat-cell
-          *matCellDef="let row"
-        >
+        <td class="cellContainer" mat-cell *matCellDef="let row">
           <div class="cell right">{{ row.cheapestRemaining }}</div>
         </td>
       </ng-container>
@@ -157,7 +161,23 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="loading">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          [attr.colspan]="6"
+          class="loadingContainer"
+        >
+          <mat-spinner class="loadingSpinner" diameter="36"></mat-spinner>
+        </th>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-header-row
+        *matHeaderRowDef="['loading']"
+        class="loadingHeader"
+      ></tr>
       <tr
         class="row"
         mat-row

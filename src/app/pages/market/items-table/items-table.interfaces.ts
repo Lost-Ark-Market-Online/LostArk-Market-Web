@@ -6,7 +6,7 @@ export interface MarketItem extends DocumentData {
   amount: number;
   rarity: number;
   category: string;
-  subcategory: string;
+  subcategory?: string;
   image: string;
   avgPrice?: number;
   cheapestRemaining?: number;

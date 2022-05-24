@@ -9,7 +9,7 @@
       [class.legendary]="data.item.rarity == 4"
       [class.relic]="data.item.rarity == 5"
     >
-      <img class="itemImage" [src]="common.getImageUrl(data.item.image)" />
+      <img class="itemImage" [src]="data.item.image" />
       <span class="itemName">{{ data.item.name }}</span>
     </div>    
     <button class="closeBtn" matSuffix mat-icon-button (click)="close()">

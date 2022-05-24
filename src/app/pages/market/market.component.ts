@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ɵɵsetComponentScope } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ɵɵsetComponentScope } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { filter, map, Observable, shareReplay, startWith, Subscription, take } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -80,16 +80,15 @@ const categoriesMap: { [slug: string]: { category: string, subcategories?: { [su
 @Component({
   selector: 'app-market',
   templateUrl: './market.component.html',
-  styleUrls: ['./market.component.css']
+  styleUrls: ['./market.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketComponent implements OnInit, OnDestroy {
+export class MarketComponent implements OnDestroy, AfterViewInit {
   searchControl = new FormControl();
   options: string[] = autocompleteOptions;
   filteredOptions?: Observable<string[]>;
-  favorites: FavoriteItem[];
   filter: Filter;
   routeSubscription: Subscription;
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Large, Breakpoints.XLarge])
     .pipe(
       map(result => !result.matches),
@@ -118,7 +117,6 @@ export class MarketComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public common: CommonService
   ) {
-    this.favorites = JSON.parse(localStorage.getItem('favorites') || 'null') || [];
     this.filter = {
       favorites: true
     };
@@ -160,11 +158,13 @@ export class MarketComponent implements OnInit, OnDestroy {
             }
           }
         } else {
-          this.filter.favorites = true;
-          this.filter.category = undefined;
-          this.filter.subcategory = undefined;
+          if (this.common.marketFavorites.length > 0) {
+            this.router.navigate([this.common.regionSlug, 'market', 'favorites'])
+          } else {
+            this.router.navigate([this.common.regionSlug, 'market', 'enhancement-material'])
+          }
         }
-        
+
         switch (this.filter.category) {
           case 'Enhancement Material':
             this.menu.enhancementMaterialsSubMenu = true;
@@ -186,7 +186,7 @@ export class MarketComponent implements OnInit, OnDestroy {
             break;
           case 'Sailing':
             this.menu.sailingSubMenu = true;
-            break;            
+            break;
           case 'Pets':
             this.menu.petsSubMenu = true;
             break;
@@ -203,16 +203,17 @@ export class MarketComponent implements OnInit, OnDestroy {
       });
   }
 
+  ngAfterViewInit(): void {
+  }
+
   ngOnDestroy(): void {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
   }
 
-  ngOnInit(): void {
-  }
 
-  resetSubMenus(){
+  resetSubMenus() {
     this.menu = {
       enhancementMaterialsSubMenu: false,
       traderSubMenu: false,
