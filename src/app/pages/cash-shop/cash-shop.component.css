@@ -4,7 +4,7 @@
   gap: 16px;
   justify-content: center;
   margin: 16px;
-  height: 864px;
+  height: 880px;
 }
 .shopItem {
   height: 262px;
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   position: relative;
 }
 .shopItem .itemImage {
@@ -38,7 +38,7 @@
 .shopItem .price {
   display: flex;
   position: absolute;
-  align-items: end;
+  align-items: flex-end;
   color: white;
   bottom: 24px;
   gap: 4px;
@@ -50,7 +50,7 @@
   color: white;
   align-items: center;
   font-size: 16px;
-  align-items: end;
+  align-items: flex-end;
 }
 .shopItem .price img {
   width: 24px;
@@ -64,7 +64,7 @@
 }
 .shopItem .price .goldPrices .shop {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 2px;
   line-height: 18px;
 }
@@ -76,7 +76,7 @@
   font-size: 10px;
   line-height: 10px;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 2px;
 }
 .shopItem .price .goldPrices .market img {
@@ -138,7 +138,7 @@
   width: 49px;
   height: 24px;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   padding-left: 16px;
   text-shadow: black 1px 1px 2px;
   overflow: hidden;
