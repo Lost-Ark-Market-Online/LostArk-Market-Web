@@ -89,7 +89,7 @@
 }
 
 .submenu-mount.expanded,
-.submenu-pets.expanded{
+.submenu-pets.expanded {
   height: 156px;
 }
 
@@ -136,16 +136,25 @@
   background-color: #252c35;
 }
 
-.sidenav-content{
+.sidenav-content {
   height: auto;
 }
 
-.menu-btn{
+.menu-btn {
   color: white;
 }
 
+.clearBtn {
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.clearBtn:hover {
+  color: var(--text-color-focused);
+}
+
 @media only screen and (max-width: 768px) {
-  .sidenav-container{    
+  .sidenav-container {
     min-height: calc(100vh - 168px);
   }
 }

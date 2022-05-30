@@ -20,6 +20,7 @@
       [formControl]="searchControl"
       [matAutocomplete]="auto"
     />
+    <mat-icon *ngIf="searchControl.value" matSuffix class="clearBtn" (click)="clearSearch()">close</mat-icon>
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
       <mat-option
         *ngFor="let option of filteredOptions | async"
