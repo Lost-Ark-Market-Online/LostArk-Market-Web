@@ -77,11 +77,13 @@ export class MarketDataSource extends DataSource<MarketItem> {
           }
 
           const request: GetLiveDataRequest = {};
-          if (combined.filter.category) {
+          if (combined.filter.search) {
+            request.search = combined.filter.search;
+          } else if (combined.filter.category) {
             request.category = combined.filter.category;
-          }
-          if (combined.filter.subcategory) {
-            request.subcategory = combined.filter.subcategory;
+            if (combined.filter.subcategory) {
+              request.subcategory = combined.filter.subcategory;
+            }
           }
           if (combined.filter.favorites) {
             request.items = this.common.marketFavorites.join(",") || "";
@@ -121,7 +123,7 @@ export class MarketDataSource extends DataSource<MarketItem> {
                 }
               }
               let fullPrice;
-              if (category == 'Currency Exchange'){
+              if (category == 'Currency Exchange') {
                 fullPrice = Math.round(lowPrice * 95)
               }
 

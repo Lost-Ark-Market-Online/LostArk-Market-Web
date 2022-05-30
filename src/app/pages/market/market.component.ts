@@ -140,28 +140,29 @@ export class MarketComponent implements OnDestroy, AfterViewInit {
           this.filter.subcategory = undefined;
           this.filter.favorites = false;
           this.filter.search = search;
-          return;
-        }
-        const { region, category, subcategory } = route.snapshot.params;
-        if (category) {
-          if (category == 'favorites') {
-            this.filter.favorites = true;
-            this.filter.category = undefined;
-            this.filter.subcategory = undefined;
-          } else {
-            this.filter.favorites = false;
-            this.filter.category = categoriesMap[category].category;
-            if (subcategory) {
-              this.filter.subcategory = categoriesMap[category].subcategories![subcategory];
-            } else {
-              this.filter.subcategory = undefined;
-            }
-          }
         } else {
-          if (this.common.marketFavorites.length > 0) {
-            this.router.navigate([this.common.regionSlug, 'market', 'favorites'])
+          this.filter.search = undefined;
+          const { region, category, subcategory } = route.snapshot.params;
+          if (category) {
+            if (category == 'favorites') {
+              this.filter.favorites = true;
+              this.filter.category = undefined;
+              this.filter.subcategory = undefined;
+            } else {
+              this.filter.favorites = false;
+              this.filter.category = categoriesMap[category].category;
+              if (subcategory) {
+                this.filter.subcategory = categoriesMap[category].subcategories![subcategory];
+              } else {
+                this.filter.subcategory = undefined;
+              }
+            }
           } else {
-            this.router.navigate([this.common.regionSlug, 'market', 'enhancement-material'])
+            if (this.common.marketFavorites.length > 0) {
+              this.router.navigate([this.common.regionSlug, 'market', 'favorites'])
+            } else {
+              this.router.navigate([this.common.regionSlug, 'market', 'enhancement-material'])
+            }
           }
         }
 
@@ -232,16 +233,27 @@ export class MarketComponent implements OnDestroy, AfterViewInit {
     const search = this.searchControl.value;
     if (search) {
       logEvent(this.analytics, 'search', { query: search });
-      window.history.pushState(null, this.common.region, slugify(this.common.region).toLowerCase() + `?search=${encodeURIComponent(search)}`);
+      // window.history.pushState(null, this.common.region, slugify(this.common.region).toLowerCase() + `/market?search=${encodeURIComponent(search)}`);
+
+      // this.filter.category = undefined;
+      // this.filter.subcategory = undefined;
+      // this.filter.favorites = false;
+      // this.filter.search = search;
+      // this.resetSubMenus();
+      // this.marketTable.dataSource.refreshMarket();
+
+      this.router.navigate([this.common.regionSlug, 'market'], {
+        queryParams: {
+          search
+        }
+      });
     } else {
-      window.history.pushState(null, this.common.region, slugify(this.common.region).toLowerCase());
+      if (this.common.marketFavorites.length > 0) {
+        this.router.navigate([this.common.regionSlug, 'market', 'favorites'])
+      } else {
+        this.router.navigate([this.common.regionSlug, 'market', 'enhancement-material'])
+      }
     }
-    this.filter.category = undefined;
-    this.filter.subcategory = undefined;
-    this.filter.favorites = false;
-    this.filter.search = search;
-    this.resetSubMenus();
-    this.marketTable.dataSource.refreshMarket();
   }
 
   private _filter(value: string): string[] {

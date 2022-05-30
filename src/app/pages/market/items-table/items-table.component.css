@@ -70,7 +70,7 @@
 }
 
 .market .cell.right {
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .market .normal {
@@ -190,7 +190,7 @@
 .cellContainer .chartContainer {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   justify-content: center;
 }
 .cellContainer .chartContainer .variation{

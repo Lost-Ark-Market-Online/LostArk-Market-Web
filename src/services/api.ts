@@ -35,6 +35,7 @@ export interface GetLiveDataRequest {
   subcategory?: string;
   categories?: string;
   items?: string;
+  search?: string;
 };
 
 @Injectable({
@@ -65,6 +66,9 @@ export class ApiService {
     }
     if (request.items) {
       params['items'] = request.items;
+    }
+    if (request.search) {
+      params['search'] = request.search;
     }
     return this.http.get<MarketLiveItem[]>(`${this.endpoint}/export-market-live/${this.common.region}`, {
       params
