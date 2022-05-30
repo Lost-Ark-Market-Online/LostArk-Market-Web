@@ -4081,9 +4081,9 @@
     "strongholdXp": 576
   },
   {
-    "name": "Awakening Potion",
-    "id": "awakening-potion-3",
-    "image": "awakening-potion.webp",
+    "name": "Stimulant",
+    "id": "stimulant-3",
+    "image": "stimulant.webp",
     "imgUrl": "/icons/battle_item_01_10.webp",
     "amount": 3,
     "rarity": 3,
@@ -4096,7 +4096,7 @@
       {
         "href": "https://lostarkcodex.com/us/research/601003/",
         "start": "[",
-        "text": "Craft Method: Awakening Potion",
+        "text": "Craft Method: Stimulant",
         "end": "] Research at the Lab"
       },
       {
