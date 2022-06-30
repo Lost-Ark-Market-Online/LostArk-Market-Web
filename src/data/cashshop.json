@@ -1036,10 +1036,10 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Enhancement Rec.",
-    "image": "guardian-stone-crystal.png",
-    "marketId": "guardian-stone-crystal-0",
-    "cashShopId": "guardian-stone-crystal-bound-1,000",
-    "name": "Guardian Stone Crystal (Bound) [1,000]",
+    "image": "crystallized-guardian-stone.png",
+    "marketId": "crystallized-guardian-stone-0",
+    "cashShopId": "crystallized-guardian-stone-bound-1,000",
+    "name": "Crystallized Guardian Stone (Bound) [1,000]",
     "amount": 1000,
     "blueCrystals": 270,
     "rarity": 2
@@ -1069,10 +1069,10 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Enhancement Rec.",
-    "image": "destruction-stone-crystal.png",
-    "marketId": "destruction-stone-crystal-0",
-    "cashShopId": "destruction-stone-crystal-bound-500",
-    "name": "Destruction Stone Crystal (Bound) [500]",
+    "image": "crystallized-destruction-stone.png",
+    "marketId": "crystallized-destruction-stone-0",
+    "cashShopId": "crystallized-destruction-stone-bound-500",
+    "name": "Crystallized Destruction Stone (Bound) [500]",
     "amount": 500,
     "blueCrystals": 300,
     "rarity": 3
