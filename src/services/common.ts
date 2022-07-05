@@ -1,7 +1,15 @@
-import { Injectable } from "@angular/core";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { ConnectableObservable, filter, map, Observable, Subject } from "rxjs";
-import slugify from "slugify";
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ConnectableObservable, filter, map, Observable, Subject } from 'rxjs';
+import slugify from 'slugify';
+import autocompleteStrings from '../data/market_autocomplete.json';
+
+const idsFromAutoCompleteStrings = autocompleteStrings.map((s) =>
+  s
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/\[?.+\]| |'|:|\(|\)/g, '')
+);
 
 export const regionMap: { [slug: string]: string } = {
   'north-america-east': 'North America East',
@@ -9,40 +17,40 @@ export const regionMap: { [slug: string]: string } = {
   'europe-central': 'Europe Central',
   'europe-west': 'Europe West',
   'south-america': 'South America',
-}
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
   region$ = new Subject<string>();
-  region = "";
-  regionSlug = "";
+  region = '';
+  regionSlug = '';
   activatedRoute: ActivatedRoute;
   marketFavorites: string[] = [];
   cashShopFavorites: string[] = [];
   craftingFavorites: string[] = [];
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor(private router: Router, private route: ActivatedRoute) {
     this.localStorageCheck();
-    this.region$.subscribe(region => {
-      this.region = region
-      this.regionSlug = region ? slugify(region, { lower: true }) : "";
+    this.region$.subscribe((region) => {
+      this.region = region;
+      this.regionSlug = region ? slugify(region, { lower: true }) : '';
     });
     this.region$.next(localStorage.getItem('region') || 'North America East');
     this.activatedRoute = this.route;
-    this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd),
-      map(() => route),
-      map(route => {
-        while (route.firstChild) {
-          route = route.firstChild;
-        }
-        return route;
-      })).subscribe(route => {
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        map(() => route),
+        map((route) => {
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        })
+      )
+      .subscribe((route) => {
         this.activatedRoute = route;
         const { region } = route.snapshot.params;
         if (region == 'default' && this.region) {
@@ -59,34 +67,42 @@ export class CommonService {
   }
 
   updateRegion(region: string, navigate: boolean = false) {
-    console.log('updateRegion', region, navigate)
+    console.log('updateRegion', region, navigate);
     if (!region) {
-      region = 'North America East'
+      region = 'North America East';
     }
     this.region$.next(region);
     localStorage.setItem('region', region);
     if (navigate) {
       const url = this.activatedRoute.snapshot.url;
       url[0].path = '/' + this.regionSlug;
-      this.router.navigate([...url.map(x => x.path)]);
+      this.router.navigate([...url.map((x) => x.path)]);
     }
   }
 
   localStorageCheck() {
-    const version: number = JSON.parse(localStorage.getItem('version') || 'null') || 0;
+    const keys = ['marketFavorites', 'cashShopFavorites', 'craftingFavorites'];
+    const version: number =
+      JSON.parse(localStorage.getItem('version') || 'null') || 0;
     if (version < 2) {
       //Remove old storage
       localStorage.clear();
       //Update version
       localStorage.setItem('version', '2');
       //Set marketFavorites
-      localStorage.setItem('marketFavorites', JSON.stringify([]));
-      localStorage.setItem('cashShopFavorites', JSON.stringify([]));
-      localStorage.setItem('craftingFavorites', JSON.stringify([]));
+      keys.forEach((key) => {
+        localStorage.setItem(key, JSON.stringify([]));
+      });
     }
-    this.marketFavorites = JSON.parse(localStorage.getItem('marketFavorites') || 'null') || [];
-    this.cashShopFavorites = JSON.parse(localStorage.getItem('cashShopFavorites') || 'null') || [];
-    this.craftingFavorites = JSON.parse(localStorage.getItem('craftingFavorites') || 'null') || [];
+
+    keys.forEach((key) => this.fixLocalStorageIds(key));
+
+    this.marketFavorites =
+      JSON.parse(localStorage.getItem('marketFavorites') || 'null') || [];
+    this.cashShopFavorites =
+      JSON.parse(localStorage.getItem('cashShopFavorites') || 'null') || [];
+    this.craftingFavorites =
+      JSON.parse(localStorage.getItem('craftingFavorites') || 'null') || [];
   }
 
   toggleMarketFavorite(itemId: string) {
@@ -99,7 +115,10 @@ export class CommonService {
     } else {
       this.marketFavorites.push(itemId);
     }
-    localStorage.setItem('marketFavorites', JSON.stringify(this.marketFavorites));
+    localStorage.setItem(
+      'marketFavorites',
+      JSON.stringify(this.marketFavorites)
+    );
   }
 
   isMarketFavorite(itemId: string) {
@@ -119,7 +138,10 @@ export class CommonService {
     } else {
       this.cashShopFavorites.push(itemId);
     }
-    localStorage.setItem('cashShopFavorites', JSON.stringify(this.cashShopFavorites));
+    localStorage.setItem(
+      'cashShopFavorites',
+      JSON.stringify(this.cashShopFavorites)
+    );
   }
 
   isCashShopFavorite(itemId: string) {
@@ -139,7 +161,10 @@ export class CommonService {
     } else {
       this.craftingFavorites.push(itemId);
     }
-    localStorage.setItem('craftingFavorites', JSON.stringify(this.craftingFavorites));
+    localStorage.setItem(
+      'craftingFavorites',
+      JSON.stringify(this.craftingFavorites)
+    );
   }
 
   isCraftingFavorite(itemId: string) {
@@ -149,4 +174,19 @@ export class CommonService {
     return this.craftingFavorites.indexOf(itemId) >= 0;
   }
 
+  fixLocalStorageIds(storageKey: string) {
+    const values =
+      (JSON.parse(localStorage.getItem(storageKey) || 'null') as
+        | string[]
+        | null) || [];
+    const filtered = values.filter((v) => this.doesItemIdExist(v));
+    if (filtered.length < values.length) {
+      localStorage.setItem(storageKey, JSON.stringify(filtered));
+    }
+  }
+
+  doesItemIdExist(itemId: string) {
+    const idWithoutRarity = itemId.replace(/-[0-9]/, '');
+    return idsFromAutoCompleteStrings.indexOf(idWithoutRarity) > -1;
+  }
 }
