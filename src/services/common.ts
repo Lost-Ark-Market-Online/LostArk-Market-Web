@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ConnectableObservable, filter, map, Observable, Subject } from 'rxjs';
+import { filter, map, Subject } from 'rxjs';
 import slugify from 'slugify';
-import autocompleteStrings from '../data/market_autocomplete.json';
-
-const idsFromAutoCompleteStrings = autocompleteStrings.map((s) =>
-  s
-    .toLowerCase()
-    .replace(/ /g, '-')
-    .replace(/\[?.+\]| |'|:|\(|\)/g, '')
-);
 
 export const regionMap: { [slug: string]: string } = {
   'north-america-east': 'North America East',
@@ -84,6 +76,8 @@ export class CommonService {
     const keys = ['marketFavorites', 'cashShopFavorites', 'craftingFavorites'];
     const version: number =
       JSON.parse(localStorage.getItem('version') || 'null') || 0;
+
+    // Base structure check 2.0
     if (version < 2) {
       //Remove old storage
       localStorage.clear();
@@ -95,14 +89,32 @@ export class CommonService {
       });
     }
 
-    keys.forEach((key) => this.fixLocalStorageIds(key));
-
+    // Load local storage data
     this.marketFavorites =
       JSON.parse(localStorage.getItem('marketFavorites') || 'null') || [];
     this.cashShopFavorites =
       JSON.parse(localStorage.getItem('cashShopFavorites') || 'null') || [];
     this.craftingFavorites =
       JSON.parse(localStorage.getItem('craftingFavorites') || 'null') || [];
+
+    // 2.1 Migration
+    if (version < 2.1) {
+      const migration = {
+        "guardian-stone-crystal-0": "crystallized-guardian-stone-0",
+        "destruction-stone-crystal-0": "crystallized-destruction-stone-0",
+        "hunting-crystal-3": "crystallized-hunting-bauble-3",
+        "fishing-crystal-3": "crystallized-fishing-bauble-3",
+        "excavating-crystal-3": "crystallized-excavating-bauble-3"
+      };
+      this.marketFavorites = this.marketFavorites.map(itemId => {
+        return migration[itemId] || itemId;
+      });      
+      //Update version
+      localStorage.setItem('version', '2.1');
+    }
+
+    // Todo: fix defaults
+    // First change the autocomplete source from local to API
   }
 
   toggleMarketFavorite(itemId: string) {
@@ -172,21 +184,5 @@ export class CommonService {
       return false;
     }
     return this.craftingFavorites.indexOf(itemId) >= 0;
-  }
-
-  fixLocalStorageIds(storageKey: string) {
-    const values =
-      (JSON.parse(localStorage.getItem(storageKey) || 'null') as
-        | string[]
-        | null) || [];
-    const filtered = values.filter((v) => this.doesItemIdExist(v));
-    if (filtered.length < values.length) {
-      localStorage.setItem(storageKey, JSON.stringify(filtered));
-    }
-  }
-
-  doesItemIdExist(itemId: string) {
-    const idWithoutRarity = itemId.replace(/-[0-9]/, '');
-    return idsFromAutoCompleteStrings.indexOf(idWithoutRarity) > -1;
   }
 }
