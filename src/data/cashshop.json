@@ -1255,6 +1255,28 @@
   },
   {
     "category": "Mari's Secret Shop",
+    "subcategory": "Enhancement Rec.",
+    "image": "tailoring-applied-mending.png",
+    "marketId": "tailoring-applied-mending-4",
+    "cashShopId": "tailoring-applied-mending-bound-4",
+    "name": "Tailoring: Applied Mending (Bound) [x4]",
+    "amount": 4,
+    "blueCrystals": 260,
+    "rarity": 4
+  },
+  {
+    "category": "Mari's Secret Shop",
+    "subcategory": "Enhancement Rec.",
+    "image": "metallurgy-applied-welding.png",
+    "marketId": "metallurgy-applied-welding-4",
+    "cashShopId": "metallurgy-applied-welding-bound-2",
+    "name": "Metallurgy: Applied Welding (Bound) [x2]",
+    "amount": 2,
+    "blueCrystals": 280,
+    "rarity": 4
+  },
+  {
+    "category": "Mari's Secret Shop",
     "subcategory": "Warton/Trade Skill Rec.",
     "image": "research-acceleration-chip.png",
     "cashShopId": "research-acceleration-chip-x2",
