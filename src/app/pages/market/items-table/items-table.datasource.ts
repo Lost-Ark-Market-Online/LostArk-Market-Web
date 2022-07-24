@@ -124,7 +124,11 @@ export class MarketDataSource extends DataSource<MarketItem> {
               }
               let fullPrice;
               if (category == 'Currency Exchange') {
-                fullPrice = Math.round(lowPrice * 95)
+                if(id == 'blue-crystal-0'){
+                  fullPrice = Math.round(lowPrice * 95)
+                }else{                  
+                  fullPrice = Math.round(lowPrice * 238)
+                }
               }
 
               return {

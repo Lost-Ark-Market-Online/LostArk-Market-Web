@@ -131,7 +131,7 @@
               </div>
               <span *ngIf="row.fullPrice">/</span>
               <div class="price" *ngIf="row.fullPrice">
-                95
+                {{row.id == 'blue-crystal-0'?95:238}}
                 <img
                   class="gold"
                   [src]="row.id == 'blue-crystal-0' ? '/assets/icons/bluecrystal.png' : '/assets/icons/royalcrystal.png'"
@@ -189,7 +189,7 @@
   <mat-paginator
     class="paginator"
     #paginator
-    [length]="dataSource?.collectionSize"
+    [length]="dataSource.collectionSize"
     [pageIndex]="0"
     [pageSize]="10"
     [pageSizeOptions]="[5, 10, 20, 50]"
