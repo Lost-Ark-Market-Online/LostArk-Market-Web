@@ -1113,6 +1113,17 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Enhancement Rec.",
+    "image": "honor-shard-pouch-l.png",
+    "marketId": "honor-shard-pouch-l-3",
+    "cashShopId": "honor-shard-pouch-l-20",
+    "name": "Honor Shard Pouch (L) [20]",
+    "amount": 20,
+    "blueCrystals": 291,
+    "rarity": 2
+  },
+  {
+    "category": "Mari's Secret Shop",
+    "subcategory": "Enhancement Rec.",
     "image": "harmony-leapstone.png",
     "marketId": "harmony-leapstone-2",
     "cashShopId": "harmony-leapstone-bound-5",
