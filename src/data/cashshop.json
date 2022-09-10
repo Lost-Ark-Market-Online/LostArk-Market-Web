@@ -1319,6 +1319,16 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Warton/Trade Skill Rec.",
+    "image": "vitameow.png",
+    "cashShopId": "vitameow-10",
+    "name": "Vitameow [10]",
+    "amount": 10,
+    "blueCrystals": 30,
+    "rarity": 3
+  },
+  {
+    "category": "Mari's Secret Shop",
+    "subcategory": "Warton/Trade Skill Rec.",
     "image": "healing-battle-item-chest.png",
     "contains": [
       {
@@ -1574,7 +1584,7 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Warton/Trade Skill Rec.",
-    "image": "card-pack.png",
+    "image": "any-card-pack.png",
     "cashShopId": "any-card-pack-x5",
     "name": "Any Card Pack [x5]",
     "amount": 5,
@@ -1584,7 +1594,7 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Warton/Trade Skill Rec.",
-    "image": "card-pack.png",
+    "image": "any-card-pack.png",
     "cashShopId": "any-card-pack-x10",
     "name": "Any Card Pack [x10]",
     "amount": 10,
@@ -1594,7 +1604,7 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Warton/Trade Skill Rec.",
-    "image": "card-pack.png",
+    "image": "rare-card-pack.png",
     "cashShopId": "legendary---rare-card-pack-x3",
     "name": "Legendary - Rare Card Pack [x3]",
     "amount": 3,
@@ -1604,7 +1614,7 @@
   {
     "category": "Mari's Secret Shop",
     "subcategory": "Warton/Trade Skill Rec.",
-    "image": "card-pack.png",
+    "image": "rare-card-pack.png",
     "cashShopId": "legendary---rare-card-pack-x5",
     "name": "Legendary - Rare Card Pack [x5]",
     "amount": 5,
