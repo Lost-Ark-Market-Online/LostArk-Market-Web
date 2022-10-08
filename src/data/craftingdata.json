@@ -5672,7 +5672,7 @@
     "strongholdXp": 432
   },
   {
-    "name": "Splendid Disguise Robe",
+    "name": "Splendid Camouflage Robe",
     "id": "splendid-disguise-robe-2",
     "image": "splendid-disguise-robe.webp",
     "imgUrl": "/icons/battle_item_01_95.webp",
@@ -5687,7 +5687,7 @@
       {
         "href": "https://lostarkcodex.com/us/research/604001/",
         "start": "[",
-        "text": "Craft Method: Splendid Disguise Robe",
+        "text": "Craft Method: Splendid Camouflage Robe",
         "end": "] Research at the Lab"
       },
       {
