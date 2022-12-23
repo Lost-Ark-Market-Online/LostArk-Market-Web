@@ -164,6 +164,37 @@
           >Minimum value is 0%</mat-error
         >
       </mat-form-field>
+      <div
+        class="sliderField"
+        [class.active]="bonusForm.get('showAdvancedProfit')?.value"
+      >
+        <mat-slide-toggle formControlName="showAdvancedProfit"
+          >Calculate Advanced Profits</mat-slide-toggle
+        >
+      </div>
+      <mat-form-field
+        *ngIf="bonusForm.get('showAdvancedProfit')?.value"
+        class="inputField"
+        appearance="outline"
+      >
+        <mat-label>Workbench Count</mat-label>
+        <input
+          class="numberInput"
+          type="number"
+          formControlName="workbenchCount"
+          min="1"
+          max="3"
+          matInput
+        />
+        <mat-error
+          *ngIf="bonusForm.get('workbenchCount')?.hasError('max')"
+          >Maximum value 3</mat-error
+        >
+        <mat-error
+          *ngIf="bonusForm.get('workbenchCount')?.hasError('min')"
+          >Minimum value is 0</mat-error
+        >
+      </mat-form-field>
     </form>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
@@ -232,12 +263,20 @@
                   </button>
                   <span class="itemName">{{ item.name }}</span>
                   <span
-                    *ngIf="recipes[item.id].craftvsbuy"
+                    *ngIf="recipes[item.id].craftvsbuy && !bonusForm.get('showAdvancedProfit')?.value"
                     class="price"
                     [class.overprice]="recipes[item.id].craftvsbuy! > 0"
                     [class.discount]="recipes[item.id].craftvsbuy! < 0"
                     >( {{ recipes[item.id].craftvsbuy }} % )</span
                   >
+                  <span
+                    *ngIf="recipes[item.id].profitPerHour && bonusForm.get('showAdvancedProfit')?.value"
+                    class="profit"
+                    [class.overprice]="recipes[item.id].profitPerHour! < 0"
+                    [class.discount]="recipes[item.id].profitPerHour! > 0"
+                    >
+                      ( {{ recipes[item.id].profitPerHour}} <img class="currency" src="/assets/icons/gold.png" /><span>/ h</span> )
+                  </span>
                 </div>
               </a>
             </div>
@@ -942,6 +981,19 @@
                   >{{ recipes[selectedRecipeId!].price
                   }}<img class="currency" src="/assets/icons/gold.png"
                 /></span>
+              </div>
+              <div
+                class="detailRow total"
+                *ngIf="recipes[selectedRecipeId!].profitPerHour && bonusForm.get('showAdvancedProfit')?.value"
+              >
+                <span class="item">Profit</span>
+                <span
+                  class="price"
+                  [class.overprice]="recipes[selectedRecipeId!].profitPerHour! < 0"
+                  [class.discount]="recipes[selectedRecipeId!].profitPerHour! > 0"
+                  >
+                  {{ recipes[selectedRecipeId!].profitPerHour }}<img class="currency" src="/assets/icons/gold.png" /> / Hour
+                </span>
               </div>
               <div
                 class="detailRow total"
