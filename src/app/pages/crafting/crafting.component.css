@@ -436,6 +436,19 @@
   color: #ff2020;
 }
 
+.profit {
+  display: flex;
+  align-items: center;
+}
+
+.profit.discount {
+  color: limegreen;
+}
+
+.profit.overprice {
+  color: #ff2020;
+}
+
 .bonusesContainer {
   background-color: var(--primary-background-color);
 }

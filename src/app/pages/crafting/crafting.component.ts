@@ -120,6 +120,7 @@ export interface Recipe {
   craftvsbuy?: number;
   fullCraftvsbuy?: number;
   partialCraftvsbuy?: number;
+  profitPerHour?: number;
   open?: boolean;
   recomendation?: string;
   craftingTimeSeconds?: number;
@@ -151,8 +152,10 @@ export class CraftingComponent implements OnInit, OnDestroy {
     energyReduction: new FormControl(0, [Validators.min(-30), Validators.max(0)]),
     craftingTimeReduction: new FormControl(0, [Validators.min(-30), Validators.max(0)]),
     strongholdXpIncrease: new FormControl(0, [Validators.min(0), Validators.max(30)]),
+    workbenchCount: new FormControl(1, [Validators.min(1), Validators.max(3)]),
     showStrongholdXp: new FormControl(true),
     showEnergy: new FormControl(true),
+    showAdvancedProfit: new FormControl(true),
   });
   searchControl = new FormControl();
   options: string[] = [];
@@ -364,6 +367,9 @@ export class CraftingComponent implements OnInit, OnDestroy {
         this.recipes[this.selectedRecipeId!]!.total = this.recipes[this.selectedRecipeId!]!.partialCraftTotal;
       }
       this.recipes[this.selectedRecipeId!]!.craftvsbuy = Math.round((-1 + (this.recipes[this.selectedRecipeId!]!.total! / this.recipes[this.selectedRecipeId!]!.price!)) * 10000) / 100;
+
+      // In order to get the correct profit an update is required here.
+      this.updateDiscount(this.selectedRecipeId!);
     }
   }
 
@@ -531,7 +537,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
       this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXpIncreased = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXp! * (1 + (bonuses.strongholdXpIncrease / 100)));
       this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSecondsDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSeconds! * (1 + (bonuses.craftingTimeReduction / 100)));
 
-
       // Sum craft total cost
       if (this.recipes[recipeIndex].ingredients[ingredientIndex].ingredients) {
         this.recipes[recipeIndex].ingredients[ingredientIndex].craftTotal = (this.recipes[recipeIndex].ingredients[ingredientIndex].ingredients!).reduce((craftTotal, subIngredient) => {
@@ -588,6 +593,20 @@ export class CraftingComponent implements OnInit, OnDestroy {
       this.recipes[recipeIndex].total = this.recipes[recipeIndex].partialCraftTotal;
       this.recipes[recipeIndex].craftvsbuy = this.recipes[recipeIndex].partialCraftvsbuy;
     }
+
+    if (bonuses.showAdvancedProfit) {
+      this.calculateProfitPerHour(this.recipes[recipeIndex]);
+    }
+  }
+
+  calculateProfitPerHour(recipe: Recipe) {
+    let craftingTime = recipe.craftingTimeSecondsDiscounted!;
+
+    if (craftingTime <= 0) {
+      craftingTime = 1;
+    }
+
+    recipe.profitPerHour = Math.floor((recipe.price! - recipe.total!) / craftingTime * 3600) * this.bonusForm.value.workbenchCount;
   }
 
   calculateTime(craftingTime: number) {
