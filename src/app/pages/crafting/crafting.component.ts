@@ -139,6 +139,16 @@ export interface CraftingSubMenu {
   name: string;
   items: Recipe[]
 };
+const bonusDefaults = {
+  costReduction: 0,
+  energyReduction: 0,
+  craftingTimeReduction: 0,
+  strongholdXpIncrease: 0,
+  workbenchCount: 1,
+  showStrongholdXp: 0,
+  showEnergy: 0,
+  showAdvancedProfit: 0,
+}
 
 
 @Component({
@@ -272,7 +282,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
         }
       });
     this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {
-      this.api.getLiveData({categories:"Combat Supplies,Cooking,Trader,Sailing,Enhancement Material"}).pipe(take(1)).subscribe((data) => {
+      this.api.getLiveData({ categories: "Combat Supplies,Cooking,Trader,Sailing,Enhancement Material" }).pipe(take(1)).subscribe((data) => {
         this.marketData = data.reduce<{ [itemId: string]: MarketLiveItem }>((acc, item) => {
           acc[item.id] = item;
           return acc;
@@ -283,7 +293,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
 
     const craftingStrongholdBonuses = JSON.parse(localStorage.getItem('craftingStrongholdBonuses') || 'null');
     if (craftingStrongholdBonuses) {
-      this.bonusForm.setValue(craftingStrongholdBonuses);
+      this.bonusForm.setValue({ ...bonusDefaults, ...craftingStrongholdBonuses });
     }
     this.bonusesSubscription = this.bonusForm.valueChanges.pipe(debounceTime(100), startWith(this.bonusForm.value)).subscribe(bonuses => {
       localStorage.setItem('craftingStrongholdBonuses', JSON.stringify(bonuses));
