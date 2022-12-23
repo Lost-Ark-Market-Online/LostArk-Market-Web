@@ -600,10 +600,15 @@ export class CraftingComponent implements OnInit, OnDestroy {
   }
 
   calculateProfitPerHour(recipe: Recipe) {
+    if (!recipe.price) {
+      return;
+    }
+
     let craftingTime = recipe.craftingTimeSecondsDiscounted!;
 
     if (craftingTime <= 0) {
-      craftingTime = 1;
+      // Tested ingame; if crafting time is 0, it will be set to 15 seconds
+      craftingTime = 15;
     }
 
     recipe.profitPerHour = Math.floor((recipe.price! - recipe.total!) / craftingTime * 3600) * this.bonusForm.value.workbenchCount;
