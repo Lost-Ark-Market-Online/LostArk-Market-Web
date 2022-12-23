@@ -606,10 +606,13 @@ export class CraftingComponent implements OnInit, OnDestroy {
 
     let craftingTime = recipe.craftingTimeSecondsDiscounted!;
 
+    // INFO: This could be removed if the API data for recipes with less than 10 seconds is fixed
     if (craftingTime <= 0) {
-      // Tested ingame; if crafting time is 0, it will be set to 15 seconds
-      craftingTime = 15;
+      craftingTime = 10;
     }
+
+    // INFO: Add another 10 seconds cause the player needs to click the 'claim' button
+    craftingTime += 10;
 
     recipe.profitPerHour = Math.floor((recipe.price! - recipe.total!) / craftingTime * 3600) * this.bonusForm.value.workbenchCount;
   }
