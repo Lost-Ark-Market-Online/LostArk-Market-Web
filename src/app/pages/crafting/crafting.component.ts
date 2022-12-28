@@ -616,8 +616,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
         continue;
       }
 
-      console.log('Adding ', ingredient)
-
       craftingTime += ingredient.craftingTimeSecondsDiscounted! ?? 0;
     }
 
