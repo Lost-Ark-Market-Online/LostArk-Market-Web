@@ -608,7 +608,17 @@ export class CraftingComponent implements OnInit, OnDestroy {
 
     // INFO: this is for splendid recipes with multiple ingredients
     for (let ingredient of recipe.ingredients) {
-      craftingTime += ingredient.craftingTimeSecondsDiscounted!;
+      if (ingredient.craftvsbuy! > 0 || !recipe.open!) {
+        continue;
+      }
+
+      if (!ingredient.hasOwnProperty('ingredients')) {
+        continue;
+      }
+
+      console.log('Adding ', ingredient)
+
+      craftingTime += ingredient.craftingTimeSecondsDiscounted! ?? 0;
     }
 
     // INFO: This could be removed if the API data for recipes with less than 10 seconds is fixed
