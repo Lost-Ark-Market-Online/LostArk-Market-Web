@@ -1680,5 +1680,27 @@
     "amount": 1,
     "blueCrystals": 50,
     "rarity": 3
+  },
+  {
+    "category": "Mari's Secret Shop",
+    "subcategory": "Enhancement Rec.",
+    "image": "superior-oreha-fusion-material.png",
+    "marketId": "superior-oreha-fusion-material-3",
+    "cashShopId": "superior-oreha-fusion-material-bound-5",
+    "name": "Superior Oreha Fusion Material (Bound) [10]",
+    "amount": 10,
+    "blueCrystals": 30,
+    "rarity": 3
+  },
+  {
+    "category": "Mari's Secret Shop",
+    "subcategory": "Enhancement Rec.",
+    "image": "marvelous-honor-leapstone.png",
+    "marketId": "marvelous-honor-leapstone-3",
+    "cashShopId": "marvelous-honor-leapstone-bound-10",
+    "name": "Marvelous Honor Leapstone (Bound) [10]",
+    "amount": 10,
+    "blueCrystals": 100,
+    "rarity": 3
   }
 ]
