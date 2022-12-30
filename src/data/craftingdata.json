@@ -11171,10 +11171,9 @@
   },
   {
     "name": "Superior Oreha Fusion Material",
-    "id": "superior-oreha-fusion-material-2-1",
+    "id": "superior-oreha-fusion-material-3-1",
     "image": "superior-oreha-fusion-material.webp",
-    //  id, image, imageURL needs replacing for each data object
-    "imgUrl": "/icons/use_9_71.webp", 
+    "imgUrl": "", 
     "amount": 20,
     "rarity": 3,
     "category": "Special",
@@ -11220,9 +11219,9 @@
   },
   {
     "name": "Superior Oreha Fusion Material",
-    "id": "superior-oreha-fusion-material-2-3",
+    "id": "superior-oreha-fusion-material-3-3",
     "image": "superior-oreha-fusion-material.webp",
-    "imgUrl": "/icons/use_9_71.webp",
+    "imgUrl": "",
     "amount": 20,
     "rarity": 3,
     "category": "Special",
@@ -11268,9 +11267,9 @@
   },
   {
     "name": "Superior Oreha Fusion Material",
-    "id": "superior-oreha-fusion-material-2-2",
+    "id": "superior-oreha-fusion-material-3-2",
     "image": "basic-oreha-fusion-material.webp",
-    "imgUrl": "/icons/use_9_71.webp",
+    "imgUrl": "",
     "amount": 20,
     "rarity": 3,
     "category": "Special",
