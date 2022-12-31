@@ -264,7 +264,7 @@
                   <span class="itemName">{{ item.name }}</span>
                   <span
                     *ngIf="recipes[item.id].craftvsbuy && !bonusForm.get('showAdvancedProfit')?.value"
-                    class="price"
+                    class="profit"
                     [class.overprice]="recipes[item.id].craftvsbuy! > 0"
                     [class.discount]="recipes[item.id].craftvsbuy! < 0"
                     >( {{ recipes[item.id].craftvsbuy }} % )</span

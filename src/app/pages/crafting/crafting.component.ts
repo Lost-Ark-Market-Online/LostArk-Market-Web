@@ -424,6 +424,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
       };
       return acc;
     }, {});
+    console.log("buildRecipes",this.recipes)
   }
 
   setRecipePrices() {
