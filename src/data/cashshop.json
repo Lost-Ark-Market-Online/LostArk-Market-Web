@@ -1426,8 +1426,8 @@
     "image": "buff-battle-item-chest.png",
     "contains": [
       {
-        "name": "Adrophine Potion (Bound)",
-        "id": "adrophine-potion-3",
+        "name": "Atropine Potion (Bound)",
+        "id": "atropine-potion-3",
         "amount": 3
       },
       {
