@@ -19,6 +19,7 @@ const categoriesMap: { [slug: string]: { category: string, subcategories?: { [su
     subcategories: {
       'honing-materials': 'Honing Materials',
       'additional-honing-materials': 'Additional Honing Materials',
+      'weapon-evolution-materials': 'Weapon Evolution Materials',
       'other-materials': 'Other Materials',
     }
   },
