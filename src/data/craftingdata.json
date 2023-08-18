@@ -11105,5 +11105,146 @@
       }
     ],
     "strongholdXp": 576
+  },
+  {
+    "name": "Prime Oreha Fusion Material",
+    "id": "prime-oreha-fusion-material-4-1",
+    "image": "prime-oreha-fusion-material.webp",
+    "amount": 15,
+    "rarity": 3,
+    "category": "Special",
+    "subcategory": "Fusion Material",
+    "craftingTime": "75m",
+    "cost": 300,
+    "energy": 360,
+    "requirements": [
+      {
+        "href": "https://lostarkcodex.com/us/research/614204/",
+        "start": "[",
+        "text": "Craft Method: Prime Oreha Fusion Material (Hunting)",
+        "end": "] Research at the Lab"
+      },
+      {
+        "text": "Crafting Workshop Lv.2"
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "Oreha Thick Meat",
+        "id": "oreha-thick-meat-2",
+        "image": "oreha-thick-meat.webp",
+        "rarity": 2,
+        "amount": 52
+      },
+      {
+        "name": "Tough Leather",
+        "id": "tough-leather-1",
+        "image": "tough-leather.webp",
+        "rarity": 1,
+        "amount": 69
+      },
+      {
+        "name": "Thick Raw Meat",
+        "id": "thick-raw-meat-0",
+        "image": "thick-raw-meat.webp",
+        "rarity": 0,
+        "amount": 142
+      }
+    ],
+    "strongholdXp": 720
+  },
+  {
+    "name": "Prime Oreha Fusion Material",
+    "id": "prime-oreha-fusion-material-4-2",
+    "image": "prime-oreha-fusion-material.webp",
+    "amount": 15,
+    "rarity": 3,
+    "category": "Special",
+    "subcategory": "Fusion Material",
+    "craftingTime": "75m",
+    "cost": 300,
+    "energy": 360,
+    "requirements": [
+      {
+        "href": "https://lostarkcodex.com/us/research/614214/",
+        "start": "[",
+        "text": "Craft Method: Prime Oreha Fusion Material (Fishing)",
+        "end": "] Research at the Lab"
+      },
+      {
+        "text": "Crafting Workshop Lv.2"
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "Oreha Solar Carp",
+        "id": "oreha-solar-carp-2",
+        "image": "oreha-solar-carp.webp",
+        "rarity": 2,
+        "amount": 52
+      },
+      {
+        "name": "Natural Pearl",
+        "id": "natural-pearl-1",
+        "image": "natural-pearl.webp",
+        "rarity": 1,
+        "amount": 69
+      },
+      {
+        "name": "Fish",
+        "id": "fish-0",
+        "image": "fish.webp",
+        "rarity": 0,
+        "amount": 142
+      }
+    ],
+    "strongholdXp": 720
+  },
+  {
+    "name": "Prime Oreha Fusion Material",
+    "id": "prime-oreha-fusion-material-4-3",
+    "image": "prime-oreha-fusion-material.webp",
+    "amount": 15,
+    "rarity": 3,
+    "category": "Special",
+    "subcategory": "Fusion Material",
+    "craftingTime": "75m",
+    "cost": 300,
+    "energy": 360,
+    "requirements": [
+      {
+        "href": "https://lostarkcodex.com/us/research/614224/",
+        "start": "[",
+        "text": "Craft Method: Prime Oreha Fusion Material (Excavating)",
+        "end": "] Research at the Lab"
+      },
+      {
+        "text": "Crafting Workshop Lv.2"
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "Oreha Relic",
+        "id": "oreha-relic-2",
+        "image": "oreha-relic.webp",
+        "rarity": 2,
+        "amount": 52
+      },
+      {
+        "name": "Rare Relic",
+        "id": "rare-relic-1",
+        "image": "rare-relic.webp",
+        "rarity": 1,
+        "amount": 51
+      },
+      {
+        "name": "Ancient Relic",
+        "id": "ancient-relic-0",
+        "image": "ancient-relic.webp",
+        "rarity": 0,
+        "amount": 107
+      }
+    ],
+    "strongholdXp": 720
   }
 ]
