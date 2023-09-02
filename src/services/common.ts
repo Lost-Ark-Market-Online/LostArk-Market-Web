@@ -7,7 +7,6 @@ export const regionMap: { [slug: string]: string } = {
   'north-america-east': 'North America East',
   'north-america-west': 'North America West',
   'europe-central': 'Europe Central',
-  'europe-west': 'Europe West',
   'south-america': 'South America',
 };
 
