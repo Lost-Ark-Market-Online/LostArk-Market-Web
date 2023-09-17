@@ -21,10 +21,10 @@
   </button>
   <a
     class="category"
-    *ngFor="let category of menu"
-    [routerLink]="['/' + common.regionSlug, 'crafting', category.id]"
+    *ngFor="let category of menu | keyvalue:sortMenu"
+    [routerLink]="['/' + common.regionSlug, 'crafting', category.key]"
     routerLinkActive="selected"
-    >{{ category.name }}</a
+    >{{ category.value }}</a
   >
   <div class="searchWrapperr">
     <mat-form-field class="searchContainer" appearance="fill">
@@ -220,9 +220,9 @@
                       subCategory.id
                     ]
               "
-              routerLinkActive="active"
               queryParamsHandling="merge"
-              [class.active]="subCategory.id == 'all'"
+              [class.active]="subMenuToggles[subCategory.id]"
+              (click)="subMenuToggles[subCategory.id] = !subMenuToggles[subCategory.id]"
             >
               <span class="full-width">{{
                 subCategory.name == "All" ? category : subCategory.name
@@ -275,7 +275,7 @@
                     [class.overprice]="recipes[item.id].profitPerHour! < 0"
                     [class.discount]="recipes[item.id].profitPerHour! > 0"
                     >
-                      ( {{ recipes[item.id].profitPerHour}} <img class="currency" src="/assets/icons/gold.png" /><span>/ h</span> )
+                      ( {{ recipes[item.id].profitPerHour}} <img class="currency" src="/assets/icons/{{recipes[item.id].cost.type}}.webp"/><span>/ h</span> )
                   </span>
                 </div>
               </a>
@@ -851,7 +851,7 @@
                     >
                     <span class="price"
                       >{{ recipeRow.costDiscounted
-                      }}<img class="currency" src="/assets/icons/gold.png"
+                      }}<img class="currency" src="/assets/icons/{{recipeRow.cost!.type}}.webp"
                     /></span>
                   </div>
                   <div
@@ -929,7 +929,7 @@
                 >
                 <span class="price"
                   >{{ recipes[selectedRecipeId!].costDiscounted
-                  }}<img class="currency" src="/assets/icons/gold.png"
+                  }}<img class="currency" src="/assets/icons/{{recipes[selectedRecipeId!].cost.type}}.webp"
                 /></span>
               </div>
               <div class="detailRow" *ngIf="bonusForm.get('showEnergy')?.value">

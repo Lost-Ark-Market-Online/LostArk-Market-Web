@@ -7,88 +7,20 @@ import slugify from 'slugify';
 import { Filter } from 'src/interfaces/common';
 import { ApiService, MarketLiveItem } from 'src/services/api';
 import { CommonService } from 'src/services/common';
-import { regionMap } from 'src/services/common';
 
 import craftingdata from '../../../data/craftingdata.json';
+import { KeyValue } from '@angular/common';
 
-const categoriesMap: { [slug: string]: { category: string, subcategories: { [subslug: string]: string } } } = {
-  "favorites": {
-    category: "Favorites",
-    subcategories: {
-      "all": "All"
-    }
-  },
-  "recommendations": {
-    category: "Recommendations",
-    subcategories: {
-      "all": "All"
-    }
-  },
-  'battle-item': {
-    category: 'Battle Item',
-    subcategories: {
-      'potion': 'Battle Item - Potion',
-      'bomb': 'Battle Item - Bomb',
-      'grenade': 'Battle Item - Grenade',
-      'robe': 'Battle Item - Robe',
-      'others': 'Battle Item - Others',
-    }
-  },
-  'cooking': {
-    category: "Cooking",
-    subcategories: {
-      'artisan': "Artisan Cooking",
-      'artificer': "Artificer Cooking",
-      "expert": "Expert Cooking"
-    }
-  },
-  "structure": {
-    category: "Structure",
-    subcategories: {
-      "building": "Landmark - Building",
-      "garden": "Landmark - Garden",
-      "wall": "Landmark - Wall",
-      "others": "Landmark - Others",
-      "bed": "Furniture - Bed",
-      "chair": "Furniture - Chair",
-      "table": "Furniture - Table",
-      "cabinet": "Furniture - Cabinet",
-      "tool": "Prop - Tool",
-      "decoration": "Prop - Decoration"
-    }
-  },
-  "tools": {
-    category: "Tools",
-    subcategories: {
-      "foraging": "Foraging Tool",
-      "logging": "Logging Tool",
-      "mining": "Mining Tool",
-      "hunting": "Hunting Tool",
-      "fishing": "Fishing Tool",
-      "excavating": "Excavating Tool",
-      "part-materials": "Part Materials"
-    }
-  },
-  "special": {
-    category: "Special",
-    subcategories: {
-      "fusion-material": "Fusion Material",
-      "skill-tree-extract": "Skill Tree Extract",
-      "secret-map": "Secret Map"
-    }
-  },
-  "farm": {
-    category: "Farm",
-    subcategories: {
-      "battle-item": "Battle Item",
-      "cooking": "Cooking",
-      "fusion-material": "Fusion Material",
-      "trade-skill-tools": "Trade Skill Tools",
-      "treasure-map": "Treasure Map",
-      "ship-parts": "Ship Parts"
-    }
-  }
-}
+const categoriesMap = {
+  "favorites": "Favorites",
+  "recommendations": "Recommendations",
+  "battle-item": "Battle Item",
+  "cooking": "Cooking",
+  "structure": "Structure",
+  "tools": "Tools",
+  "special": "Special",
+  "farm": "Farm"
+};
 
 export interface Material {
   amount: number;
@@ -105,8 +37,11 @@ export interface Recipe {
   rarity: number;
   amount: number;
   category: string;
-  subcategory: string;
-  cost: number;
+  subCategory: string;
+  cost: {
+    value: number;
+    type: string;
+  };
   energy: number;
   energyDiscounted?: number;
   craftingTime: string;
@@ -131,7 +66,36 @@ export interface Recipe {
     text: string;
     end?: string;
   }[];
-  ingredients: Partial<Recipe>[]
+  ingredients: Ingredient[];
+}
+
+export interface Ingredient {
+  name: string;
+  id: string;
+  image: string;
+  rarity: number;
+  amount: number;
+  open?: boolean;
+  price?: number;
+  total?: number;
+  strongholdXp?: number;
+  cost?: {
+    value: number;
+    type: string;
+  };
+  energy?: number;
+  costDiscounted?: number;
+  craftTotal?: number;
+  partialCraftTotal?: number;
+  craftvsbuy?: number;
+  fullCraftvsbuy?: number;
+  partialCraftvsbuy?: number;
+  profitPerHour?: number;
+  craftingTimeSeconds?: number;
+  craftingTimeSecondsDiscounted?: number;
+  strongholdXpIncreased?: number;
+  energyDiscounted?: number;
+  ingredients?: Ingredient[];
 }
 
 export interface CraftingSubMenu {
@@ -139,6 +103,7 @@ export interface CraftingSubMenu {
   name: string;
   items: Recipe[]
 };
+
 const bonusDefaults = {
   costReduction: 0,
   energyReduction: 0,
@@ -171,7 +136,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
   options: string[] = [];
   filteredOptions?: Observable<string[]>;
   filter: Filter;
-  menu: { id: string; name: string }[] = [];
+  menu: { [slug: string]: string; };
   submenu: CraftingSubMenu[] = [];
   routeSubscription: Subscription;
   regionSubscription: Subscription;
@@ -182,6 +147,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
   marketData: { [itemId: string]: MarketLiveItem } = {};
   selectedRecipeId?: string;
   category: string = 'favorites';
+  subMenuToggles = {};
 
 
   isLarge$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Large, Breakpoints.XLarge])
@@ -211,7 +177,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
     this.filter = {
       favorites: true
     };
-    this.menu = this.buildMenu();
+    this.menu = categoriesMap;
     this.buildRecipes();
 
     this.routeSubscription = this.router.events.pipe(
@@ -242,37 +208,34 @@ export class CraftingComponent implements OnInit, OnDestroy {
           return;
         }
         if (category) {
-          this.category = categoriesMap[category].category;
+          this.category = categoriesMap[category];
           this.selectedRecipeId = undefined;
           this.filter.category = category;
           if (category == 'favorites') {
             this.filter.favorites = true;
-            this.filter.subcategory = undefined;
+            this.filter.subcategory = "all";
             this.buildSubMenu(category);
+            this.subMenuToggles["all"] = true;
           } else if (category == 'recommendations') {
             this.filter.favorites = false;
-            this.filter.subcategory = undefined;
+            this.filter.subcategory = "all";
             if (previousCategory != category) {
               this.buildSubMenu(category);
             }
+            this.subMenuToggles["all"] = true;
           } else {
             this.filter.favorites = false;
             if (previousCategory != category) {
               this.buildSubMenu(category);
             }
             if (subcategory) {
-              this.filter.subcategory = subcategory
+              this.filter.subcategory = subcategory;
             } else {
               this.filter.subcategory = undefined;
             }
           }
           if (item) {
             this.selectedRecipeId = item;
-          } else {
-            if (this.submenu[0].items[0]) {
-              this.router.navigate([this.common.regionSlug, 'crafting', this.filter.category, this.filter.subcategory || this.submenu[0].id, (this.submenu.find(sm => sm.id == this.filter.subcategory) || this.submenu[0]).items[0].id], { queryParamsHandling: 'preserve' });
-              this.selectedRecipeId = this.submenu[0].items[0]?.id;
-            }
           }
         } else {
           this.filter.favorites = true;
@@ -284,7 +247,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
     this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {
       this.api.getLiveData({ categories: "Combat Supplies,Cooking,Trader,Sailing,Enhancement Material" }).pipe(take(1)).subscribe((data) => {
         this.marketData = data.reduce<{ [itemId: string]: MarketLiveItem }>((acc, item) => {
-          acc[item.id] = item;
+          acc[item.name] = item;
           return acc;
         }, {});
         this.setRecipePrices();
@@ -314,6 +277,9 @@ export class CraftingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.route.snapshot.params["subcategory"]) {
+      this.subMenuToggles[this.route.snapshot.params["subcategory"]] = true;
+    }
   }
 
   search() {
@@ -333,8 +299,10 @@ export class CraftingComponent implements OnInit, OnDestroy {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  buildMenu() {
-    return Object.keys(categoriesMap).map(id => ({ id, name: categoriesMap[id].category }));
+  sortMenu(_left: KeyValue<any, any>, _right: KeyValue<any, any>): number {
+    const leftIndex = Object.keys(categoriesMap).findIndex(key => key == _left.key);
+    const rightIndex = Object.keys(categoriesMap).findIndex(key => key == _right.key);
+    return leftIndex - rightIndex;
   }
 
   buildSubMenu(categoryId: string) {
@@ -356,14 +324,26 @@ export class CraftingComponent implements OnInit, OnDestroy {
         name: "All",
         items: craftingdata.filter(cd => cd.name.toLowerCase().indexOf(this.filter.search!.toLowerCase()) >= 0).sort((a, b) => a.name > b.name ? 1 : -1)
       }];
-      console.log('this.filter.search!.toLowerCase()', this.filter.search!.toLowerCase());
-      console.log('submenu', this.submenu);
     } else {
-      this.submenu = Object.keys(categoriesMap[categoryId].subcategories).map(id => ({
-        id,
-        name: categoriesMap[categoryId].subcategories[id],
-        items: craftingdata.filter(cd => cd.subcategory == categoriesMap[categoryId].subcategories[id] && cd.category == categoriesMap[categoryId].category).sort((a, b) => a.name > b.name ? 1 : -1)
+      // Get all recipes from category
+      const rr = craftingdata.filter(a => categoriesMap[categoryId] == a.category);
+      // Get all subcategories based on recipes
+      const subCategories = Object.keys(rr.reduce((acc, item) => {
+        acc[item.subCategory] = true;
+        return acc;
+      }, {}));
+      // Build submenu
+      this.submenu = subCategories.map(subCategory => ({
+        id: slugify(subCategory),
+        name: subCategory,
+        items: craftingdata.filter(cd => categoriesMap[categoryId] == cd.category && cd.subCategory == subCategory).sort((a, b) => a.name > b.name ? 1 : -1)
       }));
+      // Build submenu toggles
+      this.subMenuToggles = this.submenu.reduce((acc, subMenu) => {
+        acc[subMenu.id] = false;
+        return acc;
+      }, {});
+
     }
   }
 
@@ -393,7 +373,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
           return parseInt(timeMatch![2] || '0') * 3600 + parseInt(timeMatch![4] || '0') * 60;
         }(),
         ingredients: cd.ingredients.map(ingredient => {
-          const subRecipe = craftingdata.find(cd => cd.id == ingredient.id);
+          const subRecipe = craftingdata.find(cd => cd.name == ingredient.name);
           if (subRecipe) {
             return {
               name: ingredient.name,
@@ -415,7 +395,10 @@ export class CraftingComponent implements OnInit, OnDestroy {
                 return parseInt(timeMatch![2] || '0') * 3600 + parseInt(timeMatch![4] || '0') * 60;
               }(),
               energy: Math.round(ingredient.amount / subRecipe.amount * subRecipe.energy),
-              cost: Math.round(ingredient.amount / subRecipe.amount * subRecipe.cost),
+              cost: {
+                value: Math.round(ingredient.amount / subRecipe.amount * subRecipe.cost.value),
+                type: subRecipe.cost.type
+              },
               strongholdXp: Math.round(ingredient.amount / subRecipe.amount * subRecipe.strongholdXp),
             };
           }
@@ -424,20 +407,15 @@ export class CraftingComponent implements OnInit, OnDestroy {
       };
       return acc;
     }, {});
-    console.log("buildRecipes",this.recipes)
+    console.log("buildRecipes", this.recipes)
   }
 
   setRecipePrices() {
     for (const recipeId in this.recipes) {
-      const itemId = slugify(this.recipes[recipeId].name, { lower: true, remove: /[\[\]]/g })
-        .toLowerCase()
-        .replace(/[ ']/g, "-")
-        .replace(/\:/g, "")
-        .replace(/!/g, "") + '-' + this.recipes[recipeId].rarity;
-      if (this.marketData[itemId]?.lowPrice) {
+      if (this.marketData[this.recipes[recipeId].name]?.lowPrice) {
         this.recipes[recipeId].price = Math.max(Math.round(
-          this.marketData[itemId]?.lowPrice /
-          this.marketData[itemId]?.amount *
+          this.marketData[this.recipes[recipeId].name]?.lowPrice /
+          this.marketData[this.recipes[recipeId].name]?.amount *
           this.recipes[recipeId].amount
         ), 1);
       } else {
@@ -445,11 +423,10 @@ export class CraftingComponent implements OnInit, OnDestroy {
       }
       for (const ingredientIndexStr in this.recipes[recipeId].ingredients) {
         const ingredientIndex = parseInt(ingredientIndexStr);
-        const ingredientId = this.recipes[recipeId].ingredients[ingredientIndex].id!;
-        if (this.marketData[ingredientId]?.lowPrice) {
+        if (this.marketData[this.recipes[recipeId].ingredients[ingredientIndex].name]?.lowPrice) {
           this.recipes[recipeId].ingredients[ingredientIndex].price = Math.round(
-            this.marketData[ingredientId]?.lowPrice /
-            this.marketData[ingredientId]?.amount *
+            this.marketData[this.recipes[recipeId].ingredients[ingredientIndex].name]?.lowPrice /
+            this.marketData[this.recipes[recipeId].ingredients[ingredientIndex].name]?.amount *
             this.recipes[recipeId].ingredients[ingredientIndex].amount!
           ) || 1;
 
@@ -461,11 +438,10 @@ export class CraftingComponent implements OnInit, OnDestroy {
           // Add prices
           for (const subIngredientIndexStr in this.recipes[recipeId].ingredients[ingredientIndex].ingredients) {
             const subIngredientIndex = parseInt(subIngredientIndexStr);
-            const subIngredientId = this.recipes[recipeId].ingredients[ingredientIndex].ingredients![subIngredientIndex].id!;
 
             this.recipes[recipeId].ingredients[ingredientIndex].ingredients![subIngredientIndex].price = Math.round(
-              this.marketData[subIngredientId]?.lowPrice /
-              this.marketData[subIngredientId]?.amount *
+              this.marketData[this.recipes[recipeId].ingredients[ingredientIndex].ingredients![subIngredientIndex].name]?.lowPrice /
+              this.marketData[this.recipes[recipeId].ingredients[ingredientIndex].ingredients![subIngredientIndex].name]?.amount *
               this.recipes[recipeId].ingredients[ingredientIndex].ingredients![subIngredientIndex].amount!
             );
           }
@@ -538,21 +514,40 @@ export class CraftingComponent implements OnInit, OnDestroy {
     const bonuses = this.bonusForm.value;
     this.recipes[recipeIndex].craftingTimeSecondsDiscounted = Math.round(this.recipes[recipeIndex].craftingTimeSeconds! * (1 + (bonuses.craftingTimeReduction / 100)));
     this.recipes[recipeIndex].energyDiscounted = Math.round(this.recipes[recipeIndex].energy! * (1 + (bonuses.energyReduction / 100)));
-    this.recipes[recipeIndex].costDiscounted = Math.round(this.recipes[recipeIndex].cost! * (1 + (bonuses.costReduction / 100)));
+    this.recipes[recipeIndex].costDiscounted = Math.round(this.recipes[recipeIndex].cost.value! * (1 + (bonuses.costReduction / 100)));
     this.recipes[recipeIndex].strongholdXpIncreased = Math.round(this.recipes[recipeIndex].strongholdXp! * (1 + (bonuses.strongholdXpIncrease / 100)));
     this.recipes[recipeIndex].craftingTimeSecondsDiscounted = Math.round(this.recipes[recipeIndex].craftingTimeSeconds! * (1 + (bonuses.craftingTimeReduction / 100)));
     for (let ingredientIndex in this.recipes[recipeIndex].ingredients) {
-      this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSecondsDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSeconds! * (1 + (bonuses.craftingTimeReduction / 100)));
-      this.recipes[recipeIndex].ingredients[ingredientIndex].energyDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].energy! * (1 + (bonuses.energyReduction / 100)));
-      this.recipes[recipeIndex].ingredients[ingredientIndex].costDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].cost! * (1 + (bonuses.costReduction / 100)));
-      this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXpIncreased = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXp! * (1 + (bonuses.strongholdXpIncrease / 100)));
-      this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSecondsDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSeconds! * (1 + (bonuses.craftingTimeReduction / 100)));
+
+      // Calculate Ingredient Crafting Time
+      this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSeconds = 0;
+      if (this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSeconds) {
+        this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSecondsDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].craftingTimeSeconds! * (1 + (bonuses.craftingTimeReduction / 100)));
+      }
+
+      // Calculate Ingredient Energy used
+      this.recipes[recipeIndex].ingredients[ingredientIndex].energyDiscounted = 0;
+      if (this.recipes[recipeIndex].ingredients[ingredientIndex].energy) {
+        this.recipes[recipeIndex].ingredients[ingredientIndex].energyDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].energy! * (1 + (bonuses.energyReduction / 100)));
+      }
+
+      // Calculate Ingredient Crafting Cost
+      this.recipes[recipeIndex].ingredients[ingredientIndex].costDiscounted = 0;
+      if (this.recipes[recipeIndex].ingredients[ingredientIndex].cost) {
+        this.recipes[recipeIndex].ingredients[ingredientIndex].costDiscounted = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].cost!.value! * (1 + (bonuses.costReduction / 100)));
+      }
+
+      // Calculate Stronghold XP
+      this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXpIncreased = 0;
+      if (this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXp) {
+        this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXpIncreased = Math.round(this.recipes[recipeIndex].ingredients[ingredientIndex].strongholdXp! * (1 + (bonuses.strongholdXpIncrease / 100)));
+      }
 
       // Sum craft total cost
       if (this.recipes[recipeIndex].ingredients[ingredientIndex].ingredients) {
         this.recipes[recipeIndex].ingredients[ingredientIndex].craftTotal = (this.recipes[recipeIndex].ingredients[ingredientIndex].ingredients!).reduce((craftTotal, subIngredient) => {
           return craftTotal + (subIngredient.price || 0);
-        }, 0) + this.recipes[recipeIndex].ingredients[ingredientIndex].costDiscounted!;
+        }, 0) + (this.recipes[recipeIndex].ingredients[ingredientIndex].cost!.type == 'gold' ? this.recipes[recipeIndex].ingredients[ingredientIndex].costDiscounted! : 0);
 
         // Evaluate Craft vs Buy
         if (this.recipes[recipeIndex].ingredients[ingredientIndex].craftTotal && this.recipes[recipeIndex].ingredients[ingredientIndex].price) {
@@ -567,12 +562,12 @@ export class CraftingComponent implements OnInit, OnDestroy {
     // Sum craft total cost (Craft sub recipes)
     this.recipes[recipeIndex].craftTotal = this.recipes[recipeIndex].ingredients.reduce((acc, ingredient) => {
       return acc + (ingredient.craftTotal ? (ingredient.craftTotal || 0) : ingredient!.price || 0);
-    }, 0) + this.recipes[recipeIndex].costDiscounted!;
+    }, 0) + (this.recipes[recipeIndex].cost.type == 'gold' ? this.recipes[recipeIndex].costDiscounted! : 0);
 
     // Sum partial craft total cost (Buy sub recipe ingredients)
     this.recipes[recipeIndex].partialCraftTotal = this.recipes[recipeIndex].ingredients.reduce((acc, ingredient) => {
       return acc + (ingredient!.price || 0);
-    }, 0) + this.recipes[recipeIndex].costDiscounted!;
+    }, 0) + (this.recipes[recipeIndex].cost.type == 'gold' ? this.recipes[recipeIndex].costDiscounted! : 0);
 
     // Evaluate Craft vs Buy
     if (this.recipes[recipeIndex].craftTotal && this.recipes[recipeIndex].price) {
