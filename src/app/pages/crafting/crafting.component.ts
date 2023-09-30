@@ -2,7 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { debounceTime, filter, first, iif, map, Observable, shareReplay, startWith, Subscription, take } from 'rxjs';
+import { combineLatest, debounceTime, filter, first, iif, map, Observable, shareReplay, startWith, Subscription, take } from 'rxjs';
 import slugify from 'slugify';
 import { Filter } from 'src/interfaces/common';
 import { ApiService, MarketLiveItem } from 'src/services/api';
@@ -202,7 +202,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
           if (item) {
             this.selectedRecipeId = item;
           } else {
-            this.router.navigate([this.common.regionSlug, 'crafting', 'search', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'preserve' });
+            this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'crafting', 'search', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'merge' });
             this.selectedRecipeId = this.submenu[0].items[0].id;
           }
           return;
@@ -241,10 +241,11 @@ export class CraftingComponent implements OnInit, OnDestroy {
           this.filter.favorites = true;
           this.filter.category = undefined;
           this.filter.subcategory = undefined;
-          this.router.navigate([this.common.regionSlug, 'crafting', 'recommendations']);
+          this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'crafting', 'recommendations'], { queryParamsHandling: 'merge' });
         }
       });
-    this.regionSubscription = this.common.region$.pipe(startWith(this.common.region)).subscribe(region => {
+
+    this.regionSubscription = combineLatest([this.common.region$, this.common.jumpstart$]).pipe(startWith({})).subscribe(_ => {
       this.api.getLiveData({ categories: "Combat Supplies,Cooking,Trader,Sailing,Enhancement Material" }).pipe(take(1)).subscribe((data) => {
         this.marketData = data.reduce<{ [itemId: string]: MarketLiveItem }>((acc, item) => {
           acc[item.name] = item;
@@ -252,7 +253,8 @@ export class CraftingComponent implements OnInit, OnDestroy {
         }, {});
         this.setRecipePrices();
       });
-    })
+    });
+
 
     const craftingStrongholdBonuses = JSON.parse(localStorage.getItem('craftingStrongholdBonuses') || 'null');
     if (craftingStrongholdBonuses) {
@@ -284,10 +286,10 @@ export class CraftingComponent implements OnInit, OnDestroy {
 
   search() {
     const search = this.searchControl.value;
-    this.router.navigate([this.common.regionSlug, 'crafting'], {
+    this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'crafting'], {
       queryParams: {
         search
-      }
+      },
     });
   }
 
@@ -407,7 +409,6 @@ export class CraftingComponent implements OnInit, OnDestroy {
       };
       return acc;
     }, {});
-    console.log("buildRecipes", this.recipes)
   }
 
   setRecipePrices() {
@@ -468,14 +469,13 @@ export class CraftingComponent implements OnInit, OnDestroy {
     if (this.filter.category == 'recommendations') {
       this.buildSubMenu('recommendations');
       if (this.selectedRecipeId) {
-        console.log(this.selectedRecipeId);
         if (this.recipes[this.selectedRecipeId].craftvsbuy! > -20) {
           this.selectedRecipeId = undefined;
-          this.router.navigate([this.common.regionSlug, 'crafting', 'recommendations', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'preserve' });
+          this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'crafting', 'recommendations', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'merge' });
           this.selectedRecipeId = this.submenu[0].items[0].id;
         }
       } else {
-        this.router.navigate([this.common.regionSlug, 'crafting', 'recommendations', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'preserve' });
+        this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'crafting', 'recommendations', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'merge' });
         this.selectedRecipeId = this.submenu[0].items[0].id;
       }
     }
@@ -502,7 +502,7 @@ export class CraftingComponent implements OnInit, OnDestroy {
       if (this.selectedRecipeId) {
         if (this.recipes[this.selectedRecipeId].craftvsbuy! > -20) {
           this.selectedRecipeId = undefined;
-          this.router.navigate([this.common.regionSlug, 'crafting', 'recommendations', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'preserve' });
+          this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'crafting', 'recommendations', 'all', this.submenu[0].items[0].id], { queryParamsHandling: 'merge' });
           this.selectedRecipeId = this.submenu[0].items[0].id;
         }
       }

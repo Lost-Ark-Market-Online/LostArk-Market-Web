@@ -21,8 +21,13 @@
   </button>
   <a
     class="category"
-    *ngFor="let category of menu | keyvalue:sortMenu"
-    [routerLink]="['/' + common.regionSlug, 'crafting', category.key]"
+    *ngFor="let category of menu | keyvalue : sortMenu"
+    [routerLink]="[
+      '/' + common.regionSlug,
+      common.jumpstartSlug,
+      'crafting',
+      category.key
+    ]"
     routerLinkActive="selected"
     >{{ category.value }}</a
   >
@@ -186,12 +191,10 @@
           max="3"
           matInput
         />
-        <mat-error
-          *ngIf="bonusForm.get('workbenchCount')?.hasError('max')"
+        <mat-error *ngIf="bonusForm.get('workbenchCount')?.hasError('max')"
           >Maximum value 3</mat-error
         >
-        <mat-error
-          *ngIf="bonusForm.get('workbenchCount')?.hasError('min')"
+        <mat-error *ngIf="bonusForm.get('workbenchCount')?.hasError('min')"
           >Minimum value is 0</mat-error
         >
       </mat-form-field>
@@ -212,9 +215,15 @@
               class="submenu-header"
               [routerLink]="
                 filter.subcategory == subCategory.id
-                  ? ['/' + common.regionSlug, 'crafting', filter.category]
+                  ? [
+                      '/' + common.regionSlug,
+                      common.jumpstartSlug,
+                      'crafting',
+                      filter.category
+                    ]
                   : [
                       '/' + common.regionSlug,
+                      common.jumpstartSlug,
                       'crafting',
                       filter.category,
                       subCategory.id
@@ -222,7 +231,9 @@
               "
               queryParamsHandling="merge"
               [class.active]="subMenuToggles[subCategory.id]"
-              (click)="subMenuToggles[subCategory.id] = !subMenuToggles[subCategory.id]"
+              (click)="
+                subMenuToggles[subCategory.id] = !subMenuToggles[subCategory.id]
+              "
             >
               <span class="full-width">{{
                 subCategory.name == "All" ? category : subCategory.name
@@ -242,6 +253,7 @@
                 mat-list-item
                 [routerLink]="[
                   '/' + common.regionSlug,
+                  common.jumpstartSlug,
                   'crafting',
                   filter.category,
                   subCategory.id,
@@ -263,19 +275,29 @@
                   </button>
                   <span class="itemName">{{ item.name }}</span>
                   <span
-                    *ngIf="recipes[item.id].craftvsbuy && !bonusForm.get('showAdvancedProfit')?.value"
+                    *ngIf="
+                      recipes[item.id].craftvsbuy &&
+                      !bonusForm.get('showAdvancedProfit')?.value
+                    "
                     class="profit"
                     [class.overprice]="recipes[item.id].craftvsbuy! > 0"
                     [class.discount]="recipes[item.id].craftvsbuy! < 0"
                     >( {{ recipes[item.id].craftvsbuy }} % )</span
                   >
                   <span
-                    *ngIf="recipes[item.id].profitPerHour && bonusForm.get('showAdvancedProfit')?.value"
+                    *ngIf="
+                      recipes[item.id].profitPerHour &&
+                      bonusForm.get('showAdvancedProfit')?.value
+                    "
                     class="profit"
                     [class.overprice]="recipes[item.id].profitPerHour! < 0"
                     [class.discount]="recipes[item.id].profitPerHour! > 0"
+                  >
+                    ( {{ recipes[item.id].profitPerHour }}
+                    <img class="currency" src="/assets/icons/gold.webp" /><span
+                      >/ h</span
                     >
-                      ( {{ recipes[item.id].profitPerHour}} <img class="currency" src="/assets/icons/gold.webp"/><span>/ h</span> )
+                    )
                   </span>
                 </div>
               </a>
@@ -851,7 +873,9 @@
                     >
                     <span class="price"
                       >{{ recipeRow.costDiscounted
-                      }}<img class="currency" src="/assets/icons/{{recipeRow.cost!.type}}.webp"
+                      }}<img
+                        class="currency"
+                        src="/assets/icons/{{ recipeRow.cost!.type }}.webp"
                     /></span>
                   </div>
                   <div
@@ -929,7 +953,11 @@
                 >
                 <span class="price"
                   >{{ recipes[selectedRecipeId!].costDiscounted
-                  }}<img class="currency" src="/assets/icons/{{recipes[selectedRecipeId!].cost.type}}.webp"
+                  }}<img
+                    class="currency"
+                    src="/assets/icons/{{
+                      recipes[selectedRecipeId!].cost.type
+                    }}.webp"
                 /></span>
               </div>
               <div class="detailRow" *ngIf="bonusForm.get('showEnergy')?.value">
@@ -984,15 +1012,23 @@
               </div>
               <div
                 class="detailRow total"
-                *ngIf="recipes[selectedRecipeId!].profitPerHour && bonusForm.get('showAdvancedProfit')?.value"
+                *ngIf="
+                  recipes[selectedRecipeId!].profitPerHour &&
+                  bonusForm.get('showAdvancedProfit')?.value
+                "
               >
                 <span class="item">Profit</span>
                 <span
                   class="price"
-                  [class.overprice]="recipes[selectedRecipeId!].profitPerHour! < 0"
-                  [class.discount]="recipes[selectedRecipeId!].profitPerHour! > 0"
-                  >
-                  {{ recipes[selectedRecipeId!].profitPerHour }}<img class="currency" src="/assets/icons/gold.png" /> / Hour
+                  [class.overprice]="
+                    recipes[selectedRecipeId!].profitPerHour! < 0
+                  "
+                  [class.discount]="
+                    recipes[selectedRecipeId!].profitPerHour! > 0
+                  "
+                >
+                  {{ recipes[selectedRecipeId!].profitPerHour
+                  }}<img class="currency" src="/assets/icons/gold.png" /> / Hour
                 </span>
               </div>
               <div

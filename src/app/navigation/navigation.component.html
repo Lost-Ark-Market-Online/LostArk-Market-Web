@@ -8,25 +8,41 @@
       <ng-template matMenuContent>
         <button
           mat-menu-item
-          (click)="common.updateRegion('Europe Central', true)"
+          (click)="
+            common.updateRegion('Europe Central', common.jumpstart, true)
+          "
         >
           Europe Central
         </button>
         <button
           mat-menu-item
-          (click)="common.updateRegion('North America West', true)"
+          (click)="
+            common.updateRegion(
+              'North America West',
+              common.jumpstart,
+              true
+            )
+          "
         >
           North America West
         </button>
         <button
           mat-menu-item
-          (click)="common.updateRegion('North America East', true)"
+          (click)="
+            common.updateRegion(
+              'North America East',
+              common.jumpstart,
+              true
+            )
+          "
         >
           North America East
         </button>
         <button
           mat-menu-item
-          (click)="common.updateRegion('South America', true)"
+          (click)="
+            common.updateRegion('South America', common.jumpstart, true)
+          "
         >
           South America
         </button>
@@ -34,10 +50,16 @@
     </mat-menu>
     <mat-menu #jumpstartMenu="matMenu">
       <ng-template matMenuContent>
-        <button mat-menu-item (click)="common.updateJumpstart(true)">
+        <button
+          mat-menu-item
+          (click)="common.updateRegion(common.region, true, true)"
+        >
           Jump Start
         </button>
-        <button mat-menu-item (click)="common.updateJumpstart(false)">
+        <button
+          mat-menu-item
+          (click)="common.updateRegion(common.region, false, true)"
+        >
           Regular
         </button>
       </ng-template>
@@ -89,14 +111,14 @@
   </mat-toolbar-row>
   <mat-toolbar-row class="secondRow scrollable">
     <a
-      [routerLink]="['/' + common.regionSlug, 'market']"
+      [routerLink]="['/' + common.regionSlug, common.jumpstartSlug, 'market']"
       routerLinkActive="active"
       class="tab"
     >
       <span>Market</span>
     </a>
     <a
-      [routerLink]="['/' + common.regionSlug, 'crafting']"
+      [routerLink]="['/' + common.regionSlug, common.jumpstartSlug, 'crafting']"
       routerLinkActive="active"
       class="tab"
     >

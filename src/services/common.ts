@@ -22,6 +22,9 @@ export class CommonService {
   cashShopFavorites: string[] = [];
   craftingFavorites: string[] = [];
   jumpstart = false;
+  jumpstartSlug = '';
+  jumpstart$ = new Subject<boolean>();
+  jumpstartSlug$ = new Subject<string>();
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.localStorageCheck();
@@ -44,14 +47,23 @@ export class CommonService {
       )
       .subscribe((route) => {
         this.activatedRoute = route;
-        const { region } = route.snapshot.params;
-        const { jumpstart } = route.snapshot.queryParams;
-        this.jumpstart = !!jumpstart;
-        if (region == 'default' && this.region) {
-          return this.updateRegion(this.region, true);
+        console.log('Route params', route.snapshot.params);
+        let { region, jumpstart } = route.snapshot.params;
+        if (region == 'default') {
+          region = 'north-america-east';
         }
-        if (this.region != regionMap[region]) {
-          return this.updateRegion(regionMap[region], true);
+        switch (jumpstart) {
+          case 'default':
+          case 'regular':
+            jumpstart = false;
+            break;
+          case 'jumpstart':
+            jumpstart = true;
+        }
+        region = regionMap[region];
+        if (this.region != region || this.jumpstart != jumpstart) {
+          console.log('Route Pipe', region, jumpstart)
+          return this.updateRegion(region, jumpstart, true);
         }
       });
   }
@@ -60,30 +72,22 @@ export class CommonService {
     return `/assets/item_icons/${filename}`;
   }
 
-  updateRegion(region: string, navigate: boolean = false) {
-    if (!region) {
-      region = 'North America East';
-    }
+  updateRegion(region: string, jumpstart: boolean, navigate: boolean = false) {
+    console.log('Update Region', region, jumpstart, navigate)
     this.region$.next(region);
     localStorage.setItem('region', region);
+    this.jumpstart = jumpstart;
+    this.jumpstartSlug = jumpstart ? 'jumpstart' : 'regular';
+    this.jumpstart$.next(jumpstart);
+    this.jumpstartSlug$.next(this.jumpstartSlug);
     if (navigate) {
       const url = this.activatedRoute.snapshot.url;
-      url[0].path = '/' + this.regionSlug;
-
-      if (this.jumpstart) {
-        this.router.navigate([...url.map((x) => x.path)], { queryParams: { jumpstart: this.jumpstart } });
-      } else {
+      console.log('Navigate to:', url);
+      if (url.length > 0) {
+        url[0].path = '/' + this.regionSlug;
+        url[1].path = this.jumpstartSlug;
         this.router.navigate([...url.map((x) => x.path)]);
       }
-    }
-  }
-  updateJumpstart(value) {
-    this.jumpstart = value;
-    const url = this.activatedRoute.snapshot.url;
-    if (this.jumpstart) {
-      this.router.navigate([...url.map((x) => x.path)], { queryParams: { jumpstart: this.jumpstart } });
-    } else {
-      this.router.navigate([...url.map((x) => x.path)]);
     }
   }
 

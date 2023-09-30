@@ -41,22 +41,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ApiService } from '../services/api';
-import { CashShopComponent } from './pages/cash-shop/cash-shop.component'; 
+import { CashShopComponent } from './pages/cash-shop/cash-shop.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 function pageMatcherFactory(page: string) {
   return function craftingPageMatcher(segments: UrlSegment[]): UrlMatchResult {
-    if (segments.length >= 2 && segments[1].path == page) {
+    if (segments.length >= 2 && segments[2].path == page) {
       let posParams: any = {};
       posParams['region'] = segments[0];
-      if (segments.length > 2) {
-        posParams['category'] = segments[2]
-      }
+      posParams['jumpstart'] = segments[1];
       if (segments.length > 3) {
-        posParams['subcategory'] = segments[3]
+        posParams['category'] = segments[3]
       }
       if (segments.length > 4) {
-        posParams['item'] = segments[4]
+        posParams['subcategory'] = segments[4]
+      }
+      if (segments.length > 5) {
+        posParams['item'] = segments[5]
       }
       return {
         consumed: segments,
@@ -73,7 +74,7 @@ const routes: Routes = [
   { matcher: pageMatcherFactory('crafting'), component: CraftingComponent },
   { matcher: pageMatcherFactory('cash-shop'), component: CashShopComponent },
   { matcher: pageMatcherFactory('market'), component: MarketComponent },
-  { path: '', redirectTo: '/default/market', pathMatch: 'full' },
+  { path: '', redirectTo: '/default/default/market', pathMatch: 'full' },
 ]
 
 @NgModule({

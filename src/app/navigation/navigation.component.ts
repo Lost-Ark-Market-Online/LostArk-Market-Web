@@ -21,7 +21,6 @@ import { CommonService } from 'src/services/common';
 })
 export class NavigationComponent implements OnInit {
   version: string = packageJson.version;
-  regionSlug: string = "";
 
   constructor(
     private firestore: Firestore,

@@ -160,9 +160,9 @@ export class MarketComponent implements OnDestroy, AfterViewInit {
             }
           } else {
             if (this.common.marketFavorites.length > 0) {
-              this.router.navigate([this.common.regionSlug, 'market', 'favorites'])
+              this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'market', 'favorites'])
             } else {
-              this.router.navigate([this.common.regionSlug, 'market', 'enhancement-material'])
+              this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'market', 'enhancement-material'])
             }
           }
         }
@@ -239,16 +239,16 @@ export class MarketComponent implements OnDestroy, AfterViewInit {
     const search = this.searchControl.value;
     if (search) {
       logEvent(this.analytics, 'search', { query: search });
-      this.router.navigate([this.common.regionSlug, 'market'], {
+      this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'market'], {
         queryParams: {
           search
         }
       });
     } else {
       if (this.common.marketFavorites.length > 0) {
-        this.router.navigate([this.common.regionSlug, 'market', 'favorites'])
+        this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'market', 'favorites'])
       } else {
-        this.router.navigate([this.common.regionSlug, 'market', 'enhancement-material'])
+        this.router.navigate([this.common.regionSlug, this.common.jumpstartSlug, 'market', 'enhancement-material'])
       }
     }
   }
