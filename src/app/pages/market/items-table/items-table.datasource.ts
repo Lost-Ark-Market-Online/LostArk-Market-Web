@@ -9,12 +9,7 @@ import { CommonService } from 'src/services/common';
 import { ApiService, GetLiveDataRequest } from 'src/services/api';
 
 export interface CombinedFilter {
-  filter: {
-    category?: string;
-    subcategory?: string;
-    favorites?: boolean;
-    search?: string;
-  },
+  filter: Filter,
   paginator: {
     length: number;
     pageIndex: number;
@@ -53,7 +48,9 @@ export class MarketDataSource extends DataSource<MarketItem> {
           category: this.filter?.category,
           subcategory: this.filter?.subcategory,
           favorites: this.filter?.favorites,
-          search: this.filter?.search
+          search: this.filter?.search,
+          region: this.common.region,
+          jumpstart: this.common.jumpstart
         })),
         paginator: this.paginator.page.pipe(startWith({ previousPageIndex: 0, pageIndex: 0, pageSize: 10, length: 0 })),
         sort: this.sort.sortChange.pipe(startWith({ active: 'name', direction: 'asc' }))

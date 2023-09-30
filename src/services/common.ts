@@ -21,6 +21,7 @@ export class CommonService {
   marketFavorites: string[] = [];
   cashShopFavorites: string[] = [];
   craftingFavorites: string[] = [];
+  jumpstart = false;
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.localStorageCheck();
@@ -44,6 +45,8 @@ export class CommonService {
       .subscribe((route) => {
         this.activatedRoute = route;
         const { region } = route.snapshot.params;
+        const { jumpstart } = route.snapshot.queryParams;
+        this.jumpstart = !!jumpstart;
         if (region == 'default' && this.region) {
           return this.updateRegion(this.region, true);
         }
@@ -58,7 +61,6 @@ export class CommonService {
   }
 
   updateRegion(region: string, navigate: boolean = false) {
-    console.log('updateRegion', region, navigate);
     if (!region) {
       region = 'North America East';
     }
@@ -67,6 +69,20 @@ export class CommonService {
     if (navigate) {
       const url = this.activatedRoute.snapshot.url;
       url[0].path = '/' + this.regionSlug;
+
+      if (this.jumpstart) {
+        this.router.navigate([...url.map((x) => x.path)], { queryParams: { jumpstart: this.jumpstart } });
+      } else {
+        this.router.navigate([...url.map((x) => x.path)]);
+      }
+    }
+  }
+  updateJumpstart(value) {
+    this.jumpstart = value;
+    const url = this.activatedRoute.snapshot.url;
+    if (this.jumpstart) {
+      this.router.navigate([...url.map((x) => x.path)], { queryParams: { jumpstart: this.jumpstart } });
+    } else {
       this.router.navigate([...url.map((x) => x.path)]);
     }
   }
@@ -107,7 +123,7 @@ export class CommonService {
       };
       this.marketFavorites = this.marketFavorites.map(itemId => {
         return migration[itemId] || itemId;
-      });      
+      });
       //Update version
       localStorage.setItem('version', '2.1');
     }

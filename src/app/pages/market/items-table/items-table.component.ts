@@ -32,7 +32,14 @@ export class ItemsTableComponent implements AfterViewInit {
   Highcharts: typeof Highcharts = Highcharts;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['name', 'variation', 'recentPrice', 'lowPrice', 'cheapestRemaining', 'updatedAt'];
+  displayedColumns = [
+    'name',
+    //'variation', 
+    'recentPrice',
+    'lowPrice',
+    'cheapestRemaining',
+    'updatedAt'
+  ];
 
   constructor(
     private _snackBar: MatSnackBar,
@@ -53,14 +60,14 @@ export class ItemsTableComponent implements AfterViewInit {
     this.dataSource.filter = this.filter;
   }
 
-  openHistory(item: MarketItem) {
-    logEvent(this.analytics, 'historical_component', { region: this.common.region, item: item.id });
-    this.dialog.open(HistoricalComponent, {
-      width: '80%',
-      maxWidth: '800px',
-      data: { item, region: this.common.region }
-    })
-  }
+  // openHistory(item: MarketItem) {
+  //   logEvent(this.analytics, 'historical_component', { region: this.common.region, item: item.id });
+  //   this.dialog.open(HistoricalComponent, {
+  //     width: '80%',
+  //     maxWidth: '800px',
+  //     data: { item, region: this.common.region }
+  //   })
+  // }
 
   isUntradable(item: MarketItem) {
     if (item.category == 'Engraving Recipe') {

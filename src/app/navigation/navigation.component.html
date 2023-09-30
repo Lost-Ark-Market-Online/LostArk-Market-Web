@@ -32,6 +32,16 @@
         </button>
       </ng-template>
     </mat-menu>
+    <mat-menu #jumpstartMenu="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item (click)="common.updateJumpstart(true)">
+          Jump Start
+        </button>
+        <button mat-menu-item (click)="common.updateJumpstart(false)">
+          Regular
+        </button>
+      </ng-template>
+    </mat-menu>
     <span class="spacer"></span>
     <button
       matTooltip="Pick your region"
@@ -40,6 +50,14 @@
       [matMenuTriggerFor]="appMenu"
     >
       {{ common.region }}
+    </button>
+    <button
+      matTooltip="Jumpstart or Regular?"
+      matTooltipPosition="below"
+      mat-button
+      [matMenuTriggerFor]="jumpstartMenu"
+    >
+      {{ common.jumpstart ? "Jump Start" : "Regular" }}
     </button>
     <div class="buttons">
       <button
@@ -95,15 +113,15 @@
       <mat-icon>link</mat-icon>
       <span>LA Helper</span>
     </a>
-    <a
-      href="https://lostark.meta-game.gg/"
-      target="_blank"
-      class="tab"
-    >
+    <a href="https://lostark.meta-game.gg/" target="_blank" class="tab">
       <mat-icon>link</mat-icon>
       <span>LA Meta-Game</span>
     </a>
-    <a href="https://documenter.getpostman.com/view/20821530/UyxbppKr" target="_blank" class="tab">
+    <a
+      href="https://documenter.getpostman.com/view/20821530/UyxbppKr"
+      target="_blank"
+      class="tab"
+    >
       <mat-icon>link</mat-icon>
       <span>API Doc</span>
     </a>

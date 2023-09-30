@@ -37,6 +37,7 @@ export interface GetLiveDataRequest {
   categories?: string;
   items?: string;
   search?: string;
+  jumpstart?: boolean;
 };
 
 @Injectable({
@@ -71,10 +72,12 @@ export class ApiService {
     if (request.search) {
       params['search'] = request.search;
     }
+    if (this.common.jumpstart) {
+      params['jumpstart'] = this.common.jumpstart;
+    }
     return this.http.get<MarketLiveItem[]>(`${this.endpoint}/export-market-live/${this.common.region}`, {
       params
     }).pipe(catchError((error) => {
-
       if (error.status === 0) {
         console.error('An error occurred:', error.error);
       } else {

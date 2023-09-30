@@ -199,6 +199,8 @@ export class MarketComponent implements OnDestroy, AfterViewInit {
             this.menu.gemChestSubMenu = true;
             break;
         }
+        this.filter.region = this.common.region;
+        this.filter.jumpstart = this.common.jumpstart;
         if (this.marketTable?.dataSource) {
           this.marketTable.dataSource.refreshMarket();
         }
@@ -229,7 +231,7 @@ export class MarketComponent implements OnDestroy, AfterViewInit {
       gemChestSubMenu: false,
     }
   }
-  clearSearch(){
+  clearSearch() {
     this.searchControl.reset();
     this.search();
   }
